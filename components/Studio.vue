@@ -18,7 +18,10 @@ const selectNewDocument = (document: Document) => {
 <template>
   <section class="flex gap-4">
     <div class="w-1/5 border-r border-gray-700 h-screen">
-      <Sidebar :documents="schema.documents" @on-selected-new-document="selectNewDocument" />
+      <Sidebar
+        :documents="schema.documents"
+        @on-selected-new-document="selectNewDocument"
+      />
     </div>
 
     <div class="p-4">

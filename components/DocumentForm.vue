@@ -49,6 +49,7 @@ const onDocumentEdit = () => {
             :name="field.name"
             class="border border-gray-700"
             type="text"
+            :required="field.required"
           />
         </div>
       </div>

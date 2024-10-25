@@ -44,7 +44,7 @@ const documentClick = (idx: number) => {
             <LucideChevronDown />
           </button>
 
-          <ul class="text-sm" v-if="isDocumentHidden(idx)">
+          <ul v-if="isDocumentHidden(idx)" class="text-sm">
             <li>
               <button @click="emit('onSelectedNewDocument', document)">
                 Create a new {{ document.name }}
