@@ -5,7 +5,7 @@ import Studio from "~/components/Studio.vue";
 await $fetch("/api/schema", {
   method: "POST",
   body: {
-    value: schema,
+    schema,
   },
 });
 </script>

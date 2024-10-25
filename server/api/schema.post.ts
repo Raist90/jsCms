@@ -1,35 +1,16 @@
-import { createDBquery } from "~/db/queries";
-import { db } from "../utils";
+import type { Schema } from "~/types";
+import { schemaTable } from "~/db/dbSchema";
+import { db } from "~/db/db";
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
+  const body = await readBody<{ schema: Schema }>(event);
+  const schema = JSON.stringify(body.schema);
+
   const id = crypto.randomUUID();
-
-  const checkIfExistsQuery = `
-    SELECT COUNT(*) as count FROM schema;
-  `;
-
-  const insertQuery = `
-    INSERT INTO schema (id, value)
-    VALUES ('${id}', '${JSON.stringify(body.value)}');
-  `;
-
-  db.exec(createDBquery);
-
-  const hasResults = async () => {
-    return await new Promise((resolve, reject) => {
-      db.all(checkIfExistsQuery, [], (err, rows: { count: number }[]) => {
-        if (err) reject(err);
-        else resolve(rows[0]?.count > 0);
-      });
-    });
+  const addSchemaQuery = async () => {
+    return db.insert(schemaTable).values({ id, schema });
   };
 
-  const result = (await hasResults()) as boolean;
-
-  if (!result) {
-    db.exec(insertQuery);
-  }
-
-  return "";
+  const hasSchema = await db.$count(schemaTable);
+  if (!hasSchema) await addSchemaQuery();
 });
