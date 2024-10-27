@@ -14,23 +14,23 @@ type BaseFieldKeys = {
 
 type Field =
   | Prettify<
-    BaseFieldKeys & {
-      type: "string" | "number" | "boolean";
-    }
-  >
+      BaseFieldKeys & {
+        type: "string" | "number" | "boolean";
+      }
+    >
   | Prettify<
-    BaseFieldKeys & {
-      type: "object";
-      fields: Field[];
-    }
-  >
+      BaseFieldKeys & {
+        type: "object";
+        fields: Field[];
+      }
+    >
   | Prettify<
-    BaseFieldKeys & {
-      type: "array";
-      // let's restrict multidimensional arrays for now
-      fields: Exclude<Field, BaseFieldKeys & { type: "array" }>[];
-    }
-  >;
+      BaseFieldKeys & {
+        type: "array";
+        // let's restrict multidimensional arrays for now
+        fields: Exclude<Field, BaseFieldKeys & { type: "array" }>[];
+      }
+    >;
 
 type Document = {
   description: string;
