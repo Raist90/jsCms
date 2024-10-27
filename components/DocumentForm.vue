@@ -5,10 +5,18 @@ const props = defineProps<{ document: Document }>();
 const fields = computed(() => props.document.fields);
 
 const formData = reactive<{ [key: string]: any }>({});
+const formErrors = ref<Record<string, string> | null>(null);
 
 const isFormDisabled = ref(false);
 const isFormSubmitted = ref(false);
 const onFormSubmit = () => {
+  const validationErrors = validateDocumentFields(props.document, formData);
+  if (validationErrors) {
+    formErrors.value = validationErrors;
+    return;
+  }
+
+  formErrors.value = null;
   isFormDisabled.value = true;
   isFormSubmitted.value = true;
 };
@@ -38,6 +46,7 @@ const onDocumentEdit = () => {
 
     <form
       class="grid gap-y-4 p-4 border border-gray-700"
+      novalidate
       @submit.prevent="onFormSubmit"
     >
       <div v-for="field in fields" :key="field.type">
@@ -51,6 +60,12 @@ const onDocumentEdit = () => {
             type="text"
             :required="field.required"
           />
+          <span
+            v-if="formErrors && formErrors[field.name]"
+            class="text-red-500"
+          >
+            {{ formErrors[field.name] }}
+          </span>
         </div>
       </div>
 
