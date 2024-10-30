@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Document } from "~/types";
+import type { Document, DocumentJsonModel } from "~/types";
 
 const props = defineProps<{ document: Document }>();
 const fields = computed(() => props.document.fields);
@@ -9,7 +9,7 @@ const formErrors = ref<Record<string, string> | null>(null);
 
 const isFormDisabled = ref(false);
 const isFormSubmitted = ref(false);
-const onFormSubmit = () => {
+const onFormSubmit = async () => {
   const validationErrors = validateDocumentFields(props.document, formData);
   if (validationErrors) {
     formErrors.value = validationErrors;
@@ -19,6 +19,19 @@ const onFormSubmit = () => {
   formErrors.value = null;
   isFormDisabled.value = true;
   isFormSubmitted.value = true;
+
+  await $fetch("/api/documents", {
+    method: "POST",
+    body: {
+      document: props.document,
+      data: {
+        id: crypto.randomUUID(),
+        name: props.document.name,
+        type: props.document.type,
+        ...formData,
+      } satisfies DocumentJsonModel,
+    },
+  });
 };
 
 const onDocumentEdit = () => {

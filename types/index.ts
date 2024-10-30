@@ -1,4 +1,5 @@
 export type { Prettify, Schema, AppConfig, Document };
+export type { DocumentJsonModel };
 export { addDocument };
 
 type Prettify<T> = {
@@ -51,4 +52,12 @@ type Schema = {
 
 type AppConfig = {
   schema: Schema;
+};
+
+// TODO: move this stuff elsewhere or reorganize types folder
+//
+type DocumentJsonModel = Record<string, unknown> & {
+  id: ReturnType<typeof crypto.randomUUID>;
+  name: string;
+  type: "document";
 };
