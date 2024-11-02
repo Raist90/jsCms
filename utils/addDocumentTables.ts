@@ -1,7 +1,7 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 import type { Document } from "~/types";
 
-export function createDocumentTables(document: Document) {
+export function addDocumentTables(document: Document) {
   const fields = document.fields;
 
   const columns = fields

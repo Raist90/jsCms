@@ -7,6 +7,7 @@ const emit = defineEmits<{
 
 const props = defineProps<{ documents: Document[] }>();
 const documents = computed(() => props.documents);
+console.log(props.documents);
 
 type ElemsList = {
   name: string;
@@ -50,7 +51,11 @@ const documentClick = (idx: number) => {
                 Create a new {{ document.name }}
               </button>
             </li>
-            <li>List all {{ document.name }} collection</li>
+            <li>
+              <a :href="`/documents/${document.name}`"
+                >List all {{ document.name }} collection</a
+              >
+            </li>
           </ul>
         </li>
       </ul>

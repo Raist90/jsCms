@@ -9,10 +9,6 @@ await $fetch("/api/schema", {
     schema,
   },
 });
-
-// this creates the tables for each document if not exists
-// const documents = schema.documents;
-// documents.forEach((document) => createDocumentsTables(document));
 </script>
 
 <template>
