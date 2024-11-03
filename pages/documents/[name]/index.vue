@@ -12,28 +12,42 @@ const list = await $fetch("/api/documentsList", {
   },
 });
 
-const headers = Object.keys(list[0]);
-const rows = list.map((elem) => Object.values(elem));
+const selected = ref([list[0]]);
+
+// const query = ref("");
+
+// const filteredRows = computed(() => {
+//   if (!query.value) {
+//     return list;
+//   }
+//
+//   return list.filter((elem) => {
+//     return Object.values(elem).some((value) => {
+//       return String(value).toLowerCase().includes(query.value.toLowerCase());
+//     });
+//   });
+// });
 </script>
 
 <template>
-  <div v-if="list.length" class="p-4">
-    <h2 v-text="`${capitalize(documentName)} list`" />
-    <table>
-      <thead>
-        <tr>
-          <th v-for="(item, index) in headers" :key="index">
-            {{ item }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
-          <td v-for="(value, keyIndex) in row" :key="keyIndex">
-            {{ value }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700"> -->
+  <!--   <UInput v-model="query" placeholder="Filter document..." /> -->
+  <!-- </div> -->
+
+  <section class="w-full">
+    <header class="p-4 border-b border-gray-200 flex gap-x-3 items-center h-16">
+      <h2 class="font-bold" v-text="`${capitalize(documentName)} list`" />
+      <UButton
+        :to="`/documents/${documentName}/add`"
+        size="xs"
+        icon="heroicons:pencil-square"
+        color="gray"
+        >Add a new {{ documentName }}</UButton
+      >
+    </header>
+
+    <div v-if="list.length" class="px-4 py-2">
+      <UTable v-model="selected" :rows="list" />
+    </div>
+  </section>
 </template>
