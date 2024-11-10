@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Document, DocumentJsonModel } from "~/types";
+import DynamicField from "./DynamicField.vue";
 
 const props = defineProps<{ document: Document }>();
 const fields = computed(() => props.document.fields);
@@ -26,7 +27,6 @@ const onFormSubmit = async () => {
       document: props.document,
       data: {
         id: crypto.randomUUID(),
-        name: props.document.name,
         type: props.document.type,
         ...formData,
       } satisfies DocumentJsonModel,
@@ -54,21 +54,12 @@ const onDocumentEdit = () => {
       @submit.prevent="onFormSubmit"
     >
       <div v-for="field in fields" :key="field.name">
-        <div v-if="field.type === 'string'">
-          <UFormGroup :label="field.title">
-            <UInput
-              v-model="formData[field.name]"
-              :color="(formErrors?.[field.name] && 'red') || undefined"
-              :disabled="isFormDisabled"
-              :name="field.name"
-              type="text"
-              :required="field.required"
-            />
-          </UFormGroup>
-          <p v-if="formErrors?.[field.name]" class="text-red-500 mt-2 text-sm">
-            {{ formErrors[field.name] }}
-          </p>
-        </div>
+        <DynamicField
+          v-model="formData"
+          :field="field"
+          :form-errors
+          :disabled="isFormDisabled"
+        />
       </div>
 
       <UButton :disabled="isFormDisabled" type="submit" class="max-w-fit">

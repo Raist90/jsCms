@@ -55,9 +55,7 @@ type AppConfig = {
 };
 
 // TODO: move this stuff elsewhere or reorganize types folder
-//
-type DocumentJsonModel = Record<string, unknown> & {
+type DocumentJsonModel = {
   id: ReturnType<typeof crypto.randomUUID>;
-  name: string;
   type: "document";
-};
+} & Record<string, any>;
