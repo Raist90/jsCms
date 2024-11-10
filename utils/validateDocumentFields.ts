@@ -1,11 +1,17 @@
 import type { Document } from "~/types";
 import { z } from "zod";
+import {
+  isArray,
+  isBoolean,
+  isNonEmptyObject,
+  isNumber,
+  isString,
+} from "@sindresorhus/is";
 
 export { validateDocumentFields };
 
 function validateDocumentFields(
   document: Document,
-  // FIX: this should not be named as it is because I think it's still not a json but an object coming from a form
   formData: Record<string, unknown>,
 ) {
   const errors: Record<string, string> = {};
@@ -20,55 +26,36 @@ function validateDocumentFields(
       continue;
     }
 
-    const error = validateFieldType(formData[fieldName]);
+    const { error } = validateFieldType(formData[fieldName]);
     if (error) {
       errors[fieldName] = error;
     }
   }
+
   if (Object.keys(errors).length) return errors;
   return;
 }
 
 function validateFieldType(field: unknown) {
   let errMsg: string | null = null;
+  const validatorSchema = z.object({
+    string: z.string(),
+    number: z.number(),
+    boolean: z.boolean(),
+  });
 
-  switch (typeof field) {
-    case "string": {
-      const { success } = z.string().safeParse(field);
+  if (isNonEmptyObject(field) || isArray(field))
+    Object.values(field).map((field) => validateFieldType(field));
+  else if (isString(field) || isNumber(field) || isBoolean(field)) {
+    const { success } =
+      validatorSchema.shape[
+        typeof field as "string" | "number" | "boolean" // seems like ts is unable to infer `typeof`
+      ].safeParse(field);
 
-      if (!success) {
-        errMsg = `Field ${field} must be a string`;
-      }
-      break;
-    }
-    case "number":
-      {
-        const { success } = z.number().safeParse(field);
-
-        if (!success) {
-          errMsg = `Field ${field} must be a number`;
-        }
-      }
-      break;
-    case "boolean":
-      {
-        const { success } = z.boolean().safeParse(field);
-
-        if (!success) {
-          errMsg = `Field ${field} must be a boolean`;
-        }
-      }
-      break;
-    case "object":
-      {
-        const keys = Object.keys(field as object);
-        keys.map((key) => validateFieldType(key));
-      }
-      break;
-    default:
-      errMsg = `Field ${field} is invalid`;
+    if (!success) errMsg = `Field ${field} must be a ${typeof field}`;
+  } else {
+    errMsg = `Field ${String(field)} is invalid`;
   }
 
-  if (errMsg) return errMsg;
-  return;
+  return { error: errMsg };
 }

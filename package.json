@@ -16,6 +16,7 @@
     "@nuxt/fonts": "^0.10.2",
     "@nuxt/ui": "^2.18.7",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "@sindresorhus/is": "^7.0.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.1",
     "eslint-config-prettier": "^9.1.0",

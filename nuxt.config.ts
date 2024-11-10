@@ -3,13 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   components: false,
   devtools: { enabled: false },
-  modules: [
-    "nuxt-lucide-icons",
-    "@nuxt/eslint",
-    "@nuxt/ui",
-    "@nuxtjs/tailwindcss",
-    "@nuxt/fonts",
-  ],
+  modules: ["nuxt-lucide-icons", "@nuxt/eslint", "@nuxt/ui", "@nuxt/fonts"],
   fonts: {
     defaults: {
       weights: [400],
@@ -26,4 +20,3 @@ export default defineNuxtConfig({
     },
   },
 });
-

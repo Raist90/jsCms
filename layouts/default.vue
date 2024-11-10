@@ -8,11 +8,13 @@ const {
 </script>
 
 <template>
-  <div class="flex h-screen">
-    <div class="w-60 flex-grow border-r border-gray-200">
+  <div class="flex flex-row h-screen">
+    <div class="w-60 shrink-0 border-r border-gray-200">
       <Sidebar :documents />
     </div>
 
-    <slot />
+    <div class="flex-1 overflow-auto">
+      <slot />
+    </div>
   </div>
 </template>

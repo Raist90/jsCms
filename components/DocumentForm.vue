@@ -48,24 +48,26 @@ const onDocumentEdit = () => {
       </button>
     </div>
 
-    <form class="space-y-4 w-60" novalidate @submit.prevent="onFormSubmit">
-      <div v-for="field in fields" :key="field.type">
+    <form
+      class="space-y-4 w-1/2 mx-auto border border-gray-200 p-4"
+      novalidate
+      @submit.prevent="onFormSubmit"
+    >
+      <div v-for="field in fields" :key="field.name">
         <div v-if="field.type === 'string'">
           <UFormGroup :label="field.title">
             <UInput
               v-model="formData[field.name]"
+              :color="(formErrors?.[field.name] && 'red') || undefined"
               :disabled="isFormDisabled"
               :name="field.name"
               type="text"
               :required="field.required"
             />
           </UFormGroup>
-          <span
-            v-if="formErrors && formErrors[field.name]"
-            class="text-red-500"
-          >
+          <p v-if="formErrors?.[field.name]" class="text-red-500 mt-2 text-sm">
             {{ formErrors[field.name] }}
-          </span>
+          </p>
         </div>
       </div>
 

@@ -1,3 +1,13 @@
 export default defineAppConfig({
-  ui: {},
+  ui: {
+    strategy: "merge",
+    formGroup: {
+      label: {
+        base: "font-bold",
+      },
+    },
+    input: {
+      rounded: "rounded-none",
+    },
+  },
 });

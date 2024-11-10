@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import { isString } from "@sindresorhus/is";
 import type { Document } from "~/types";
 
 defineProps<{ documents: Document[] }>();
+
+let routeParam: string | undefined;
+const { params } = useRoute();
+if (isString(params.name)) routeParam = params.name;
+else routeParam = undefined;
 </script>
 
 <template>
@@ -11,11 +17,15 @@ defineProps<{ documents: Document[] }>();
     </header>
 
     <nav class="p-4">
-      <ul class="flex flex-col gap-y-2">
+      <ul class="grid gap-y-2">
         <li v-for="document in documents" :key="document.name">
-          <ULink :to="`/documents/${document.name}`">{{
-            document.title
-          }}</ULink>
+          <ULink
+            :external="true"
+            :to="`/documents/${document.name}`"
+            :active="(routeParam && document.name === routeParam) || undefined"
+            active-class="text-primary"
+            >{{ document.title }}</ULink
+          >
         </li>
       </ul>
     </nav>
