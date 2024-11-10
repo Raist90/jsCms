@@ -12,7 +12,6 @@ export function addDocumentTables(document: Document) {
 
   return sqliteTable(document.name, {
     id: text().primaryKey().notNull().unique(),
-    name: text().notNull(),
     type: text().notNull(),
     ...columns,
   });
