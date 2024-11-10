@@ -26,4 +26,14 @@ const formData = defineModel<{ [key: string]: any }>({ required: true });
       {{ formErrors[field.name] }}
     </p>
   </div>
+  <div v-if="field.type === 'object'">
+    <DynamicField
+      v-for="subfield in field.fields"
+      :key="subfield.name"
+      v-model="formData"
+      :field="subfield"
+      :form-errors
+      :disabled
+    />
+  </div>
 </template>
