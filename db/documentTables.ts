@@ -13,3 +13,9 @@ export const pageTable = sqliteTable("page", {
   title: text().notNull(),
   slug: text().notNull(),
 });
+
+export const settingsTable = sqliteTable("settings", {
+  id: text().primaryKey().notNull().unique(),
+  type: text().notNull(),
+  generalSettings: text().notNull(),
+});

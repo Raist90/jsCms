@@ -17,6 +17,21 @@ const onFormSubmit = async () => {
     return;
   }
 
+  let objectFieldTypeData: Record<string, string> = {};
+  fields.value.forEach((field) => {
+    if (field.type === "object") {
+      const subfieldValues = Object.fromEntries(
+        field.fields
+          .filter((subfield) => subfield.name in formData)
+          .map((subfield) => [subfield.name, formData[subfield.name]]),
+      );
+      if (Object.keys(subfieldValues).length) {
+        objectFieldTypeData = { [field.name]: JSON.stringify(subfieldValues) };
+      }
+      return;
+    }
+  });
+
   formErrors.value = null;
   isFormDisabled.value = true;
   isFormSubmitted.value = true;
@@ -29,6 +44,7 @@ const onFormSubmit = async () => {
         id: crypto.randomUUID(),
         type: props.document.type,
         ...formData,
+        ...(objectFieldTypeData && objectFieldTypeData),
       } satisfies DocumentJsonModel,
     },
   });
@@ -53,14 +69,14 @@ const onDocumentEdit = () => {
       novalidate
       @submit.prevent="onFormSubmit"
     >
-      <div v-for="field in fields" :key="field.name">
+      <template v-for="field in fields" :key="field.name">
         <DynamicField
           v-model="formData"
           :field="field"
           :form-errors
           :disabled="isFormDisabled"
         />
-      </div>
+      </template>
 
       <UButton :disabled="isFormDisabled" type="submit" class="max-w-fit">
         Save {{ document.name }}

@@ -1,12 +1,5 @@
 import type { Document } from "~/types";
 import { z } from "zod";
-import {
-  isArray,
-  isBoolean,
-  isNonEmptyObject,
-  isNumber,
-  isString,
-} from "@sindresorhus/is";
 
 export { validateDocumentFields };
 
@@ -21,14 +14,26 @@ function validateDocumentFields(
     const fieldName = field.name;
     const isRequired = field.required;
 
-    if (isRequired && !(fieldName in formData)) {
-      errors[fieldName] = `Field ${fieldName} is required`;
-      continue;
-    }
+    // NOTE: this works but we can't allow same field name across the document, even if nested in objects
+    // TODO: make sure to cover `array` case as well
+    if (field.type === "object") {
+      field.fields.forEach((subfield) => {
+        if (isRequired && !(subfield.name in formData)) {
+          errors[subfield.name] = `Field ${subfield.name} is required`;
+          return;
+        }
 
-    const { error } = validateFieldType(formData[fieldName]);
-    if (error) {
-      errors[fieldName] = error;
+        const { error } = validateFieldType(subfield, formData[subfield.name]);
+        if (error) errors[fieldName] = error;
+      });
+    } else {
+      if (isRequired && !(fieldName in formData)) {
+        errors[fieldName] = `Field ${fieldName} is required`;
+        continue;
+      }
+
+      const { error } = validateFieldType(field, formData[fieldName]);
+      if (error) errors[fieldName] = error;
     }
   }
 
@@ -36,7 +41,10 @@ function validateDocumentFields(
   return;
 }
 
-function validateFieldType(field: unknown) {
+function validateFieldType(
+  field: Document["fields"][number],
+  fieldValue: unknown,
+) {
   let errMsg: string | null = null;
   const validatorSchema = z.object({
     string: z.string(),
@@ -44,17 +52,20 @@ function validateFieldType(field: unknown) {
     boolean: z.boolean(),
   });
 
-  if (isNonEmptyObject(field) || isArray(field))
-    Object.values(field).map((field) => validateFieldType(field));
-  else if (isString(field) || isNumber(field) || isBoolean(field)) {
-    const { success } =
-      validatorSchema.shape[
-        typeof field as "string" | "number" | "boolean" // seems like ts is unable to infer `typeof`
-      ].safeParse(field);
+  const fieldName = field.name;
+  const fieldType = field.type;
 
-    if (!success) errMsg = `Field ${field} must be a ${typeof field}`;
+  if (
+    fieldType === "string" ||
+    fieldType === "number" ||
+    fieldType === "boolean"
+  ) {
+    const { success } = validatorSchema.shape[fieldType].safeParse(fieldValue);
+
+    if (!success)
+      errMsg = `Field ${fieldName} must be a valid "${fieldType}". You provided "${fieldValue}" instead`;
   } else {
-    errMsg = `Field ${String(field)} is invalid`;
+    errMsg = `Field "${fieldName}" is invalid`;
   }
 
   return { error: errMsg };

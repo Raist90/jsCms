@@ -1,6 +1,6 @@
 import { addDocument } from "@/types";
 
-export { article, page };
+export { article, page, settings };
 
 const article = addDocument({
   description: "This is an article",
@@ -44,6 +44,38 @@ const page = addDocument({
       required: true,
       title: "Slug",
       type: "string",
+    },
+  ],
+});
+
+const settings = addDocument({
+  description: "This is the settings document",
+  name: "settings",
+  title: "Settings",
+  type: "document",
+  fields: [
+    {
+      description: "These are the general settings",
+      name: "generalSettings",
+      required: true,
+      title: "General settings",
+      type: "object",
+      fields: [
+        {
+          description: "This is the site title",
+          name: "siteTitle",
+          required: true,
+          title: "Site title",
+          type: "string",
+        },
+        {
+          description: "This is the site description",
+          name: "siteDescription",
+          required: true,
+          title: "Site description",
+          type: "string",
+        },
+      ],
     },
   ],
 });

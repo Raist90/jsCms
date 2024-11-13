@@ -4,7 +4,6 @@ const { params } = useRoute();
 const documentName =
   typeof params.name === "string" ? params.name : params.name[0];
 
-// FIX: I'm getting an error because I'm fetching this clientside maybe
 const list = await $fetch("/api/documentsList", {
   method: "POST",
   body: {

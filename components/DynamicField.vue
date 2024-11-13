@@ -11,7 +11,7 @@ const formData = defineModel<{ [key: string]: any }>({ required: true });
 </script>
 
 <template>
-  <div v-if="field.type === 'string'">
+  <template v-if="field.type === 'string'">
     <UFormGroup :label="field.title">
       <UInput
         v-model="formData[field.name]"
@@ -22,11 +22,13 @@ const formData = defineModel<{ [key: string]: any }>({ required: true });
         :required="field.required"
       />
     </UFormGroup>
-    <p v-if="formErrors?.[field.name]" class="text-red-500 mt-2 text-sm">
-      {{ formErrors[field.name] }}
-    </p>
-  </div>
-  <div v-if="field.type === 'object'">
+  </template>
+
+  <template v-if="field.type === 'object'">
+    <div>
+      <h3 class="text-sm font-bold mb-1">{{ field.title }}</h3>
+      <p class="text-xs">{{ field.description }}</p>
+    </div>
     <DynamicField
       v-for="subfield in field.fields"
       :key="subfield.name"
@@ -35,5 +37,9 @@ const formData = defineModel<{ [key: string]: any }>({ required: true });
       :form-errors
       :disabled
     />
-  </div>
+  </template>
+
+  <p v-if="formErrors?.[field.name]" class="text-red-500 mt-2 text-sm">
+    {{ formErrors[field.name] }}
+  </p>
 </template>
