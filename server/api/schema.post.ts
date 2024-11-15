@@ -4,7 +4,7 @@ import { db } from "~/db/db";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ schema: Schema }>(event);
-  const schema = JSON.stringify(body.schema);
+  const schema = body.schema;
 
   const id = crypto.randomUUID();
   const addSchemaQuery = async () => {

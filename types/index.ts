@@ -42,8 +42,8 @@ type Document = {
 };
 
 // TODO: move this elsewhere
-function addDocument(d: Document): Document {
-  return d;
+function addDocument(document: Document): Document {
+  return document;
 }
 
 type Schema = {
@@ -57,5 +57,6 @@ type AppConfig = {
 // TODO: move this stuff elsewhere or reorganize types folder
 type DocumentJsonModel = {
   id: ReturnType<typeof crypto.randomUUID>;
-  type: "document";
-} & Record<string, any>;
+  type: string;
+  data: Record<string, any>;
+};

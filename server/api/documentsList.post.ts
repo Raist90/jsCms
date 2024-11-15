@@ -1,16 +1,15 @@
-import { getTableUniqueName } from "drizzle-orm";
-import * as allDocumentTables from "@/db/documentTables";
 import { db } from "~/db/db";
+import { contentTable } from "~/db/dbSchema";
+import { eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   const { documentName } = await readBody<{ documentName: string }>(event);
 
-  const documentTables = Object.values(allDocumentTables);
-  const documentTableIdx = documentTables
-    .map((table) => getTableUniqueName(table))
-    .findIndex((name) => name === `public.${documentName}`);
-  const documentTable = documentTables[documentTableIdx];
+  const documentListByName = await db
+    .select()
+    .from(contentTable)
+    .where(eq(contentTable.type, `${documentName}`));
 
-  const list = await db.select().from(documentTable);
-  return list;
+  if (!documentListByName.length) return [];
+  else return documentListByName;
 });

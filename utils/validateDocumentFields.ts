@@ -5,7 +5,7 @@ export { validateDocumentFields };
 
 function validateDocumentFields(
   document: Document,
-  formData: Record<string, unknown>,
+  formData: Record<string, any>,
 ) {
   const errors: Record<string, string> = {};
   const fields = document.fields;
@@ -18,12 +18,15 @@ function validateDocumentFields(
     // TODO: make sure to cover `array` case as well
     if (field.type === "object") {
       field.fields.forEach((subfield) => {
-        if (isRequired && !(subfield.name in formData)) {
+        if (isRequired && !(subfield.name in formData[field.name])) {
           errors[subfield.name] = `Field ${subfield.name} is required`;
           return;
         }
 
-        const { error } = validateFieldType(subfield, formData[subfield.name]);
+        const { error } = validateFieldType(
+          subfield,
+          formData[field.name][subfield.name],
+        );
         if (error) errors[fieldName] = error;
       });
     } else {

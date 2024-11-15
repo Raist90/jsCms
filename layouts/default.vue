@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import config from "@/cmsConfig";
 import Sidebar from "~/components/Sidebar.vue";
 
-const {
-  schema: { documents },
-} = config;
+const schema = await $fetch("/api/schema", {
+  method: "GET",
+});
+const { documents } = schema;
 </script>
 
 <template>

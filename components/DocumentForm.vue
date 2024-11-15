@@ -4,8 +4,7 @@ import DynamicField from "./DynamicField.vue";
 
 const props = defineProps<{ document: Document }>();
 const fields = computed(() => props.document.fields);
-
-const formData = reactive<{ [key: string]: any }>({});
+const formData = reactive<Record<string, any>>({});
 const formErrors = ref<Record<string, string> | null>(null);
 
 const isFormDisabled = ref(false);
@@ -17,21 +16,6 @@ const onFormSubmit = async () => {
     return;
   }
 
-  let objectFieldTypeData: Record<string, string> = {};
-  fields.value.forEach((field) => {
-    if (field.type === "object") {
-      const subfieldValues = Object.fromEntries(
-        field.fields
-          .filter((subfield) => subfield.name in formData)
-          .map((subfield) => [subfield.name, formData[subfield.name]]),
-      );
-      if (Object.keys(subfieldValues).length) {
-        objectFieldTypeData = { [field.name]: JSON.stringify(subfieldValues) };
-      }
-      return;
-    }
-  });
-
   formErrors.value = null;
   isFormDisabled.value = true;
   isFormSubmitted.value = true;
@@ -39,14 +23,12 @@ const onFormSubmit = async () => {
   await $fetch("/api/documents", {
     method: "POST",
     body: {
-      document: props.document,
+      id: crypto.randomUUID(),
+      type: props.document.name,
       data: {
-        id: crypto.randomUUID(),
-        type: props.document.type,
         ...formData,
-        ...(objectFieldTypeData && objectFieldTypeData),
-      } satisfies DocumentJsonModel,
-    },
+      },
+    } satisfies DocumentJsonModel,
   });
 };
 
@@ -54,6 +36,18 @@ const onDocumentEdit = () => {
   isFormDisabled.value = false;
   isFormSubmitted.value = false;
 };
+
+watch(
+  () => fields,
+  () => {
+    fields.value.forEach((field) => {
+      if (field.type === "object") {
+        formData[field.name] = {};
+      }
+    });
+  },
+  { immediate: true },
+);
 </script>
 
 <template>

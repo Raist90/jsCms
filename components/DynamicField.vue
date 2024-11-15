@@ -32,7 +32,7 @@ const formData = defineModel<{ [key: string]: any }>({ required: true });
     <DynamicField
       v-for="subfield in field.fields"
       :key="subfield.name"
-      v-model="formData"
+      v-model="formData[field.name]"
       :field="subfield"
       :form-errors
       :disabled
