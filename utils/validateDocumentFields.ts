@@ -11,14 +11,17 @@ function validateDocumentFields(
   const fields = document.fields;
 
   for (const field of fields) {
+    if (!field.required) continue;
+
     const fieldName = field.name;
-    const isRequired = field.required;
 
     // NOTE: this works but we can't allow same field name across the document, even if nested in objects
     // TODO: make sure to cover `array` case as well
     if (field.type === "object") {
       field.fields.forEach((subfield) => {
-        if (isRequired && !(subfield.name in formData[field.name])) {
+        if (!subfield.required) return;
+
+        if (!(subfield.name in formData[field.name])) {
           errors[subfield.name] = `Field ${subfield.name} is required`;
           return;
         }
@@ -30,7 +33,7 @@ function validateDocumentFields(
         if (error) errors[fieldName] = error;
       });
     } else {
-      if (isRequired && !(fieldName in formData)) {
+      if (!(fieldName in formData)) {
         errors[fieldName] = `Field ${fieldName} is required`;
         continue;
       }
@@ -49,8 +52,9 @@ function validateFieldType(
   fieldValue: unknown,
 ) {
   let errMsg: string | null = null;
+
   const validatorSchema = z.object({
-    string: z.string(),
+    string: z.string().min(1),
     number: z.number(),
     boolean: z.boolean(),
   });

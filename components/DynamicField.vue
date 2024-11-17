@@ -6,28 +6,66 @@ type Props = {
   formErrors: Record<string, string> | null;
   disabled: boolean;
 };
-defineProps<Props>();
-const formData = defineModel<{ [key: string]: any }>({ required: true });
+const props = defineProps<Props>();
+const field = computed(() => props.field);
+
+const formData = defineModel<Record<string, any>>({
+  required: true,
+});
+
+watch(
+  () => field,
+  () => {
+    if (field.value.type === "boolean")
+      formData.value[field.value.name] = false;
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
-  <template v-if="field.type === 'string'">
-    <UFormGroup :label="field.title">
+  <template v-if="field.type !== 'object'">
+    <UFormGroup
+      v-slot="{ error }"
+      :error="formErrors?.[field.name] && `${formErrors[field.name]}`"
+      :required="field.required"
+      :description="
+        (field.type !== 'boolean' && field.description) || undefined
+      "
+      :label="field.title"
+    >
       <UInput
+        v-if="field.type === 'string' || field.type === 'number'"
         v-model="formData[field.name]"
+        :trailing-icon="
+          (error && 'i-heroicons-exclamation-triangle-20-solid') || undefined
+        "
         :color="(formErrors?.[field.name] && 'red') || undefined"
         :disabled
         :name="field.name"
-        type="text"
+        :type="field.type === 'string' ? 'text' : 'number'"
         :required="field.required"
       />
+
+      <div
+        v-if="field.type === 'boolean'"
+        class="flex gap-x-2 items-center p-2 border"
+      >
+        <UToggle v-model="formData[field.name]" size="lg" />
+
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          {{ field.description }}
+        </p>
+      </div>
     </UFormGroup>
   </template>
 
-  <template v-if="field.type === 'object'">
+  <template v-else-if="field.type === 'object'">
     <div>
-      <h3 class="text-sm font-bold mb-1">{{ field.title }}</h3>
-      <p class="text-xs">{{ field.description }}</p>
+      <h3 class="text font-bold mb-1">{{ field.title }}</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        {{ field.description }}
+      </p>
     </div>
     <DynamicField
       v-for="subfield in field.fields"
@@ -38,8 +76,4 @@ const formData = defineModel<{ [key: string]: any }>({ required: true });
       :disabled
     />
   </template>
-
-  <p v-if="formErrors?.[field.name]" class="text-red-500 mt-2 text-sm">
-    {{ formErrors[field.name] }}
-  </p>
 </template>

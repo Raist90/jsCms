@@ -11,6 +11,5 @@ export default defineEventHandler(async (event) => {
     return db.insert(schemaTable).values({ id, schema });
   };
 
-  const hasSchema = await db.$count(schemaTable);
-  if (!hasSchema) await addSchemaQuery();
+  await addSchemaQuery();
 });

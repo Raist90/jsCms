@@ -45,6 +45,13 @@ const page = addDocument({
       title: "Slug",
       type: "string",
     },
+    {
+      description: "Check this if you want the page to be indexable",
+      name: "isIndexable",
+      required: true,
+      title: "Is Indexable",
+      type: "boolean",
+    },
   ],
 });
 
@@ -71,7 +78,7 @@ const settings = addDocument({
         {
           description: "This is the site description",
           name: "siteDescription",
-          required: true,
+          required: false,
           title: "Site description",
           type: "string",
         },

@@ -13,6 +13,11 @@ type BaseFieldKeys = {
   title: string;
 };
 
+// TODO: continue this
+type SpecialFieldKeys = {
+  specialField: "slug" | "list" | "image" | "text";
+};
+
 type Field =
   | Prettify<
       BaseFieldKeys & {
