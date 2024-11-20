@@ -1,5 +1,4 @@
-export type { Prettify, Schema, AppConfig, Document };
-export type { DocumentJsonModel };
+export type { Prettify, Schema, AppConfig, Document, DocumentJsonModel };
 export { addDocument };
 
 type Prettify<T> = {
