@@ -1,17 +1,10 @@
-import type { Document } from "~/types";
-type ComputeRange<
-  N extends number,
-  Result extends Array<unknown> = [],
-> = Result["length"] extends N
-  ? Result
-  : ComputeRange<N, [...Result, Result["length"]]>;
+import type { ComputeRange, Document } from "~/types";
 
 type FetchOptions = {
   documentName: Document["name"];
   limit?: ComputeRange<21>[number];
   formatter?: (data: any) => Partial<typeof data> | undefined;
 };
-
 async function fetch(options: FetchOptions) {
   const { data } = await useFetch("/api/documentJson", {
     method: "POST",
@@ -25,6 +18,7 @@ async function fetch(options: FetchOptions) {
         .filter((d) => Boolean(d)),
   });
 
+  // TODO: not super-sure about this condition, it needs more tinkering
   if (options.limit === 1) return { result: data.value?.[0] };
   else return { result: data.value?.length ? data.value : undefined };
 }
