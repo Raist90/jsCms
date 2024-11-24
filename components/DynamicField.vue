@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import {
+  isBooleanField,
+  isNumberField,
+  isObjectField,
+  isPrimitiveField,
+  isStringField,
+} from "~/predicates";
 import type { Document } from "~/types";
 
 type Props = {
@@ -24,18 +31,18 @@ watch(
 </script>
 
 <template>
-  <template v-if="field.type !== 'object'">
+  <template v-if="isPrimitiveField(field.type)">
     <UFormGroup
       v-slot="{ error }"
       :error="formErrors?.[field.name] && `${formErrors[field.name]}`"
       :required="field.required"
       :description="
-        (field.type !== 'boolean' && field.description) || undefined
+        (!isBooleanField(field.type) && field.description) || undefined
       "
       :label="field.title"
     >
       <UInput
-        v-if="field.type === 'string' || field.type === 'number'"
+        v-if="isStringField(field.type) || isNumberField(field.type)"
         v-model="formData[field.name]"
         :trailing-icon="
           (error && 'i-heroicons-exclamation-triangle-20-solid') || undefined
@@ -43,7 +50,7 @@ watch(
         :color="(formErrors?.[field.name] && 'red') || undefined"
         :disabled
         :name="field.name"
-        :type="field.type === 'string' ? 'text' : 'number'"
+        :type="isStringField(field.type) ? 'text' : 'number'"
         :required="field.required"
       />
 
@@ -60,7 +67,7 @@ watch(
     </UFormGroup>
   </template>
 
-  <template v-else-if="field.type === 'object'">
+  <template v-else-if="isObjectField(field.type)">
     <div>
       <h3 class="text font-bold mb-1">{{ field.title }}</h3>
       <p class="text-sm text-gray-500 dark:text-gray-400">
