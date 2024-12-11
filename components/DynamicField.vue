@@ -44,7 +44,7 @@ watch(
       <UInput
         v-if="isStringField(field.type) || isNumberField(field.type)"
         v-model="formData[field.name]"
-        :trailing-icon="
+        :trailingIcon="
           (error && 'i-heroicons-exclamation-triangle-20-solid') || undefined
         "
         :color="(formErrors?.[field.name] && 'red') || undefined"
@@ -55,7 +55,7 @@ watch(
       />
 
       <div
-        v-if="field.type === 'boolean'"
+        v-if="isBooleanField(field.type)"
         class="flex gap-x-2 items-center p-2 border"
       >
         <UToggle v-model="formData[field.name]" size="lg" />
@@ -79,7 +79,7 @@ watch(
       :key="subfield.name"
       v-model="formData[field.name]"
       :field="subfield"
-      :form-errors
+      :formErrors
       :disabled
     />
   </template>

@@ -20,16 +20,54 @@ type Prettify<T> = {
 } & {};
 
 type BaseFieldKeys = {
-  description: string;
+  description?: string;
   name: string;
   required: boolean;
   title: string;
 };
 
-// TODO: continue this
-type SpecialFieldKeys = {
-  specialField: "slug" | "list" | "image" | "text";
-};
+type SlugField = Prettify<
+  BaseFieldKeys & {
+    type: "slug";
+    fromField?: Field["name"];
+    slugify?: "default" | (() => string);
+  }
+>;
+
+type ListField = Prettify<
+  Omit<BaseFieldKeys, "required"> & {
+    type: "checkbox";
+    list: string[];
+    required:
+      | boolean
+      | {
+          min: number;
+          max: number;
+        };
+  }
+>;
+
+type RadioField = Prettify<
+  BaseFieldKeys & {
+    type: "radio";
+    list: string[];
+    default?: string;
+  }
+>;
+
+type ImageField = Prettify<
+  BaseFieldKeys & {
+    type: "image";
+    src: string;
+    alt?: string;
+  }
+>;
+
+type TextField = Prettify<
+  BaseFieldKeys & {
+    type: "text";
+  }
+>;
 
 type Field =
   | Prettify<
@@ -49,7 +87,12 @@ type Field =
         // let's restrict multidimensional arrays for now
         fields: Exclude<Field, BaseFieldKeys & { type: "array" }>[];
       }
-    >;
+    >
+  | Prettify<SlugField>
+  | Prettify<ListField>
+  | Prettify<RadioField>
+  | Prettify<ImageField>
+  | Prettify<TextField>;
 
 type Document = {
   description: string;

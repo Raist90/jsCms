@@ -67,7 +67,7 @@ watch(
         <DynamicField
           v-model="formData"
           :field="field"
-          :form-errors
+          :formErrors
           :disabled="isFormDisabled"
         />
       </template>

@@ -23,7 +23,7 @@ else routeParam = undefined;
             :external="true"
             :to="`/documents/${document.name}`"
             :active="(routeParam && document.name === routeParam) || undefined"
-            active-class="text-primary"
+            activeClass="text-primary"
             >{{ document.title }}</ULink
           >
         </li>
