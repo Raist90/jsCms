@@ -1,5 +1,6 @@
 import type { Document } from "~/types";
 import { z } from "zod";
+import { isBoolean, isFunction } from "@sindresorhus/is";
 
 export { validateDocumentFields };
 
@@ -11,7 +12,11 @@ function validateDocumentFields(
   const fields = document.fields;
 
   for (const field of fields) {
-    if (!field.required) continue;
+    if (
+      (isBoolean(field.required) && !field.required) ||
+      (isFunction(field.required) && !field.required(formData))
+    )
+      continue;
 
     const fieldName = field.name;
 
@@ -19,7 +24,12 @@ function validateDocumentFields(
     // TODO: make sure to cover `array` case as well
     if (field.type === "object") {
       field.fields.forEach((subfield) => {
-        if (!subfield.required) return;
+        if (
+          (isBoolean(subfield.required) && !subfield.required) ||
+          (isFunction(subfield.required) &&
+            !subfield.required(formData[field.name]))
+        )
+          return;
 
         if (!(subfield.name in formData[field.name])) {
           errors[subfield.name] = `Field ${subfield.name} is required`;

@@ -41,7 +41,9 @@ const page = addDocument({
     {
       description: "This is the page slug",
       name: "slug",
-      required: true,
+      required: (ctx) => {
+        return !!ctx?.title?.length;
+      },
       title: "Slug",
       type: "string",
     },
@@ -78,7 +80,9 @@ const settings = addDocument({
         {
           description: "This is the site description",
           name: "siteDescription",
-          required: false,
+          required: (ctx) => {
+            return !!ctx?.siteTitle?.length;
+          },
           title: "Site description",
           type: "string",
         },

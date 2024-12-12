@@ -22,7 +22,7 @@ type Prettify<T> = {
 type BaseFieldKeys = {
   description?: string;
   name: string;
-  required: boolean;
+  required: boolean | ((ctx: Record<string, any>) => boolean);
   title: string;
 };
 

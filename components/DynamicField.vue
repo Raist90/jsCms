@@ -7,6 +7,7 @@ import {
   isStringField,
 } from "~/predicates";
 import type { Document } from "~/types";
+import { isBoolean } from "@sindresorhus/is";
 
 type Props = {
   field: Document["fields"][number];
@@ -35,7 +36,9 @@ watch(
     <UFormGroup
       v-slot="{ error }"
       :error="formErrors?.[field.name] && `${formErrors[field.name]}`"
-      :required="field.required"
+      :required="
+        isBoolean(field.required) ? field.required : field.required(formData)
+      "
       :description="
         (!isBooleanField(field.type) && field.description) || undefined
       "
@@ -51,7 +54,9 @@ watch(
         :disabled
         :name="field.name"
         :type="isStringField(field.type) ? 'text' : 'number'"
-        :required="field.required"
+        :required="
+          isBoolean(field.required) ? field.required : field.required(formData)
+        "
       />
 
       <div
