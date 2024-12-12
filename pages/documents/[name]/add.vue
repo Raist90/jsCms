@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import DocumentForm from "~/components/DocumentForm.vue";
+import config from "@/cmsConfig";
 
-const schema = await $fetch("/api/schema", {
-  method: "GET",
-});
-const { documents } = schema;
+const {
+  schema: { documents },
+} = config;
 
 const { params } = useRoute();
 const documentName =
