@@ -74,7 +74,7 @@ watch(
 
   <template v-else-if="isObjectField(field.type)">
     <div>
-      <h3 class="text font-bold mb-1">{{ field.title }}</h3>
+      <h3 class="font-bold mb-1">{{ field.title }}</h3>
       <p class="text-sm text-gray-500 dark:text-gray-400">
         {{ field.description }}
       </p>

@@ -1,15 +1,15 @@
 import type { Document } from "~/types";
 import { z } from "zod";
 import { isBoolean, isFunction } from "@sindresorhus/is";
+import { isObjectField } from "~/predicates";
 
 export { validateDocumentFields };
 
 function validateDocumentFields(
-  document: Document,
+  fields: Document["fields"],
   formData: Record<string, any>,
 ) {
   const errors: Record<string, string> = {};
-  const fields = document.fields;
 
   for (const field of fields) {
     if (
@@ -19,38 +19,17 @@ function validateDocumentFields(
       continue;
 
     const fieldName = field.name;
-
-    // NOTE: this works but we can't allow same field name across the document, even if nested in objects
-    // TODO: make sure to cover `array` case as well
-    if (field.type === "object") {
-      field.fields.forEach((subfield) => {
-        if (
-          (isBoolean(subfield.required) && !subfield.required) ||
-          (isFunction(subfield.required) &&
-            !subfield.required(formData[field.name]))
-        )
-          return;
-
-        if (!(subfield.name in formData[field.name])) {
-          errors[subfield.name] = `Field ${subfield.name} is required`;
-          return;
-        }
-
-        const { error } = validateFieldType(
-          subfield,
-          formData[field.name][subfield.name],
-        );
-        if (error) errors[fieldName] = error;
-      });
-    } else {
-      if (!(fieldName in formData)) {
-        errors[fieldName] = `Field ${fieldName} is required`;
-        continue;
-      }
-
-      const { error } = validateFieldType(field, formData[fieldName]);
-      if (error) errors[fieldName] = error;
+    if (!(fieldName in formData)) {
+      errors[fieldName] = `Field ${fieldName} is required`;
+      continue;
     }
+
+    if (isObjectField(field.type) && "fields" in field) {
+      return validateDocumentFields(field.fields, formData[fieldName]);
+    }
+
+    const { error } = validateFieldType(field, formData[fieldName]);
+    if (error) errors[fieldName] = error;
   }
 
   if (Object.keys(errors).length) return errors;

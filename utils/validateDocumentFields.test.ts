@@ -1,20 +1,24 @@
 import { describe, test, expect } from "vitest";
 import { validateDocumentFields } from "./validateDocumentFields";
-import { validDocumentMock, invalidDocumentMock } from "~/tests/mocks";
+import { mocks } from "~/tests/mocks";
 
-describe("Zod document fields validator", async () => {
-  test("Should validate a document", async () => {
+const {
+  documents: { valid, withFormDataMismatch },
+} = mocks;
+
+describe("validateDocumentFields", async () => {
+  test("Should NOT return errors", async () => {
     const errors = validateDocumentFields(
-      validDocumentMock.document,
-      validDocumentMock.formData,
+      valid.document.fields,
+      valid.formData,
     );
     expect(errors).toBeUndefined();
   });
 
-  test("Should return errors when using wrong document data structure", async () => {
+  test("Should return errors", async () => {
     const errors = validateDocumentFields(
-      validDocumentMock.document,
-      invalidDocumentMock.formData,
+      valid.document.fields,
+      withFormDataMismatch.formData,
     );
     expect(errors).toBeTypeOf("object");
   });

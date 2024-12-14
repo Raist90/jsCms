@@ -10,7 +10,7 @@ const formErrors = ref<Record<string, string> | null>(null);
 const isFormDisabled = ref(false);
 const isFormSubmitted = ref(false);
 const onFormSubmit = async () => {
-  const validationErrors = validateDocumentFields(props.document, formData);
+  const validationErrors = validateDocumentFields(fields.value, formData);
   if (validationErrors) {
     formErrors.value = validationErrors;
     return;
