@@ -50,18 +50,18 @@ watch(
         :trailingIcon="
           (error && 'i-heroicons-exclamation-triangle-20-solid') || undefined
         "
-        :color="(formErrors?.[field.name] && 'red') || undefined"
         :disabled
         :name="field.name"
         :type="isStringField(field.type) ? 'text' : 'number'"
         :required="
           isBoolean(field.required) ? field.required : field.required(formData)
         "
+        :variant="(formErrors?.[field.name] && 'error') || undefined"
       />
 
       <div
         v-if="isBooleanField(field.type)"
-        class="flex gap-x-2 items-center p-2 border"
+        class="flex gap-x-2 items-center p-2 border border-b-2 border-gray-700 bg-gray-100"
       >
         <UToggle v-model="formData[field.name]" size="lg" />
 
