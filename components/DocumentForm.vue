@@ -59,7 +59,7 @@ watch(
     </div>
 
     <form
-      class="space-y-4 w-96 border-gray-200"
+      class="space-y-4 border-gray-200"
       novalidate
       @submit.prevent="onFormSubmit"
     >

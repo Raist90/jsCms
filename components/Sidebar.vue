@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { isString } from "@sindresorhus/is";
 import type { Document } from "~/types";
 
 defineProps<{ documents: Document[] }>();
 
-let routeParam: string | undefined;
-const { params } = useRoute();
-if (isString(params.name)) routeParam = params.name;
-else routeParam = undefined;
+const routeParam = getRouteParam();
 </script>
 
 <template>

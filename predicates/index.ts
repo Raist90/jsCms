@@ -6,6 +6,7 @@ export {
   isObjectField,
   isPrimitiveField,
   isStringField,
+  isValidUUID,
 };
 
 type FieldType = Document["fields"][number]["type"];
@@ -32,4 +33,19 @@ function isObjectField(fieldType: FieldType) {
 
 function isStringField(fieldType: FieldType) {
   return !!(fieldType === "string");
+}
+
+/**
+ * Check if a string is a valid UUID.
+ * @param id The string to check.
+ * @returns Whether the string is a valid UUID.
+ */
+function isValidUUID(
+  id: string,
+): id is `${string}-${string}-${string}-${string}-${string}` {
+  return (
+    id.match(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    ) !== null
+  );
 }
