@@ -2,19 +2,13 @@
 import DocumentList from "~/components/DocumentList.vue";
 import Sidebar from "~/components/Sidebar.vue";
 import config from "@/cmsConfig";
+import { getDocumentName } from "~/documents";
 
 const {
   schema: { documents },
 } = config;
 
-// TODO: maybe rename function in `getDocumentName` and pass options to specify how (in this case using `routeParam`)
-const documentName = getRouteParam();
-const { data: documentList } = await useFetch("/api/documentsList", {
-  method: "POST",
-  body: {
-    documentName,
-  },
-});
+const documentName = computed(() => getDocumentName());
 </script>
 
 <template>
@@ -23,11 +17,8 @@ const { data: documentList } = await useFetch("/api/documentsList", {
       <Sidebar :documents />
     </div>
 
-    <div
-      v-if="documentName && documentList?.length"
-      class="w-60 shrink-0 border-r border-gray-200"
-    >
-      <DocumentList :documentName :documentList />
+    <div v-if="documentName" class="w-60 shrink-0 border-r border-gray-200">
+      <DocumentList :documentName />
     </div>
 
     <div class="flex-1 overflow-auto">

@@ -28,7 +28,7 @@ const onFormSubmit = async () => {
       data: {
         ...formData,
       },
-    } satisfies DocumentJsonModel,
+    } satisfies Omit<DocumentJsonModel, "timestamp">,
   });
 };
 

@@ -2,6 +2,7 @@
 import { isString } from "@sindresorhus/is";
 import config from "@/cmsConfig";
 import DocumentForm from "~/components/DocumentForm.vue";
+import type { DocumentJsonModel } from "~/types";
 
 const { params } = useRoute();
 const documentId = (isString(params.id) && params.id) || null;
@@ -9,15 +10,19 @@ if (!documentId)
   throw createError({ statusCode: 404, message: "Document not found" });
 
 async function getDocumentData(id: string) {
-  const { data } = await useFetch(`/api/document/data/${id}`, {
-    method: "GET",
-  });
+  const { data } = await useFetch<DocumentJsonModel>(
+    `/api/document/data/id/${id}`,
+    {
+      method: "GET",
+    },
+  );
 
-  if (data.value) return data.value;
+  if (!data.value)
+    throw createError({ statusCode: 404, message: "Document not found" });
+  return data.value;
 }
 
-// this will basically be `formData`
-// TODO: parse `documentData.data` with `zod`
+// this will be `formData`
 const documentData = await getDocumentData(documentId);
 const documentSchema = config.schema.documents.find(
   (document) => document.name === documentData?.type,

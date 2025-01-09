@@ -120,4 +120,5 @@ type DocumentJsonModel = {
   id: ReturnType<typeof crypto.randomUUID>;
   type: string;
   data: Record<string, any>;
+  timestamp: string;
 };

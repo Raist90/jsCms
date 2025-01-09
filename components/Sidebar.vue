@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Document } from "~/types";
+import { getDocumentName } from "~/documents";
 
 defineProps<{ documents: Document[] }>();
 
-const routeParam = getRouteParam();
+const routeParam = computed(() => getDocumentName());
 </script>
 
 <template>
@@ -16,9 +17,8 @@ const routeParam = getRouteParam();
       <ul class="grid gap-y-2">
         <li v-for="document in documents" :key="document.name">
           <ULink
-            :external="true"
             :to="`/documents/${document.name}`"
-            :active="(routeParam && document.name === routeParam) || undefined"
+            :active="!!(document.name === routeParam)"
             activeClass="text-primary"
             >{{ document.title }}</ULink
           >
