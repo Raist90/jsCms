@@ -7,18 +7,26 @@ const props = defineProps<{
 
 const documentName = computed(() => props.documentName);
 const documentList = useDocumentListByName(documentName);
+
+const route = useRoute();
+const currentPath = computed(() => route.path);
 </script>
 
 <template>
   <section v-if="documentName">
-    <header class="p-4 border-b border-gray-200 flex items-center h-16">
+    <header class="p-4 border-b border-gray-700 flex items-center h-16">
       <h2 class="font-bold">{{ capitalize(documentName) }} list</h2>
     </header>
 
     <nav class="p-4">
       <ul class="grid gap-y-2">
         <li v-for="document in documentList" :key="document.id">
-          <ULink :to="`/documents/${document.type}/id/${document.id}`">
+          <ULink
+            :class="['block p-2 rounded-md']"
+            :to="`/documents/${document.type}/id/${document.id}`"
+            :active="currentPath.includes(document.id)"
+            activeClass="bg-primary"
+          >
             {{ document.data.title }}
           </ULink>
         </li>

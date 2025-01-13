@@ -21,10 +21,13 @@ const formData = defineModel<Record<string, any>>({
   required: true,
 });
 
+// TODO: this is maybe too simple to work on long term
+const isEditMode = Object.keys(formData.value).length > 0;
+
 watch(
   () => field,
   () => {
-    if (field.value.type === "boolean")
+    if (field.value.type === "boolean" && !isEditMode)
       formData.value[field.value.name] = false;
   },
   { immediate: true },
@@ -61,11 +64,11 @@ watch(
 
       <div
         v-if="isBooleanField(field.type)"
-        class="flex gap-x-2 items-center p-2 border border-b-2 border-gray-700 bg-gray-100"
+        class="flex gap-x-2 items-center p-2"
       >
-        <UToggle v-model="formData[field.name]" size="lg" />
+        <UToggle v-model="formData[field.name]" :disabled size="lg" />
 
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <p class="text-sm text-gray-300">
           {{ field.description }}
         </p>
       </div>
@@ -75,7 +78,7 @@ watch(
   <template v-else-if="isObjectField(field.type)">
     <div>
       <h3 class="font-bold mb-1">{{ field.title }}</h3>
-      <p class="text-sm text-gray-500 dark:text-gray-400">
+      <p class="text-sm text-gray-300 dark:text-gray-400">
         {{ field.description }}
       </p>
     </div>

@@ -1,0 +1,11 @@
+@import "./tailwind.css";
+
+@layer base {
+  html {
+    @apply text-white;
+  }
+
+  body {
+    @apply bg-zinc-900;
+  }
+}
