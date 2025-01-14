@@ -46,6 +46,7 @@ function validateFieldType(
     string: z.string().min(1),
     number: z.number(),
     boolean: z.boolean(),
+    slug: z.string().min(1),
   });
 
   const fieldName = field.name;
@@ -54,7 +55,8 @@ function validateFieldType(
   if (
     fieldType === "string" ||
     fieldType === "number" ||
-    fieldType === "boolean"
+    fieldType === "boolean" ||
+    fieldType === "slug"
   ) {
     const { success } = validatorSchema.shape[fieldType].safeParse(fieldValue);
 

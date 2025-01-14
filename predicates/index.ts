@@ -6,6 +6,7 @@ export {
   isObjectField,
   isPrimitiveField,
   isStringField,
+  isSlugField,
   isValidUUID,
 };
 
@@ -15,7 +16,8 @@ function isPrimitiveField(fieldType: FieldType) {
   return !!(
     fieldType === "string" ||
     fieldType === "number" ||
-    fieldType === "boolean"
+    fieldType === "boolean" ||
+    fieldType === "slug"
   );
 }
 
@@ -33,6 +35,10 @@ function isObjectField(fieldType: FieldType) {
 
 function isStringField(fieldType: FieldType) {
   return !!(fieldType === "string");
+}
+
+function isSlugField(fieldType: FieldType) {
+  return !!(fieldType === "slug");
 }
 
 /**

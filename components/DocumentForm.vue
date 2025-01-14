@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { Document, DocumentJsonModel } from "~/types";
+import type { Document } from "~/types";
 import DynamicField from "./DynamicField.vue";
+import { useDocumentsStore } from "~/store/documentsStore";
 
 const props = defineProps<{ document: Document }>();
 const fields = computed(() => props.document.fields);
@@ -12,8 +13,10 @@ const formData = model.value?.data
   ? model.value.data
   : reactive<Record<string, any>>({});
 
+const { patchDocumentsData } = useDocumentsStore();
+
 // TODO: this is maybe too simple to work on long term
-const isEditMode = Object.keys(formData).length > 0;
+const isEditMode = computed(() => !!model.value?.id);
 
 const formErrors = ref<Record<string, string> | null>(null);
 const isFormDisabled = ref(false);
@@ -29,22 +32,18 @@ const onFormSubmit = async () => {
   isFormDisabled.value = true;
 
   try {
-    await $fetch("/api/documents", {
-      method: "POST",
-      body: {
-        // TODO: `model.value?.id` is any. Make sure to narrow it's type
-        id: isEditMode ? model.value?.id : crypto.randomUUID(),
-        type: props.document.name,
-        data: {
-          ...formData,
-        },
-      } satisfies Omit<DocumentJsonModel, "timestamp">,
+    await patchDocumentsData(isEditMode.value ? "update" : "add", {
+      id: isEditMode.value ? model.value?.id : crypto.randomUUID(),
+      type: props.document.name,
+      data: {
+        ...formData,
+      },
     });
 
     toast.add({
       timeout: 1500,
-      title: `${capitalize(props.document.name)} correctly ${isEditMode ? "updated!" : "saved!"}`,
-      callback: () => reloadNuxtApp({ force: true }),
+      title: `${capitalize(props.document.name)} correctly ${isEditMode.value ? "updated!" : "saved!"}`,
+      callback: () => (isFormDisabled.value = false),
     });
   } catch (err) {
     console.error(err);
@@ -63,6 +62,10 @@ watch(
   { immediate: true },
 );
 
+// TODO: this is a little bit "hackish". We should find a proper way to handle this
+const hasFormChanged = ref(false);
+onMounted(() => watch(formData, () => (hasFormChanged.value = true)));
+
 async function onDocumentDelete(id?: string) {
   if (!id) return;
   await $fetch(`/api/document/delete/id/${id}`, {
@@ -77,19 +80,21 @@ async function onDocumentDelete(id?: string) {
 
 <template>
   <section>
-    <form class="space-y-4 w-10/12" novalidate @submit.prevent="onFormSubmit">
-      <template v-for="field in fields" :key="field.name">
-        <DynamicField
-          v-model="formData"
-          :field="field"
-          :formErrors
-          :disabled="isFormDisabled"
-        />
-      </template>
+    <form novalidate @submit.prevent="onFormSubmit">
+      <div class="p-4 w-10/12 space-y-4">
+        <template v-for="field in fields" :key="field.name">
+          <DynamicField
+            v-model="formData"
+            :field="field"
+            :formErrors
+            :disabled="isFormDisabled"
+          />
+        </template>
+      </div>
 
-      <div class="flex justify-between">
+      <div class="p-4 flex justify-between border-y border-gray-700">
         <UButton
-          :disabled="isFormDisabled"
+          :disabled="isFormDisabled || !hasFormChanged"
           type="submit"
           class="max-w-fit"
           size="md"

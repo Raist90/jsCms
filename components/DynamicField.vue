@@ -5,9 +5,10 @@ import {
   isObjectField,
   isPrimitiveField,
   isStringField,
+  isSlugField,
 } from "~/predicates";
 import type { Document } from "~/types";
-import { isBoolean } from "@sindresorhus/is";
+import { isBoolean, isString } from "@sindresorhus/is";
 
 type Props = {
   field: Document["fields"][number];
@@ -32,6 +33,16 @@ watch(
   },
   { immediate: true },
 );
+
+function generateSlug(fieldName: string) {
+  if ("fromField" in field.value && isString(field.value.fromField)) {
+    const fromField = field.value?.fromField;
+    if (fromField in formData.value)
+      formData.value[fieldName] = slugify(formData.value[fromField]);
+  }
+
+  return;
+}
 </script>
 
 <template>
@@ -71,6 +82,31 @@ watch(
         <p class="text-sm text-gray-300">
           {{ field.description }}
         </p>
+      </div>
+
+      <div v-if="isSlugField(field.type)">
+        <UButtonGroup size="sm" orientation="horizontal">
+          <UInput
+            v-model="formData[field.name]"
+            :trailingIcon="
+              (error && 'i-heroicons-exclamation-triangle-20-solid') ||
+              undefined
+            "
+            :disabled
+            :name="field.name"
+            type="text"
+            :required="
+              isBoolean(field.required)
+                ? field.required
+                : field.required(formData)
+            "
+            :variant="(formErrors?.[field.name] && 'error') || undefined"
+          />
+
+          <UButton color="gray" @click="generateSlug(field.name)"
+            >Generate</UButton
+          >
+        </UButtonGroup>
       </div>
     </UFormGroup>
   </template>

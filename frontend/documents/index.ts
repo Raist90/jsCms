@@ -20,7 +20,8 @@ const article = addDocument({
       name: "slug",
       required: true,
       title: "Slug",
-      type: "string",
+      type: "slug",
+      fromField: "title",
     },
   ],
 });
@@ -45,7 +46,8 @@ const page = addDocument({
         return !!ctx?.title?.length;
       },
       title: "Slug",
-      type: "string",
+      type: "slug",
+      fromField: "title",
     },
     {
       description: "Check this if you want the page to be indexable",

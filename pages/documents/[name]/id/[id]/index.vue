@@ -34,8 +34,10 @@ const documentSchema = config.schema.documents.find(
       <h2 class="font-bold" v-text="documentData?.data.title" />
     </header>
 
-    <div v-if="documentSchema" class="p-4 h-full border-b border-gray-700">
-      <DocumentForm v-model="documentData" :document="documentSchema" />
-    </div>
+    <DocumentForm
+      v-if="documentSchema"
+      v-model="documentData"
+      :document="documentSchema"
+    />
   </section>
 </template>

@@ -20,8 +20,6 @@ const document = documents[documentIdx];
       <h2 class="font-bold" v-text="`New ${document.name}`" />
     </header>
 
-    <div class="p-4 h-full">
-      <DocumentForm :document="document" />
-    </div>
+    <DocumentForm :document="document" />
   </section>
 </template>

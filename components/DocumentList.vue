@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { useDocumentListByName } from "~/documents";
+import { useDocumentsStore } from "~/store/documentsStore";
 
 const props = defineProps<{
   documentName: string;
 }>();
 
 const documentName = computed(() => props.documentName);
-const documentList = useDocumentListByName(documentName);
+const documentsStore = useDocumentsStore();
+const { documentsData } = storeToRefs(documentsStore);
+// TODO: perform this operations on `documents/index.ts`
+const documentList = computed(() =>
+  documentsData.value?.filter((doc) => doc.type === documentName.value),
+);
 
 const route = useRoute();
 const currentPath = computed(() => route.path);
@@ -18,19 +23,21 @@ const currentPath = computed(() => route.path);
       <h2 class="font-bold">{{ capitalize(documentName) }} list</h2>
     </header>
 
-    <nav class="p-4">
-      <ul class="grid gap-y-2">
-        <li v-for="document in documentList" :key="document.id">
-          <ULink
-            :class="['block p-2 rounded-md']"
-            :to="`/documents/${document.type}/id/${document.id}`"
-            :active="currentPath.includes(document.id)"
-            activeClass="bg-primary"
-          >
-            {{ document.data.title }}
-          </ULink>
-        </li>
-      </ul>
-    </nav>
+    <ClientOnly>
+      <nav v-if="documentList.length" class="p-4">
+        <ul class="grid gap-y-2">
+          <li v-for="document in documentList" :key="document.id">
+            <ULink
+              :class="['block p-2 rounded-md']"
+              :to="`/documents/${document.type}/id/${document.id}`"
+              :active="currentPath.includes(document.id)"
+              activeClass="bg-primary"
+            >
+              {{ document.data.title }}
+            </ULink>
+          </li>
+        </ul>
+      </nav>
+    </ClientOnly>
   </section>
 </template>

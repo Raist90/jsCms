@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxt/fonts",
     "@nuxt/test-utils/module",
+    "@pinia/nuxt",
   ],
   fonts: {
     defaults: {
