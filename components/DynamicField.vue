@@ -8,7 +8,7 @@ import {
   isSlugField,
 } from "~/predicates";
 import type { Document } from "~/types";
-import { isBoolean, isString } from "@sindresorhus/is";
+import { isBoolean, isFunction, isString } from "@sindresorhus/is";
 
 type Props = {
   field: Document["fields"][number];
@@ -35,10 +35,12 @@ watch(
 );
 
 function generateSlug(fieldName: string) {
-  if ("fromField" in field.value && isString(field.value.fromField)) {
-    const fromField = field.value?.fromField;
+  if ("slugify" in field.value && isString(field.value.slugify)) {
+    const fromField = field.value?.slugify;
     if (fromField in formData.value)
       formData.value[fieldName] = slugify(formData.value[fromField]);
+  } else if ("slugify" in field.value && isFunction(field.value?.slugify)) {
+    formData.value[fieldName] = field.value.slugify(formData.value);
   }
 
   return;

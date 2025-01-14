@@ -21,7 +21,7 @@ const article = addDocument({
       required: true,
       title: "Slug",
       type: "slug",
-      fromField: "title",
+      slugify: "title",
     },
   ],
 });
@@ -47,7 +47,7 @@ const page = addDocument({
       },
       title: "Slug",
       type: "slug",
-      fromField: "title",
+      slugify: "title",
     },
     {
       description: "Check this if you want the page to be indexable",

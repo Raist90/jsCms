@@ -29,8 +29,7 @@ type BaseFieldKeys = {
 type SlugField = Prettify<
   BaseFieldKeys & {
     type: "slug";
-    fromField: Field["name"];
-    slugify?: (ctx: Record<string, any>) => string;
+    slugify: Field["name"] | ((ctx: Record<string, any>) => string);
   }
 >;
 
