@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getDocumentName } from "~/documents";
 import { useDocumentsStore } from "~/store/documentsStore";
+import type { DocumentJsonModel } from "~/types";
 
 const documentName = computed(() => getDocumentName());
 
@@ -10,7 +11,8 @@ const list = computed(() =>
   documentsData.value?.filter((doc) => doc.type === documentName.value),
 );
 
-const selected = ref(list.value.length ? [list.value?.[0]] : []);
+// const selected = ref(list.value.length ? [list.value?.[0]] : []);
+const selected = ref<DocumentJsonModel[]>([]);
 const columns = computed(() => {
   return Object.keys(list?.value?.[0]).map((key) => ({
     key,
@@ -20,7 +22,7 @@ const columns = computed(() => {
 
 watch(list, (val) => {
   if (val.length) {
-    selected.value = [val[0]];
+    selected.value = [];
   } else selected.value = [];
 });
 
@@ -61,7 +63,7 @@ function onDeleteSelected() {
         >
       </header>
 
-      <div v-if="list.length" class="px-4 py-2">
+      <div v-if="list.length" class="p-4">
         <UTable v-model="selected" :columns="columns" :rows="list" />
       </div>
     </section>

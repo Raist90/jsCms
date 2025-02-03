@@ -18,7 +18,7 @@ export default defineAppConfig({
     input: {
       rounded: "rounded-none",
       variant: {
-        error: "border border-red-500",
+        error: "border border-red-500 text-gray-900",
       },
     },
     notifications: {
@@ -26,14 +26,16 @@ export default defineAppConfig({
     },
     table: {
       td: {
-        base: "text-white",
+        base: "text-white border border-gray-700",
       },
       tr: {
-        selected: "bg-primary",
+        selected: "", // This is the only way I could find to reset the class styles
+        base: "border border-gray-700",
       },
       th: {
-        base: "text-white",
+        base: "text-white font-bold uppercase",
       },
+      thead: "border border-b-none border-gray-700",
     },
     toggle: {
       inactive: "bg-gray-400",

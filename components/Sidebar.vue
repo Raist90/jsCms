@@ -4,7 +4,9 @@ import { getDocumentName } from "~/documents";
 
 defineProps<{ documents: Document[] }>();
 
-const routeParam = computed(() => getDocumentName());
+const route = useRoute();
+
+const documentName = computed(() => getDocumentName());
 </script>
 
 <template>
@@ -19,8 +21,13 @@ const routeParam = computed(() => getDocumentName());
           <ULink
             :class="['block p-2 rounded-md']"
             :to="`/documents/${document.name}`"
-            :active="!!(document.name === routeParam)"
-            activeClass="bg-primary/20"
+            :active="!!(document.name === documentName)"
+            :activeClass="
+              route.path === `/documents/${documentName}` ||
+              route.path === `/documents/${documentName}/add`
+                ? 'bg-primary'
+                : 'bg-primary/20'
+            "
             >{{ document.title }}</ULink
           >
         </li>

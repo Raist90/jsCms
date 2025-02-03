@@ -1,31 +1,28 @@
 <script setup lang="ts">
-import { isString } from "@sindresorhus/is";
 import config from "@/cmsConfig";
 import DocumentForm from "~/components/DocumentForm.vue";
+import { useDocumentsStore } from "~/store/documentsStore";
+import { getDocumentId } from "~/documents";
 import type { DocumentJsonModel } from "~/types";
 
-const { params } = useRoute();
-const documentId = (isString(params.id) && params.id) || null;
-if (!documentId)
-  throw createError({ statusCode: 404, message: "Document not found" });
+const { getDocumentDataById, patchDocumentsData } = useDocumentsStore();
+const toast = useToast();
 
-async function getDocumentData(id: string) {
-  const { data } = await useFetch<DocumentJsonModel>(
-    `/api/document/data/id/${id}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (!data.value)
-    throw createError({ statusCode: 404, message: "Document not found" });
-  return data.value;
-}
-
-const documentData = await getDocumentData(documentId);
+const documentId = getDocumentId();
+const documentData = await getDocumentDataById(documentId);
 const documentSchema = config.schema.documents.find(
   (document) => document.name === documentData?.type,
 );
+
+async function onDocumentDataDelete(documentData: DocumentJsonModel) {
+  await patchDocumentsData("delete", documentData);
+  navigateTo(`/documents/${documentData.type}`);
+
+  toast.add({
+    timeout: 1500,
+    title: `${capitalize(documentData.type)} correctly deleted!`,
+  });
+}
 </script>
 
 <template>
@@ -35,9 +32,10 @@ const documentSchema = config.schema.documents.find(
     </header>
 
     <DocumentForm
-      v-if="documentSchema"
+      v-if="documentData && documentSchema"
       v-model="documentData"
       :document="documentSchema"
+      @document-data-delete="onDocumentDataDelete(documentData)"
     />
   </section>
 </template>

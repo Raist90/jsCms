@@ -1,41 +1,52 @@
 import type { DocumentJsonModel } from "~/types";
 
 export const useDocumentsStore = defineStore("documents", () => {
+  // States
   const documentsData = ref<DocumentJsonModel[]>([]);
 
-  async function initializeDocumentsStore() {
-    const data = await $fetch("/api/documents", {
-      method: "get",
-    });
+  // Getters
+  const documentsList = computed(() =>
+    documentsData.value?.map((doc) => doc.data.title),
+  ) as ComputedRef<string[]>;
 
-    documentsData.value = data;
+  // Actions
+  async function getDocumentDataById(id?: string) {
+    const { data } = await useFetch<DocumentJsonModel>(
+      `/api/document/data/id/${id}`,
+      {
+        method: "GET",
+      },
+    );
+    return data.value;
   }
 
   async function patchDocumentsData(
     operation: "add" | "update" | "delete",
     data: Omit<DocumentJsonModel, "timestamp">,
   ) {
-    if (operation !== "delete") {
-      await $fetch("/api/documents", {
-        method: "post",
-        body: {
-          id: data.id,
-          type: data.type,
-          data: data.data,
-        },
+    const updateDocumentsStore = async () => {
+      const data = await $fetch("/api/documents", {
+        method: "GET",
       });
-    } else {
+      documentsData.value = data;
+    };
+
+    const addOrUpdateDocument = async () =>
+      await $fetch("/api/documents", {
+        method: "POST",
+        body: data,
+      });
+
+    const deleteDocument = async () =>
       await $fetch(`/api/document/delete/id/${data.id}`, {
         method: "POST",
       });
-    }
 
-    await initializeDocumentsStore();
+    if (operation !== "delete") await addOrUpdateDocument();
+    else await deleteDocument();
+
+    await updateDocumentsStore();
   }
-
-  const documentsList = computed(() =>
-    documentsData.value?.map((doc) => doc.data.title),
-  ) as ComputedRef<string[]>;
 
   return {
     // State
@@ -45,7 +56,7 @@ export const useDocumentsStore = defineStore("documents", () => {
     documentsList,
 
     // Actions
-    initializeDocumentsStore,
+    getDocumentDataById,
     patchDocumentsData,
   };
 });
