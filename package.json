@@ -2,9 +2,12 @@
   "name": "cms-monorepo",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
-    "dev": "cd apps/nuxt && nuxt dev"
+    "dev": "cd apps/nuxt && nuxt dev",
+    "components:dev": "cd packages/components && vite",
+    "storybook": "cd packages/components && storybook dev -p 6006"
   }
 }
