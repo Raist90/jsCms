@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "cd apps/nuxt && nuxt dev",
     "components:dev": "cd packages/ui && vite",
-    "storybook": "cd packages/ui && storybook dev -p 6006"
+    "storybook": "cd packages/ui && storybook dev -p 6006",
+    "prettify": "prettier . --write"
   }
 }

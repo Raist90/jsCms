@@ -1,8 +1,8 @@
 <script setup lang="ts">
 type Props = {
-  status: "error" | "success" | "warning" | "info"
-}
-defineProps<Props>()
+  status: "error" | "success" | "warning" | "info";
+};
+defineProps<Props>();
 </script>
 
 <template>

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/vue3"
+import type { Meta, StoryObj } from "@storybook/vue3";
 
-import Alert from "../components/Alert.vue"
+import Alert from "../components/Alert.vue";
 
 const meta = {
   title: "Components/Alert",
@@ -13,10 +13,10 @@ const meta = {
     },
   },
   args: {},
-} satisfies Meta<typeof Alert>
+} satisfies Meta<typeof Alert>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Error: Story = {
   args: {
@@ -25,11 +25,11 @@ export const Error: Story = {
   render: (args) => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
     template: `<Alert v-bind="args">This is an error message</Alert>`,
   }),
-}
+};
 
 export const Success: Story = {
   args: {
@@ -38,11 +38,11 @@ export const Success: Story = {
   render: (args) => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
     template: `<Alert v-bind="args">This is a success message</Alert>`,
   }),
-}
+};
 
 export const Warning: Story = {
   args: {
@@ -51,11 +51,11 @@ export const Warning: Story = {
   render: (args) => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
     template: `<Alert v-bind="args">This is a warning message</Alert>`,
   }),
-}
+};
 
 export const Info: Story = {
   args: {
@@ -64,8 +64,8 @@ export const Info: Story = {
   render: (args) => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
     template: `<Alert v-bind="args">This is an info message</Alert>`,
   }),
-}
+};

@@ -1,5 +1,8 @@
 {
   "name": "jscms-config",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "prettier": "3.4.2"
+  }
 }
