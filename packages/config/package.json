@@ -1,5 +1,5 @@
 {
-  "name": "config",
+  "name": "jscms-config",
   "private": true,
   "type": "module"
 }

@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "dev": "cd apps/nuxt && nuxt dev",
-    "components:dev": "cd packages/components && vite",
-    "storybook": "cd packages/components && storybook dev -p 6006"
+    "components:dev": "cd packages/ui && vite",
+    "storybook": "cd packages/ui && storybook dev -p 6006"
   }
 }

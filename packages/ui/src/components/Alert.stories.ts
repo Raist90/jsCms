@@ -12,9 +12,7 @@ const meta = {
       options: ["error", "success", "warning", "info"],
     },
   },
-  args: {
-    // status: "info",
-  },
+  args: {},
 } satisfies Meta<typeof Alert>
 
 export default meta

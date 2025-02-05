@@ -1,4 +1,4 @@
-import tailwindConfig from "config";
+import tailwindConfig from "jscms-config";
 
 export default {
   content: [

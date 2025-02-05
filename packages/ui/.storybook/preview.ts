@@ -3,6 +3,10 @@ import "../src/style.css"
 
 const preview: Preview = {
   parameters: {
+    backgrounds: {
+      values: [{ name: "Default", value: "#18181b" }],
+      default: "Default",
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
