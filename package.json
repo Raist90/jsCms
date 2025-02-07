@@ -9,6 +9,10 @@
     "dev": "cd apps/nuxt && nuxt dev",
     "components:dev": "cd packages/ui && vite",
     "storybook": "cd packages/ui && storybook dev -p 6006",
-    "prettify": "prettier . --write"
+    "prettify": "prettier . --write",
+    "lint:nuxt": "cd apps/nuxt && eslint .",
+    "lint:ui": "cd packages/ui && eslint . --config ../config/eslintconfig.js",
+    "lint:config": "cd packages/config && eslint .",
+    "lint": "bun run lint:nuxt && bun run lint:ui && bun run lint:config"
   }
 }

@@ -2,7 +2,15 @@
   "name": "jscms-config",
   "private": true,
   "type": "module",
-  "devDependencies": {
-    "prettier": "3.4.2"
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "eslintconfig.js",
+    "tailwind.config.js"
+  ],
+  "scripts": {
+    "debug-prettier": "prettier --find-config-path ./index.js"
   }
 }
