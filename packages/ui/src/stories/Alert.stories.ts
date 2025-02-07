@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import Alert from "../components/Alert.vue";
 
+type AlertProps = InstanceType<typeof Alert>["$props"];
 const meta = {
   title: "Components/Alert",
   component: Alert,
@@ -13,59 +14,45 @@ const meta = {
     },
   },
   args: {},
-} satisfies Meta<typeof Alert>;
+} satisfies Meta<AlertProps>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+function renderAlert(args: AlertProps) {
+  return () => ({
+    components: { Alert },
+    setup() {
+      return { args };
+    },
+    template: `<Alert v-bind="args">This is an ${args.status} message</Alert>`,
+  });
+}
 
 export const Error: Story = {
   args: {
     status: "error",
   },
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args };
-    },
-    template: `<Alert v-bind="args">This is an error message</Alert>`,
-  }),
+  render: renderAlert({ status: "error" }),
 };
 
 export const Success: Story = {
   args: {
     status: "success",
   },
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args };
-    },
-    template: `<Alert v-bind="args">This is a success message</Alert>`,
-  }),
+  render: renderAlert({ status: "success" }),
 };
 
 export const Warning: Story = {
   args: {
     status: "warning",
   },
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args };
-    },
-    template: `<Alert v-bind="args">This is a warning message</Alert>`,
-  }),
+  render: renderAlert({ status: "warning" }),
 };
 
 export const Info: Story = {
   args: {
     status: "info",
   },
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args };
-    },
-    template: `<Alert v-bind="args">This is an info message</Alert>`,
-  }),
+  render: renderAlert({ status: "info" }),
 };
