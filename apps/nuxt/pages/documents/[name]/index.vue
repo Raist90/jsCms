@@ -13,12 +13,12 @@ const list = computed(() =>
 
 // const selected = ref(list.value.length ? [list.value?.[0]] : []);
 const selected = ref<DocumentJsonModel[]>([]);
-const columns = computed(() => {
-  return Object.keys(list?.value?.[0]).map((key) => ({
-    key,
-    label: capitalize(key),
-  }));
-});
+// const columns = computed(() => {
+//   return Object.keys(list?.value?.[0]).map((key) => ({
+//     key,
+//     label: capitalize(key),
+//   }));
+// });
 
 watch(list, (val) => {
   if (val.length) {
@@ -41,30 +41,25 @@ function onDeleteSelected() {
       >
         <div class="flex gap-x-3 items-center">
           <h2 class="font-bold" v-text="`${capitalize(documentName)} list`" />
-          <UButton
+          <UILink
             :to="`/documents/${documentName}/add`"
             size="xs"
             icon="heroicons:pencil-square"
             color="gray"
-            >Add {{ documentName }}</UButton
+            >Add {{ documentName }}</UILink
           >
         </div>
 
-        <UButton
-          v-if="selected.length"
-          size="xs"
-          icon="heroicons:trash"
-          color="red"
-          @click="onDeleteSelected"
+        <UIButton v-if="selected.length" type="button" @click="onDeleteSelected"
           >Delete
           {{
             `${selected.length} ${documentName + (selected.length > 1 ? "(s)" : "")}`
-          }}</UButton
+          }}</UIButton
         >
       </header>
 
       <div v-if="list.length" class="p-4">
-        <UTable v-model="selected" :columns="columns" :rows="list" />
+        <!-- <UTable v-model="selected" :columns="columns" :rows="list" /> -->
       </div>
     </section>
   </ClientOnly>

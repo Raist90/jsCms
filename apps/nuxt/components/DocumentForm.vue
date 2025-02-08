@@ -18,7 +18,7 @@ const formData = model.value?.data
   : reactive<Record<string, any>>({});
 
 const { patchDocumentsData } = useDocumentsStore();
-const toast = useToast();
+// const toast = useToast();
 
 // TODO: this is maybe too simple to work on long term. We should determine this based on the route current path maybe
 const isEditMode = computed(() => !!model.value?.id);
@@ -48,11 +48,11 @@ const onFormSubmit = async () => {
     } satisfies Omit<DocumentJsonModel, "timestamp">);
 
     // TODO: this should be an emit. Let the page trigger the toast
-    toast.add({
-      timeout: 1500,
-      title: `${capitalize(props.document.name)} correctly ${isEditMode.value ? "updated!" : "saved!"}`,
-      callback: () => (isFormDisabled.value = false),
-    });
+    // toast.add({
+    //   timeout: 1500,
+    //   title: `${capitalize(props.document.name)} correctly ${isEditMode.value ? "updated!" : "saved!"}`,
+    //   callback: () => (isFormDisabled.value = false),
+    // });
   } catch (err) {
     console.error(err);
   }
@@ -97,16 +97,16 @@ onMounted(() => watch(formData, () => (hasFormChanged.value = true)));
       </div>
 
       <div class="p-4 flex justify-between border-y border-gray-700">
-        <UButton
+        <UIButton
           :disabled="isFormDisabled || !hasFormChanged"
           type="submit"
           class="max-w-fit"
           size="md"
         >
           {{ isEditMode ? "Update" : "Save" }} {{ document.name }}
-        </UButton>
+        </UIButton>
 
-        <UButton
+        <UIButton
           v-if="isEditMode"
           :disabled="isFormDisabled"
           type="button"
@@ -117,7 +117,7 @@ onMounted(() => watch(formData, () => (hasFormChanged.value = true)));
           @click="emit('document-data-delete')"
         >
           Delete {{ document.name }}
-        </UButton>
+        </UIButton>
       </div>
     </form>
   </section>

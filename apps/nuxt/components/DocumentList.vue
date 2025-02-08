@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useDocumentsStore } from "~/store/documentsStore";
-import { Link } from "jscms-ui";
 
 const props = defineProps<{
   documentName: string;
@@ -28,14 +27,14 @@ const currentPath = computed(() => route.path);
       <nav v-if="documentList.length" class="p-4">
         <ul class="grid gap-y-2">
           <li v-for="document in documentList" :key="document.id">
-            <Link
+            <UILink
               :class="['block p-2 rounded-md']"
               :to="`/documents/${document.type}/id/${document.id}`"
               :active="currentPath.includes(document.id)"
-              activeClass="bg-primary"
+              activeClass="bg-blue-500"
             >
               {{ document.data.title }}
-            </Link>
+            </UILink>
           </li>
         </ul>
       </nav>

@@ -12,6 +12,8 @@ type Props = {
   withButton?: boolean;
 };
 defineProps<Props>();
+
+const model = defineModel<string>();
 </script>
 
 <template>
@@ -43,6 +45,7 @@ defineProps<Props>();
           :required
           :type
           :disabled
+          v-model="model"
         />
         <slot v-if="withButton" name="button" />
       </div>

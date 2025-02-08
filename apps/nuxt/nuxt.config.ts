@@ -7,10 +7,11 @@ export default defineNuxtConfig({
   modules: [
     "nuxt-lucide-icons",
     "@nuxt/eslint",
-    "@nuxt/ui",
     "@nuxt/fonts",
     "@nuxt/test-utils/module",
     "@pinia/nuxt",
+    "@nuxtjs/tailwindcss",
+    "jscms-ui/nuxt",
   ],
   fonts: {
     defaults: {

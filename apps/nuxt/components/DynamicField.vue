@@ -9,7 +9,6 @@ import {
 } from "~/predicates";
 import type { Document } from "~/types";
 import { isBoolean, isFunction, isString } from "@sindresorhus/is";
-import { Input, Toggle } from "jscms-ui";
 
 type Props = {
   field: Document["fields"][number];
@@ -50,7 +49,7 @@ function generateSlug(fieldName: string) {
 
 <template>
   <template v-if="isPrimitiveField(field.type)">
-    <Input
+    <UIInput
       v-if="isStringField(field.type) || isNumberField(field.type)"
       v-model="formData[field.name]"
       :disabled
@@ -60,7 +59,7 @@ function generateSlug(fieldName: string) {
       :required="
         isBoolean(field.required) ? field.required : field.required(formData)
       "
-      :error="(formErrors?.[field.name] && 'error') || undefined"
+      :error="formErrors?.[field.name] || undefined"
       :label="field.title"
     />
 
@@ -68,7 +67,7 @@ function generateSlug(fieldName: string) {
       v-if="isBooleanField(field.type)"
       class="flex gap-x-2 items-center p-2"
     >
-      <Toggle
+      <UIToggle
         v-model="formData[field.name]"
         :label="field.title"
         :description="field.description"
@@ -78,7 +77,7 @@ function generateSlug(fieldName: string) {
     </div>
 
     <div v-if="isSlugField(field.type)">
-      <Input
+      <UIInput
         v-model="formData[field.name]"
         :description="field.description"
         :disabled
@@ -87,7 +86,7 @@ function generateSlug(fieldName: string) {
         :required="
           isBoolean(field.required) ? field.required : field.required(formData)
         "
-        :error="(formErrors?.[field.name] && 'error') || undefined"
+        :error="formErrors?.[field.name] || undefined"
         :label="field.title"
         withButton
       >
@@ -104,7 +103,7 @@ function generateSlug(fieldName: string) {
             Generate
           </button>
         </template>
-      </Input>
+      </UIInput>
     </div>
   </template>
 
