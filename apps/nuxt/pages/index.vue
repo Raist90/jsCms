@@ -1,17 +1,5 @@
 <script setup lang="ts">
-import Button from "~/components/Button.vue";
-import Input from "~/components/Input.vue";
-import Toggle from "~/components/Toggle.vue";
-
-// const { result } = await cmsClient.fetch({
-//   documentName: "page",
-//   formatter: (data: { title: string; isIndexable: boolean }) => {
-//     if (data.title === "First page" && data.isIndexable) {
-//       return { title: data.title };
-//     }
-//     return;
-//   },
-// });
+import { Button, Input, Toggle } from "jscms-ui";
 
 const checked = ref(false);
 </script>
@@ -48,6 +36,6 @@ const checked = ref(false);
       type="text"
     />
 
-    <Button type="submit">Save document</Button>
+    <Button variant="primary" type="submit">Save document</Button>
   </form>
 </template>
