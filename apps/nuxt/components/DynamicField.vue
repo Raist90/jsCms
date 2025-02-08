@@ -9,6 +9,7 @@ import {
 } from "~/predicates";
 import type { Document } from "~/types";
 import { isBoolean, isFunction, isString } from "@sindresorhus/is";
+import { Input, Toggle } from "jscms-ui";
 
 type Props = {
   field: Document["fields"][number];
@@ -49,68 +50,62 @@ function generateSlug(fieldName: string) {
 
 <template>
   <template v-if="isPrimitiveField(field.type)">
-    <UFormGroup
-      v-slot="{ error }"
-      :error="formErrors?.[field.name] && `${formErrors[field.name]}`"
+    <Input
+      v-if="isStringField(field.type) || isNumberField(field.type)"
+      v-model="formData[field.name]"
+      :disabled
+      :description="field.description"
+      :name="field.name"
+      :type="isStringField(field.type) ? 'text' : 'number'"
       :required="
         isBoolean(field.required) ? field.required : field.required(formData)
       "
-      :description="
-        (!isBooleanField(field.type) && field.description) || undefined
-      "
+      :error="(formErrors?.[field.name] && 'error') || undefined"
       :label="field.title"
+    />
+
+    <div
+      v-if="isBooleanField(field.type)"
+      class="flex gap-x-2 items-center p-2"
     >
-      <UInput
-        v-if="isStringField(field.type) || isNumberField(field.type)"
+      <Toggle
         v-model="formData[field.name]"
-        :trailingIcon="
-          (error && 'i-heroicons-exclamation-triangle-20-solid') || undefined
-        "
+        :label="field.title"
+        :description="field.description"
+        :disabled
+        size="lg"
+      />
+    </div>
+
+    <div v-if="isSlugField(field.type)">
+      <Input
+        v-model="formData[field.name]"
+        :description="field.description"
         :disabled
         :name="field.name"
-        :type="isStringField(field.type) ? 'text' : 'number'"
+        type="text"
         :required="
           isBoolean(field.required) ? field.required : field.required(formData)
         "
-        :variant="(formErrors?.[field.name] && 'error') || undefined"
-      />
-
-      <div
-        v-if="isBooleanField(field.type)"
-        class="flex gap-x-2 items-center p-2"
+        :error="(formErrors?.[field.name] && 'error') || undefined"
+        :label="field.title"
+        withButton
       >
-        <UToggle v-model="formData[field.name]" :disabled size="lg" />
-
-        <p class="text-sm text-gray-300">
-          {{ field.description }}
-        </p>
-      </div>
-
-      <div v-if="isSlugField(field.type)">
-        <UButtonGroup size="sm" orientation="horizontal">
-          <UInput
-            v-model="formData[field.name]"
-            :trailingIcon="
-              (error && 'i-heroicons-exclamation-triangle-20-solid') ||
-              undefined
-            "
+        <template #button>
+          <button
             :disabled
-            :name="field.name"
-            type="text"
-            :required="
-              isBoolean(field.required)
-                ? field.required
-                : field.required(formData)
-            "
-            :variant="(formErrors?.[field.name] && 'error') || undefined"
-          />
-
-          <UButton color="gray" @click="generateSlug(field.name)"
-            >Generate</UButton
+            :class="[
+              'text-gray-900 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm',
+              disabled && 'opacity-80 cursor-not-allowed',
+            ]"
+            type="button"
+            @click="generateSlug(field.name)"
           >
-        </UButtonGroup>
-      </div>
-    </UFormGroup>
+            Generate
+          </button>
+        </template>
+      </Input>
+    </div>
   </template>
 
   <template v-else-if="isObjectField(field.type)">

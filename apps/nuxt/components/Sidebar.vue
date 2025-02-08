@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Document } from "~/types";
 import { getDocumentName } from "~/documents";
+import { Link } from "jscms-ui";
 
 defineProps<{ documents: Document[] }>();
 
@@ -18,7 +19,7 @@ const documentName = computed(() => getDocumentName());
     <nav class="p-4">
       <ul class="grid gap-y-2">
         <li v-for="document in documents" :key="document.name">
-          <ULink
+          <Link
             :class="['block p-2 rounded-md']"
             :to="`/documents/${document.name}`"
             :active="!!(document.name === documentName)"
@@ -28,7 +29,7 @@ const documentName = computed(() => getDocumentName());
                 ? 'bg-primary'
                 : 'bg-primary/20'
             "
-            >{{ document.title }}</ULink
+            >{{ document.title }}</Link
           >
         </li>
       </ul>

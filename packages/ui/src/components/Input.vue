@@ -8,7 +8,7 @@ type Props = {
   label: string;
   name: string;
   required?: boolean;
-  type: "text";
+  type: "text" | "number";
   withButton?: boolean;
 };
 defineProps<Props>();
@@ -44,17 +44,7 @@ defineProps<Props>();
           :type
           :disabled
         />
-        <button
-          :disabled
-          v-if="withButton"
-          :class="[
-            'text-gray-900 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm',
-            disabled && 'opacity-80 cursor-not-allowed',
-          ]"
-          type="button"
-        >
-          Generate
-        </button>
+        <slot v-if="withButton" name="button" />
       </div>
     </div>
 
