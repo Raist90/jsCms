@@ -111,9 +111,7 @@ onMounted(() => watch(formData, () => (hasFormChanged.value = true)));
           :disabled="isFormDisabled"
           type="button"
           class="max-w-fit"
-          size="md"
-          color="red"
-          icon="i-heroicons-trash"
+          variant="danger"
           @click="emit('document-data-delete')"
         >
           Delete {{ document.name }}
