@@ -27,14 +27,14 @@ const currentPath = computed(() => route.path);
       <nav v-if="documentList.length" class="p-4">
         <ul class="grid gap-y-2">
           <li v-for="document in documentList" :key="document.id">
-            <UILink
+            <NuxtLink
               :class="['block p-2 rounded-md']"
               :to="`/documents/${document.type}/id/${document.id}`"
               :active="currentPath.includes(document.id)"
               activeClass="bg-blue-500"
             >
               {{ document.data.title }}
-            </UILink>
+            </NuxtLink>
           </li>
         </ul>
       </nav>

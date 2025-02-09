@@ -22,7 +22,7 @@ const checked = defineModel<boolean>({
       <button
         :aria-checked="checked"
         :class="[
-          'p-0.5  h-7 w-[3.25rem] flex rounded-full',
+          'p-0.5  h-7 w-[3.25rem] flex shrink-0 rounded-full',
           checked ? 'bg-blue-500 border-blue-500' : 'bg-gray-400',
         ]"
         role="switch"
@@ -30,7 +30,7 @@ const checked = defineModel<boolean>({
         @click="checked = !checked"
       >
         <span
-          class="h-full !w-1/2 bg-white transition duration-200 ease-in-out rounded-full"
+          class="h-full w-1/2 bg-white transition duration-200 ease-in-out rounded-full"
           :class="{ 'transform translate-x-6': checked }"
         />
       </button>

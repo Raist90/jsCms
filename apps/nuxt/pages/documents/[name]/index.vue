@@ -41,12 +41,12 @@ function onDeleteSelected() {
       >
         <div class="flex gap-x-3 items-center">
           <h2 class="font-bold" v-text="`${capitalize(documentName)} list`" />
-          <UILink
+          <NuxtLink
             :to="`/documents/${documentName}/add`"
             size="xs"
             icon="heroicons:pencil-square"
             color="gray"
-            >Add {{ documentName }}</UILink
+            >Add {{ documentName }}</NuxtLink
           >
         </div>
 

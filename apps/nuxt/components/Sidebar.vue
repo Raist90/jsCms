@@ -18,7 +18,7 @@ const documentName = computed(() => getDocumentName());
     <nav class="p-4">
       <ul class="grid gap-y-2">
         <li v-for="document in documents" :key="document.name">
-          <UILink
+          <NuxtLink
             :class="['block p-2 rounded-md']"
             :to="`/documents/${document.name}`"
             :active="!!(document.name === documentName)"
@@ -28,7 +28,7 @@ const documentName = computed(() => getDocumentName());
                 ? 'bg-blue-500'
                 : 'bg-blue-500/20'
             "
-            >{{ document.title }}</UILink
+            >{{ document.title }}</NuxtLink
           >
         </li>
       </ul>
