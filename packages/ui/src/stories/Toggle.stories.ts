@@ -14,6 +14,9 @@ const meta = {
     label: {
       control: "text",
     },
+    disabled: {
+      control: "boolean",
+    },
     modelValue: {
       control: "boolean",
     },
@@ -21,6 +24,7 @@ const meta = {
   args: {
     description: "This is a description",
     label: "Label",
+    disabled: false,
     modelValue: false,
   },
 } satisfies Meta<ToggleProps>;

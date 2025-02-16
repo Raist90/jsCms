@@ -25,6 +25,7 @@ const checked = ref(false);
       v-model="checked"
       description="Check this if you want the page to be indexable"
       label="Is Indexable"
+      :disabled="false"
     />
 
     <UIInput

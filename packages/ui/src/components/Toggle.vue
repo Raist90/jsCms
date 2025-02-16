@@ -4,6 +4,7 @@ import { Badge } from "jscms-ui";
 type Props = {
   description?: string;
   label: string;
+  disabled: boolean;
 };
 defineProps<Props>();
 const checked = defineModel<boolean>({
@@ -24,7 +25,9 @@ const checked = defineModel<boolean>({
         :class="[
           'p-0.5  h-7 w-[3.25rem] flex shrink-0 rounded-full',
           checked ? 'bg-blue-500 border-blue-500' : 'bg-gray-400',
+          disabled && 'opacity-50 cursor-not-allowed',
         ]"
+        :disabled
         role="switch"
         type="button"
         @click="checked = !checked"

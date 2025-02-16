@@ -6,7 +6,7 @@ import { getDocumentId } from "~/documents";
 import type { DocumentJsonModel } from "~/types";
 
 const { getDocumentDataById, patchDocumentsData } = useDocumentsStore();
-// const toast = useToast();
+const toast = useToast();
 
 const documentId = getDocumentId();
 const documentData = await getDocumentDataById(documentId);
@@ -18,10 +18,14 @@ async function onDocumentDataDelete(documentData: DocumentJsonModel) {
   await patchDocumentsData("delete", documentData);
   navigateTo(`/documents/${documentData.type}`);
 
-  // toast.add({
-  //   timeout: 1500,
-  //   title: `${capitalize(documentData.type)} correctly deleted!`,
-  // });
+  toast.add({
+    isOpen: true,
+    message: `${capitalize(documentData.type)} correctly deleted!`,
+    onClose: () => {
+      toast.clear();
+    },
+    msTimeout: 2500,
+  });
 }
 </script>
 

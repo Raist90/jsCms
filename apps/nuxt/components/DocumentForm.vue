@@ -12,13 +12,14 @@ const emit = defineEmits([
   "document-data-update",
 ]);
 
+const toast = useToast();
+
 const model = defineModel<Record<string, any>>();
 const formData = model.value?.data
   ? model.value.data
   : reactive<Record<string, any>>({});
 
 const { patchDocumentsData } = useDocumentsStore();
-// const toast = useToast();
 
 // TODO: this is maybe too simple to work on long term. We should determine this based on the route current path maybe
 const isEditMode = computed(() => !!model.value?.id);
@@ -47,12 +48,17 @@ const onFormSubmit = async () => {
       },
     } satisfies Omit<DocumentJsonModel, "timestamp">);
 
-    // TODO: this should be an emit. Let the page trigger the toast
-    // toast.add({
-    //   timeout: 1500,
-    //   title: `${capitalize(props.document.name)} correctly ${isEditMode.value ? "updated!" : "saved!"}`,
-    //   callback: () => (isFormDisabled.value = false),
-    // });
+    toast.add({
+      isOpen: true,
+      message: `${capitalize(props.document.name)} correctly ${
+        isEditMode.value ? "updated!" : "saved!"
+      }`,
+      onClose: () => {
+        toast.clear();
+        isFormDisabled.value = false;
+      },
+      msTimeout: 2500,
+    });
   } catch (err) {
     console.error(err);
   }
@@ -76,10 +82,6 @@ watch(
   },
   { immediate: true },
 );
-
-// TODO: this is a little bit "hackish". We should find a proper way to handle this
-const hasFormChanged = ref(false);
-onMounted(() => watch(formData, () => (hasFormChanged.value = true)));
 </script>
 
 <template>
@@ -98,7 +100,7 @@ onMounted(() => watch(formData, () => (hasFormChanged.value = true)));
 
       <div class="p-4 flex justify-between border-y border-gray-700">
         <UIButton
-          :disabled="isFormDisabled || !hasFormChanged"
+          :disabled="isFormDisabled"
           type="submit"
           class="max-w-fit"
           size="md"
