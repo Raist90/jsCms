@@ -26,3 +26,5 @@ logs
 .npmrc
 schema.db
 old_schema.db
+
+todo.md

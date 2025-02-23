@@ -16,7 +16,8 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-essentials"),
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-interactions"),
-    getAbsolutePath("@vueuse/integrations"),
+    // TODO: this is breaking everything
+    // getAbsolutePath("@vueuse/integrations"),
   ],
   framework: {
     name: getAbsolutePath("@storybook/vue3-vite"),
