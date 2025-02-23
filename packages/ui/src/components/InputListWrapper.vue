@@ -8,7 +8,6 @@ type Props = {
   of: "string" | "number" | "boolean" | "object";
   min?: number;
   max?: number;
-  required?: boolean;
 };
 defineProps<Props>();
 
@@ -32,7 +31,7 @@ function deleteItem(index: number) {
 
 <template>
   <div
-    class="border border-zinc-400 p-4 max-w-96 bg-zinc-700"
+    class="border border-zinc-400 p-4 max-w-lg bg-zinc-700"
     v-if="of === 'string'"
   >
     <div class="flex items-baseline">

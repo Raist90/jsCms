@@ -23,9 +23,6 @@ const meta = {
     max: {
       control: "number",
     },
-    required: {
-      control: "boolean",
-    },
   },
   args: {
     of: "string",
@@ -33,7 +30,6 @@ const meta = {
     max: 4,
     label: "Label",
     description: "This is a description",
-    required: false,
     modelValue: [],
   },
 } satisfies Meta<InputListWrapperProps>;

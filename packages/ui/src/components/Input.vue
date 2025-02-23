@@ -5,7 +5,7 @@ type Props = {
   description?: string;
   disabled?: boolean;
   error?: string;
-  label: string;
+  label?: string;
   name: string;
   required?: boolean;
   type: "text" | "number";
@@ -19,7 +19,7 @@ const model = defineModel<string>();
 <template>
   <div class="flex flex-col gap-y-2 w-full max-w-lg">
     <div>
-      <div class="flex items-baseline">
+      <div v-if="label" class="flex items-baseline">
         <label class="text-sm font-bold" v-text="label" />
         <Badge :status="required ? 'warning' : 'info'">{{
           `${required ? "Required" : "Optional"}`
