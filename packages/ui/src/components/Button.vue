@@ -4,7 +4,7 @@ import { ref } from "vue";
 type Props = {
   disabled?: boolean;
   extended?: boolean;
-  type: "button" | "submit" | "reset";
+  type?: "button" | "submit" | "reset";
   variant?: "primary" | "secondary" | "danger" | "warning";
 };
 withDefaults(defineProps<Props>(), {
@@ -26,7 +26,7 @@ const variantList = ref({
   <button
     :disabled
     :class="[
-      'text-white px-3 py-2 text-sm w-fit',
+      'block text-white px-3 py-2 text-sm w-fit',
       variantList[variant],
       extended && 'w-full',
       disabled && 'opacity-50 cursor-not-allowed',

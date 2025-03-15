@@ -52,15 +52,13 @@ const toastId = useId();
 
 <template>
   <Transition
-    enterActiveClass="transition-all duration-300 ease-in-out"
-    leaveActiveClass="transition-all duration-300 ease-in-out"
+    enterActiveClass="transition-[opacity,transform] duration-300 ease-in-out"
+    leaveActiveClass="transition-[opacity,transform] duration-300 ease-in-out"
     enterFromClass="opacity-0 translate-y-10"
-    enterToClass="opacity-100 translate-y-0"
-    leaveFromClass="opacity-100 translate-y-0"
     leaveToClass="opacity-0 translate-y-10"
   >
     <div
-      class="fixed m-6 w-full max-w-96 bottom-0 left-[50%] -translate-x-[50%] border-l-4 border-green-500 bg-green-100 text-black p-2 z-20"
+      class="fixed m-6 w-full max-w-96 bottom-0 left-1/2 -translate-x-1/2 border-l-4 border-green-500 bg-green-100 text-black p-2 z-20"
       v-if="isOpen"
       :id="toastId"
       role="dialog"
