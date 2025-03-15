@@ -9,8 +9,5 @@
     "index.d.ts",
     "eslintconfig.js",
     "tailwind.config.js"
-  ],
-  "scripts": {
-    "debug-prettier": "prettier --find-config-path ./index.js"
-  }
+  ]
 }
