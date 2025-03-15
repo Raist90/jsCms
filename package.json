@@ -12,6 +12,9 @@
     "lint:nuxt": "cd apps/nuxt && eslint .",
     "lint:ui": "cd packages/ui && eslint .",
     "lint:config": "cd packages/config && eslint .",
+    "lint:nuxt:fix": "cd apps/nuxt && eslint . --fix",
+    "lint:ui:fix": "cd packages/ui && eslint . --fix",
+    "lint:config:fix": "cd packages/config && eslint . --fix",
     "lint": "bun run lint:nuxt && bun run lint:ui && bun run lint:config",
     "lint:fix": "bun run lint:nuxt:fix && bun run lint:ui:fix && bun run lint:config:fix"
   }
