@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import type { Document } from "~/types";
-import { getDocumentName } from "~/documents";
 
 defineProps<{ documents: Document[] }>();
 
 const route = useRoute();
-
-const documentName = computed(() => getDocumentName());
+const { currentDocumentName } = useExtractRouteData(route);
 </script>
 
 <template>
@@ -19,15 +17,15 @@ const documentName = computed(() => getDocumentName());
       <ul class="grid gap-y-2">
         <li v-for="document in documents" :key="document.name">
           <NuxtLink
-            :class="['block p-2 rounded-md']"
+            class="block p-2 rounded-md"
+            :class="[
+              document.name === currentDocumentName &&
+                (((route.path === `/documents/${document.name}` ||
+                  route.path === `/documents/${document.name}/add`) &&
+                  'bg-blue-500') ||
+                  'bg-blue-500/20'),
+            ]"
             :to="`/documents/${document.name}`"
-            :active="!!(document.name === documentName)"
-            :activeClass="
-              route.path === `/documents/${documentName}` ||
-              route.path === `/documents/${documentName}/add`
-                ? 'bg-blue-500'
-                : 'bg-blue-500/20'
-            "
             >{{ document.title }}</NuxtLink
           >
         </li>

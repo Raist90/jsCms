@@ -3,19 +3,17 @@ import { useDocumentsStore } from "~/store/documentsStore";
 import type { DocumentJsonModel } from "~/types";
 
 const props = defineProps<{
-  documentName: string;
+  documentType: string;
 }>();
 
-const documentName = computed(() => props.documentName);
+const documentType = computed(() => props.documentType);
 const documentsStore = useDocumentsStore();
 const { documentsData } = storeToRefs(documentsStore);
-// TODO: perform this operations on `documents/index.ts`
-const documentList = computed(() =>
-  documentsData.value?.filter((doc) => doc.type === documentName.value),
-);
+const { filterDocumentsByType } = useFilterDocuments(documentsData.value);
+const documentsList = filterDocumentsByType(documentType);
 
 const route = useRoute();
-const currentPath = computed(() => route.path);
+const { currentPath } = useExtractRouteData(route);
 
 // TODO: It needs some testing with primitives.
 function getFallbackTitle(document: DocumentJsonModel) {
@@ -32,15 +30,15 @@ function getFallbackTitle(document: DocumentJsonModel) {
 </script>
 
 <template>
-  <section v-if="documentName">
+  <section v-if="documentType">
     <header class="p-4 border-b border-gray-700 flex items-center h-16">
-      <h2 class="font-bold">{{ capitalize(documentName) }} list</h2>
+      <h2 class="font-bold">{{ capitalize(documentType) }} list</h2>
     </header>
 
     <ClientOnly>
-      <nav v-if="documentList.length" class="p-4">
+      <nav v-if="documentsList.length" class="p-4">
         <ul class="grid gap-y-2">
-          <li v-for="document in documentList" :key="document.id">
+          <li v-for="document in documentsList" :key="document.id">
             <NuxtLink
               :class="['block p-2 rounded-md']"
               :to="`/documents/${document.type}/id/${document.id}`"

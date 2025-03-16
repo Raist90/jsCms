@@ -2,16 +2,16 @@
 import config from "@/cmsConfig";
 import DocumentForm from "~/components/DocumentForm.vue";
 import { useDocumentsStore } from "~/store/documentsStore";
-import { getDocumentId } from "~/documents";
 import type { DocumentJsonModel } from "~/types";
 
 const { getDocumentDataById, patchDocumentsData } = useDocumentsStore();
 const toast = useToast();
+const route = useRoute();
 
 const isConfirmModalOpen = ref(false);
 
-const documentId = getDocumentId();
-const documentData = await getDocumentDataById(documentId);
+const { currentPageId: documentId } = useExtractRouteData(route);
+const documentData = await getDocumentDataById(documentId.value);
 const documentSchema = config.schema.documents.find(
   (document) => document.name === documentData?.type,
 );

@@ -5,32 +5,40 @@ type Props = {
   disabled?: boolean;
   extended?: boolean;
   type?: "button" | "submit" | "reset";
-  variant?: "primary" | "secondary" | "danger" | "warning" | "outline";
+  variant?: "primary" | "danger" | "warning" | "outline";
+  size?: "sm" | "md" | "lg";
 };
 withDefaults(defineProps<Props>(), {
   disabled: false,
   extended: false,
   type: "button",
   variant: "primary",
+  size: "md",
 });
 
-const variantList = ref({
+const variantMap = ref({
   primary: "bg-blue-500 text-white",
-  secondary: "bg-gray-200 text-gray-900",
   danger: "bg-red-500 text-white",
   warning: "bg-yellow-500 text-white",
   outline: "bg-gray-200 text-gray-700",
-});
+}) satisfies Record<keyof Props["size"], string>;
+
+const sizeMap = ref({
+  sm: "px-2.5 py-1 text-xs",
+  md: "px-3 py-2 text-sm",
+  lg: "px-4 py-3 text-base",
+}) satisfies Record<keyof Props["size"], string>;
 </script>
 
 <template>
   <button
     :disabled
+    class="block"
     :class="[
-      'block px-3 py-2 text-sm w-fit',
-      variantList[variant],
-      extended && 'w-full',
+      variantMap[variant],
+      extended ? 'w-full' : 'w-fit',
       disabled && 'opacity-50 cursor-not-allowed',
+      sizeMap[size],
     ]"
     :type
   >

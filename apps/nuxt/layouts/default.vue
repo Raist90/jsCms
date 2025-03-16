@@ -2,14 +2,14 @@
 import DocumentList from "~/components/DocumentList.vue";
 import Sidebar from "~/components/Sidebar.vue";
 import config from "@/cmsConfig";
-import { getDocumentName } from "~/documents";
 import Topbar from "~/components/Topbar.vue";
 
 const {
   schema: { documents },
 } = config;
 
-const documentName = computed(() => getDocumentName());
+const route = useRoute();
+const { currentDocumentName: documentType } = useExtractRouteData(route);
 </script>
 
 <template>
@@ -21,8 +21,8 @@ const documentName = computed(() => getDocumentName());
         <Sidebar :documents />
       </div>
 
-      <div v-if="documentName" class="w-60 shrink-0 border-r border-gray-700">
-        <DocumentList :documentName />
+      <div v-if="documentType" class="w-60 shrink-0 border-r border-gray-700">
+        <DocumentList :documentType />
       </div>
 
       <div class="flex-1 overflow-auto">

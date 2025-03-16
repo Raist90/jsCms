@@ -22,7 +22,7 @@ const formData = model.value?.data
 const { patchDocumentsData } = useDocumentsStore();
 
 const route = useRoute();
-const isEditMode = computed(() => route.params.id);
+const isEditMode = computed(() => !!route.params.id);
 
 const formErrors = ref<Record<string, string> | null>(null);
 const isFormDisabled = ref(false);
