@@ -21,8 +21,8 @@ const formData = model.value?.data
 
 const { patchDocumentsData } = useDocumentsStore();
 
-// TODO: this is maybe too simple to work on long term. We should determine this based on the route current path maybe
-const isEditMode = computed(() => !!model.value?.id);
+const route = useRoute();
+const isEditMode = computed(() => route.params.id);
 
 const formErrors = ref<Record<string, string> | null>(null);
 const isFormDisabled = ref(false);
@@ -59,6 +59,8 @@ const onFormSubmit = async () => {
       },
       msTimeout: 2500,
     });
+    originalRef.value = JSON.parse(JSON.stringify(formData));
+    hasChanges.value = false;
   } catch (err) {
     console.error(err);
   }
@@ -71,16 +73,29 @@ const onFormSubmit = async () => {
   }
 };
 
+// TODO: We do the same with booleans inside `DynamicField`
+// It could be better to handle this inside a `initializeDocumentFields`
 watch(
   () => fields,
   () => {
-    fields.value.forEach((field) => {
-      if (field.type === "object") {
-        formData[field.name] = {};
-      }
-    });
+    if (!isEditMode.value)
+      fields.value.forEach((field) => {
+        if (field.type === "object") {
+          formData[field.name] = {};
+        }
+      });
   },
   { immediate: true },
+);
+
+const originalRef = ref(JSON.parse(JSON.stringify(formData)));
+const hasChanges = ref(false);
+watch(
+  formData,
+  (val) =>
+    (hasChanges.value =
+      JSON.stringify(val) !== JSON.stringify(originalRef.value)),
+  { deep: true },
 );
 </script>
 
@@ -100,7 +115,7 @@ watch(
 
       <div class="p-4 flex justify-between border-y border-gray-700">
         <UIButton
-          :disabled="isFormDisabled"
+          :disabled="isFormDisabled || !hasChanges"
           type="submit"
           class="max-w-fit"
           size="md"

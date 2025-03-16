@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDocumentsStore } from "~/store/documentsStore";
+import type { DocumentJsonModel } from "~/types";
 
 const props = defineProps<{
   documentName: string;
@@ -15,6 +16,19 @@ const documentList = computed(() =>
 
 const route = useRoute();
 const currentPath = computed(() => route.path);
+
+// TODO: It needs some testing with primitives.
+function getFallbackTitle(document: DocumentJsonModel) {
+  const { data } = document;
+  const topLevelKey = Object.keys(data)[0];
+  const topLevelValue = data[topLevelKey];
+
+  if (typeof topLevelValue === "object") {
+    const firstNestedKey = Object.keys(topLevelValue)[0];
+    return topLevelValue[firstNestedKey];
+  }
+  return topLevelValue;
+}
 </script>
 
 <template>
@@ -33,7 +47,7 @@ const currentPath = computed(() => route.path);
               :active="currentPath.includes(document.id)"
               activeClass="bg-blue-500"
             >
-              {{ document.data.title }}
+              {{ document.data.title || getFallbackTitle(document) }}
             </NuxtLink>
           </li>
         </ul>

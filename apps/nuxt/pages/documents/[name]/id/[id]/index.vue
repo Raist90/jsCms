@@ -8,6 +8,8 @@ import type { DocumentJsonModel } from "~/types";
 const { getDocumentDataById, patchDocumentsData } = useDocumentsStore();
 const toast = useToast();
 
+const isConfirmModalOpen = ref(false);
+
 const documentId = getDocumentId();
 const documentData = await getDocumentDataById(documentId);
 const documentSchema = config.schema.documents.find(
@@ -39,7 +41,35 @@ async function onDocumentDataDelete(documentData: DocumentJsonModel) {
       v-if="documentData && documentSchema"
       v-model="documentData"
       :document="documentSchema"
-      @document-data-delete="onDocumentDataDelete(documentData)"
+      @document-data-delete="isConfirmModalOpen = true"
     />
+
+    <UIModal
+      v-if="documentData"
+      :isOpen="isConfirmModalOpen"
+      title="Are you sure?"
+      @close="isConfirmModalOpen = false"
+    >
+      <template #content>
+        <p>Are you sure you want to delete this document?</p>
+      </template>
+
+      <template #cta>
+        <div class="flex justify-between">
+          <UIButton
+            variant="danger"
+            type="button"
+            @click="onDocumentDataDelete(documentData)"
+            >Delete</UIButton
+          >
+          <UIButton
+            variant="outline"
+            type="button"
+            @click="isConfirmModalOpen = false"
+            >Cancel</UIButton
+          >
+        </div>
+      </template>
+    </UIModal>
   </section>
 </template>

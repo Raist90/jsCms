@@ -58,7 +58,7 @@ const toastId = useId();
     leaveToClass="opacity-0 translate-y-10"
   >
     <div
-      class="fixed m-6 w-full max-w-96 bottom-0 left-1/2 -translate-x-1/2 border-l-4 border-green-500 bg-green-100 text-black p-2 z-20"
+      class="fixed mb-6 w-full max-w-[96%] md:max-w-96 bottom-0 left-1/2 -translate-x-1/2 border-l-4 border-green-500 bg-green-100 text-black p-2 z-20"
       v-if="isOpen"
       :id="toastId"
       role="dialog"

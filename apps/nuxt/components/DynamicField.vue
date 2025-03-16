@@ -22,13 +22,13 @@ const formData = defineModel<Record<string, any>>({
   required: true,
 });
 
-// TODO: this is maybe too simple to work on long term
-const isEditMode = Object.keys(formData.value).length > 0;
+const route = useRoute();
+const isEditMode = computed(() => route.params.id);
 
 watch(
   () => field,
   () => {
-    if (field.value.type === "boolean" && !isEditMode)
+    if (field.value.type === "boolean" && !isEditMode.value)
       formData.value[field.value.name] = false;
   },
   { immediate: true },

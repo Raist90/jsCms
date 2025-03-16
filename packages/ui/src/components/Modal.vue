@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { X } from "lucide-vue-next";
-import { computed, ref, useId } from "vue";
+import { computed, onMounted, onUnmounted, ref, useId } from "vue";
 import { UseFocusTrap } from "@vueuse/integrations/useFocusTrap/component";
 import { onClickOutside } from "@vueuse/core";
-import Button from "./Button.vue";
 
 type Props = {
   isOpen: boolean;
@@ -21,6 +20,18 @@ const slots = defineSlots();
 const modalId = useId();
 const modalRef = ref<HTMLElement | null>(null);
 onClickOutside(modalRef, () => emit("close"));
+
+function closeOnEscape(event: KeyboardEvent) {
+  if (event.key === "Escape") emit("close");
+}
+
+onMounted(() => {
+  document.addEventListener("keydown", closeOnEscape);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", closeOnEscape);
+});
 </script>
 
 <template>
@@ -31,7 +42,7 @@ onClickOutside(modalRef, () => emit("close"));
         class="fixed inset-0 z-10 flex items-center justify-center"
       >
         <div
-          class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          class="absolute inset-0 bg-black/50"
           @click="emit('close')"
           aria-hidden
         />
@@ -41,7 +52,7 @@ onClickOutside(modalRef, () => emit("close"));
             ref="modalRef"
             :class="[
               fullscreen && 'h-screen md:h-fit',
-              'relative bg-gray-900 w-full max-w-md border border-gray-700 flex flex-col z-20',
+              'relative bg-gray-900 w-full max-w-md border border-gray-700 flex flex-col z-20 m-1 md:m-0',
             ]"
             :aria-labelledby="modalId"
             role="dialog"
@@ -68,9 +79,7 @@ onClickOutside(modalRef, () => emit("close"));
               v-if="slots.cta"
               class="p-4 border-t border-gray-700 mt-auto"
             >
-              <Button>
-                <slot name="cta" />
-              </Button>
+              <slot name="cta" />
             </footer>
           </div>
         </UseFocusTrap>

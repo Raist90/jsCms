@@ -5,7 +5,7 @@ type Props = {
   disabled?: boolean;
   extended?: boolean;
   type?: "button" | "submit" | "reset";
-  variant?: "primary" | "secondary" | "danger" | "warning";
+  variant?: "primary" | "secondary" | "danger" | "warning" | "outline";
 };
 withDefaults(defineProps<Props>(), {
   disabled: false,
@@ -19,6 +19,7 @@ const variantList = ref({
   secondary: "bg-gray-200 text-gray-900",
   danger: "bg-red-500 text-white",
   warning: "bg-yellow-500 text-white",
+  outline: "bg-gray-200 text-gray-700",
 });
 </script>
 
@@ -26,7 +27,7 @@ const variantList = ref({
   <button
     :disabled
     :class="[
-      'block text-white px-3 py-2 text-sm w-fit',
+      'block px-3 py-2 text-sm w-fit',
       variantList[variant],
       extended && 'w-full',
       disabled && 'opacity-50 cursor-not-allowed',

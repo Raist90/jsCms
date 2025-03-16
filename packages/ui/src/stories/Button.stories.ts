@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import Button from "../components/Button.vue";
 
 type ButtonProps = InstanceType<typeof Button>["$props"];
-const meta = {
+const meta: Meta<ButtonProps> = {
   title: "Components/Button",
   component: Button,
   tags: ["autodocs"],
@@ -29,7 +29,7 @@ const meta = {
     type: "button",
     variant: "primary",
   },
-} satisfies Meta<ButtonProps>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
