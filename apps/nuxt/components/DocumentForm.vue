@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { Document, DocumentJsonModel } from "~/types";
+import type { DocumentDefinition, DocumentEntry } from "~/types";
 import DynamicField from "./DynamicField.vue";
 import { useDocumentsStore } from "~/store/documentsStore";
 
-const props = defineProps<{ document: Document }>();
-const fields = computed(() => props.document.fields);
+const props = defineProps<{ documentDefinition: DocumentDefinition }>();
+const fields = computed(() => props.documentDefinition.fields);
 
 const emit = defineEmits([
-  "document-data-add",
-  "document-data-delete",
-  "document-data-update",
+  "document-entry-add",
+  "document-entry-delete",
+  "document-entry-update",
 ]);
 
 const toast = useToast();
@@ -19,7 +19,7 @@ const formData = model.value?.data
   ? model.value.data
   : reactive<Record<string, any>>({});
 
-const { patchDocumentsData } = useDocumentsStore();
+const { patchDocumentEntry } = useDocumentsStore();
 
 const route = useRoute();
 const isEditMode = computed(() => !!route.params.id);
@@ -37,19 +37,19 @@ const onFormSubmit = async () => {
   formErrors.value = null;
   isFormDisabled.value = true;
 
-  const documentId = crypto.randomUUID();
+  const documentEntryId = crypto.randomUUID();
   try {
-    await patchDocumentsData(isEditMode.value ? "update" : "add", {
-      id: isEditMode.value ? model.value?.id : documentId,
-      type: props.document.name,
+    await patchDocumentEntry(isEditMode.value ? "update" : "add", {
+      id: isEditMode.value ? model.value?.id : documentEntryId,
+      type: props.documentDefinition.name,
       data: {
         ...formData,
       },
-    } satisfies Omit<DocumentJsonModel, "timestamp">);
+    } satisfies Omit<DocumentEntry, "timestamp">);
 
     toast.add({
       isOpen: true,
-      message: `${capitalize(props.document.name)} correctly ${
+      message: `${capitalize(props.documentDefinition.name)} correctly ${
         isEditMode.value ? "updated!" : "saved!"
       }`,
       onClose: () => {
@@ -67,7 +67,9 @@ const onFormSubmit = async () => {
   }
 
   if (!isEditMode.value)
-    navigateTo(`/documents/${props.document.name}/id/${documentId}`);
+    navigateTo(
+      `/documents/${props.documentDefinition.name}/id/${documentEntryId}`,
+    );
 };
 
 // Initialize the form data with empty objects for nested fields
@@ -116,7 +118,7 @@ watch(
           class="max-w-fit"
           size="md"
         >
-          {{ isEditMode ? "Update" : "Save" }} {{ document.name }}
+          {{ isEditMode ? "Update" : "Save" }} {{ documentDefinition.name }}
         </UIButton>
 
         <UIButton
@@ -125,9 +127,9 @@ watch(
           type="button"
           class="max-w-fit"
           variant="danger"
-          @click="emit('document-data-delete')"
+          @click="emit('document-entry-delete')"
         >
-          Delete {{ document.name }}
+          Delete {{ documentDefinition.name }}
         </UIButton>
       </div>
     </form>

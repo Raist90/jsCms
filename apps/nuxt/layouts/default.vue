@@ -9,7 +9,8 @@ const {
 } = config;
 
 const route = useRoute();
-const { currentDocumentName: documentType } = useExtractRouteData(route);
+const { currentDocumentEntryName: documentEntryType } =
+  useExtractRouteData(route);
 </script>
 
 <template>
@@ -21,8 +22,11 @@ const { currentDocumentName: documentType } = useExtractRouteData(route);
         <Sidebar :documents />
       </div>
 
-      <div v-if="documentType" class="w-60 shrink-0 border-r border-gray-700">
-        <DocumentsList :documentType />
+      <div
+        v-if="documentEntryType"
+        class="w-60 shrink-0 border-r border-gray-700"
+      >
+        <DocumentsList :documentEntryType />
       </div>
 
       <div class="flex-1 overflow-auto">

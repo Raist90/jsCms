@@ -1,4 +1,4 @@
-import type { Document } from "~/types";
+import type { DocumentDefinition } from "~/types";
 import { z } from "zod";
 import { isBoolean, isFunction } from "@sindresorhus/is";
 import { isObjectField } from "~/predicates";
@@ -6,7 +6,7 @@ import { isObjectField } from "~/predicates";
 export { validateDocumentFields };
 
 function validateDocumentFields(
-  fields: Document["fields"],
+  fields: DocumentDefinition["fields"],
   formData: Record<string, any>,
 ) {
   const errors: Record<string, string> = {};
@@ -37,7 +37,7 @@ function validateDocumentFields(
 }
 
 function validateFieldType(
-  field: Document["fields"][number],
+  field: DocumentDefinition["fields"][number],
   fieldValue: unknown,
 ) {
   let errMsg: string | null = null;

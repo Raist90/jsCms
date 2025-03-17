@@ -1,7 +1,7 @@
-import type { ComputeRange, Document } from "~/types";
+import type { ComputeRange, DocumentDefinition } from "~/types";
 
 type FetchOptions = {
-  documentName: Document["name"];
+  documentName: DocumentDefinition["name"];
   limit?: ComputeRange<21>[number];
   formatter?: (data: any) => Partial<typeof data> | undefined;
 };

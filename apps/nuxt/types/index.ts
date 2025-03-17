@@ -3,8 +3,8 @@ export type {
   Prettify,
   Schema,
   AppConfig,
-  Document,
-  DocumentJsonModel,
+  DocumentDefinition,
+  DocumentEntry,
 };
 export { addDocument };
 
@@ -93,7 +93,7 @@ type Field =
   | Prettify<ImageField>
   | Prettify<TextField>;
 
-type Document = {
+type DocumentDefinition = {
   description: string;
   fields: Field[];
   name: string;
@@ -102,12 +102,12 @@ type Document = {
 };
 
 // TODO: move this elsewhere
-function addDocument(document: Document): Document {
+function addDocument(document: DocumentDefinition): DocumentDefinition {
   return document;
 }
 
 type Schema = {
-  documents: Document[];
+  documents: DocumentDefinition[];
 };
 
 type AppConfig = {
@@ -115,7 +115,7 @@ type AppConfig = {
 };
 
 // TODO: move this stuff elsewhere or reorganize types folder
-type DocumentJsonModel = {
+type DocumentEntry = {
   id: ReturnType<typeof crypto.randomUUID>;
   type: string;
   data: Record<string, any>;

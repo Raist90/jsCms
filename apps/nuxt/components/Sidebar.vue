@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Document } from "~/types";
+import type { DocumentDefinition } from "~/types";
 
-defineProps<{ documents: Document[] }>();
+defineProps<{ documents: DocumentDefinition[] }>();
 
 const route = useRoute();
-const { currentDocumentName } = useExtractRouteData(route);
+const { currentDocumentEntryName } = useExtractRouteData(route);
 </script>
 
 <template>
@@ -19,7 +19,7 @@ const { currentDocumentName } = useExtractRouteData(route);
           <NuxtLink
             class="block p-2 rounded-md"
             :class="[
-              document.name === currentDocumentName &&
+              document.name === currentDocumentEntryName &&
                 (((route.path === `/documents/${document.name}` ||
                   route.path === `/documents/${document.name}/add`) &&
                   'bg-blue-500') ||

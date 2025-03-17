@@ -2,7 +2,7 @@ import { isString } from "@sindresorhus/is";
 import type { useRoute } from "#app";
 
 export function useExtractRouteData(route: ReturnType<typeof useRoute>) {
-  const currentDocumentName = computed(() => {
+  const currentDocumentEntryName = computed(() => {
     const { params } = route;
     if (isString(params.name)) return params.name;
     return "";
@@ -17,7 +17,7 @@ export function useExtractRouteData(route: ReturnType<typeof useRoute>) {
   const currentPath = computed(() => route.path);
 
   return {
-    currentDocumentName,
+    currentDocumentEntryName,
     currentPageId,
     currentPath,
   };

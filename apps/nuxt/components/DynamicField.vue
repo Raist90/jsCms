@@ -7,11 +7,11 @@ import {
   isStringField,
   isSlugField,
 } from "~/predicates";
-import type { Document } from "~/types";
+import type { DocumentDefinition } from "~/types";
 import { isBoolean, isFunction, isString } from "@sindresorhus/is";
 
 type Props = {
-  field: Document["fields"][number];
+  field: DocumentDefinition["fields"][number];
   formErrors: Record<string, string> | null;
   disabled: boolean;
 };
@@ -56,7 +56,9 @@ function generateSlug(fieldName: string) {
       :name="field.name"
       :type="isStringField(field.type) ? 'text' : 'number'"
       :required="
-        isBoolean(field.required) ? field.required : field.required(formData)
+        isBoolean(field.required)
+          ? field.required
+          : typeof field.required === 'function' && field.required(formData)
       "
       :error="formErrors?.[field.name] || undefined"
       :label="field.title"
@@ -83,7 +85,9 @@ function generateSlug(fieldName: string) {
         :name="field.name"
         type="text"
         :required="
-          isBoolean(field.required) ? field.required : field.required(formData)
+          isBoolean(field.required)
+            ? field.required
+            : typeof field.required === 'function' && field.required(formData)
         "
         :error="formErrors?.[field.name] || undefined"
         :label="field.title"
@@ -106,7 +110,11 @@ function generateSlug(fieldName: string) {
     </div>
   </template>
 
-  <template v-else-if="isObjectField(field.type)">
+  <template
+    v-else-if="
+      isObjectField(field.type) && 'fields' in field && field.fields.length
+    "
+  >
     <div>
       <h3 class="font-bold mb-1">{{ field.title }}</h3>
       <p class="text-sm text-gray-300 dark:text-gray-400">

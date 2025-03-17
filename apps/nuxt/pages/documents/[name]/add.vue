@@ -7,19 +7,19 @@ const {
 } = config;
 
 const route = useRoute();
-const { currentDocumentName } = useExtractRouteData(route);
+const { currentDocumentEntryName } = useExtractRouteData(route);
 // TODO: I need to create a composable or utility that interacts with config
-const document = documents.find(
-  (document) => document.name === currentDocumentName.value,
+const documentDefinition = documents.find(
+  (document) => document.name === currentDocumentEntryName.value,
 );
 </script>
 
 <template>
-  <section v-if="document" class="w-full">
+  <section v-if="documentDefinition" class="w-full">
     <header class="p-4 border-b border-gray-700 flex gap-x-3 items-center h-16">
-      <h2 class="font-bold" v-text="`New ${document.name}`" />
+      <h2 class="font-bold" v-text="`New ${documentDefinition.name}`" />
     </header>
 
-    <DocumentForm :document />
+    <DocumentForm :documentDefinition />
   </section>
 </template>

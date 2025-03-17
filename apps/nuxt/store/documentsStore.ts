@@ -1,12 +1,12 @@
-import type { DocumentJsonModel } from "~/types";
+import type { DocumentEntry } from "~/types";
 
 export const useDocumentsStore = defineStore("documents", () => {
   // States
-  const documentsData = ref<DocumentJsonModel[]>([]);
+  const documentsEntries = ref<DocumentEntry[]>([]);
 
   // Actions
-  async function getDocumentDataById(id?: string) {
-    const { data } = await useFetch<DocumentJsonModel>(
+  async function getDocumentEntryById(id?: string) {
+    const { data } = await useFetch<DocumentEntry>(
       `/api/document/data/id/${id}`,
       {
         method: "GET",
@@ -15,40 +15,40 @@ export const useDocumentsStore = defineStore("documents", () => {
     return data.value;
   }
 
-  async function patchDocumentsData(
+  async function patchDocumentEntry(
     operation: "add" | "update" | "delete",
-    data: Omit<DocumentJsonModel, "timestamp">,
+    data: Omit<DocumentEntry, "timestamp">,
   ) {
-    const updateDocumentsStore = async () => {
+    const updateDocumentsEntries = async () => {
       const data = await $fetch("/api/documents", {
         method: "GET",
       });
-      documentsData.value = data;
+      documentsEntries.value = data;
     };
 
-    const addOrUpdateDocument = async () =>
+    const addUpdateDocumentEntry = async () =>
       await $fetch("/api/documents", {
         method: "POST",
         body: data,
       });
 
-    const deleteDocument = async () =>
+    const deleteDocumentEntry = async () =>
       await $fetch(`/api/document/delete/id/${data.id}`, {
         method: "POST",
       });
 
-    if (operation !== "delete") await addOrUpdateDocument();
-    else await deleteDocument();
+    if (operation !== "delete") await addUpdateDocumentEntry();
+    else await deleteDocumentEntry();
 
-    await updateDocumentsStore();
+    await updateDocumentsEntries();
   }
 
   return {
     // State
-    documentsData,
+    documentsEntries,
 
     // Actions
-    getDocumentDataById,
-    patchDocumentsData,
+    getDocumentEntryById,
+    patchDocumentEntry,
   };
 });

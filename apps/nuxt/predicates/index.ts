@@ -1,4 +1,4 @@
-import type { Document } from "~/types";
+import type { DocumentDefinition } from "~/types";
 
 export {
   isBooleanField,
@@ -10,7 +10,7 @@ export {
   isValidUUID,
 };
 
-type FieldType = Document["fields"][number]["type"];
+type FieldType = DocumentDefinition["fields"][number]["type"];
 
 function isPrimitiveField(fieldType: FieldType) {
   return !!(

@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { useDocumentsStore } from "~/store/documentsStore";
-import type { DocumentJsonModel } from "~/types";
+import type { DocumentEntry } from "~/types";
 
 const props = defineProps<{
-  documentType: string;
+  documentEntryType: string;
 }>();
 
-const documentType = computed(() => props.documentType);
+const documentType = computed(() => props.documentEntryType);
 const documentsStore = useDocumentsStore();
-const { documentsData } = storeToRefs(documentsStore);
-const { filterDocumentsByType } = useFilterDocuments(documentsData);
-const documentsList = filterDocumentsByType(documentType);
+const { documentsEntries } = storeToRefs(documentsStore);
+const { filterDocumentsEntriesByType } =
+  useFilterDocumentsEntries(documentsEntries);
+const documentsList = filterDocumentsEntriesByType(documentType);
 
 const route = useRoute();
 const { currentPath } = useExtractRouteData(route);
 
 // TODO: It needs some testing with primitives.
-function getFallbackTitle(document: DocumentJsonModel) {
+function getFallbackTitle(document: DocumentEntry) {
   const { data } = document;
   const topLevelKey = Object.keys(data)[0];
   const topLevelValue = data[topLevelKey];
