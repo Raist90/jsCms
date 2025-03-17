@@ -23,16 +23,15 @@ const formData = defineModel<Record<string, any>>({
 });
 
 const route = useRoute();
-const isEditMode = computed(() => route.params.id);
+const isEditMode = computed(() => !!route.params.id);
 
-watch(
-  () => field,
-  () => {
-    if (field.value.type === "boolean" && !isEditMode.value)
+// Inizialize boolean values
+onMounted(() => {
+  if (!isEditMode.value) {
+    if (field.value.type === "boolean")
       formData.value[field.value.name] = false;
-  },
-  { immediate: true },
-);
+  }
+});
 
 function generateSlug(fieldName: string) {
   if ("slugify" in field.value && isString(field.value.slugify)) {

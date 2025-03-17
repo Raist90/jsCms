@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DocumentList from "~/components/DocumentList.vue";
+import DocumentsList from "~/components/DocumentsList.vue";
 import Sidebar from "~/components/Sidebar.vue";
 import config from "@/cmsConfig";
 import Topbar from "~/components/Topbar.vue";
@@ -22,7 +22,7 @@ const { currentDocumentName: documentType } = useExtractRouteData(route);
       </div>
 
       <div v-if="documentType" class="w-60 shrink-0 border-r border-gray-700">
-        <DocumentList :documentType />
+        <DocumentsList :documentType />
       </div>
 
       <div class="flex-1 overflow-auto">

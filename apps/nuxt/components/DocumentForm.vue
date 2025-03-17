@@ -37,11 +37,10 @@ const onFormSubmit = async () => {
   formErrors.value = null;
   isFormDisabled.value = true;
 
-  // TODO: find a more appealing name for this
-  const newlyAssignedDocumentId = crypto.randomUUID();
+  const documentId = crypto.randomUUID();
   try {
     await patchDocumentsData(isEditMode.value ? "update" : "add", {
-      id: isEditMode.value ? model.value?.id : newlyAssignedDocumentId,
+      id: isEditMode.value ? model.value?.id : documentId,
       type: props.document.name,
       data: {
         ...formData,
@@ -59,27 +58,24 @@ const onFormSubmit = async () => {
       },
       msTimeout: 2500,
     });
+
+    // Reinizialize deepclone of the original data
     originalRef.value = JSON.parse(JSON.stringify(formData));
     hasChanges.value = false;
   } catch (err) {
     console.error(err);
   }
 
-  // TODO: this condition should be based on `operationType === "add"`
-  if (!isEditMode.value) {
-    navigateTo(
-      `/documents/${props.document.name}/id/${newlyAssignedDocumentId}`,
-    );
-  }
+  if (!isEditMode.value)
+    navigateTo(`/documents/${props.document.name}/id/${documentId}`);
 };
 
-// TODO: We do the same with booleans inside `DynamicField`
-// It could be better to handle this inside a `initializeDocumentFields`
+// Initialize the form data with empty objects for nested fields
 watch(
-  () => fields,
-  () => {
+  fields,
+  (val) => {
     if (!isEditMode.value)
-      fields.value.forEach((field) => {
+      val.forEach((field) => {
         if (field.type === "object") {
           formData[field.name] = {};
         }

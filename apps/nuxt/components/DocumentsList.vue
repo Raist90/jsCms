@@ -9,7 +9,7 @@ const props = defineProps<{
 const documentType = computed(() => props.documentType);
 const documentsStore = useDocumentsStore();
 const { documentsData } = storeToRefs(documentsStore);
-const { filterDocumentsByType } = useFilterDocuments(documentsData.value);
+const { filterDocumentsByType } = useFilterDocuments(documentsData);
 const documentsList = filterDocumentsByType(documentType);
 
 const route = useRoute();

@@ -4,11 +4,6 @@ export const useDocumentsStore = defineStore("documents", () => {
   // States
   const documentsData = ref<DocumentJsonModel[]>([]);
 
-  // Getters
-  const documentsList = computed(() =>
-    documentsData.value?.map((doc) => doc.data.title),
-  ) as ComputedRef<string[]>;
-
   // Actions
   async function getDocumentDataById(id?: string) {
     const { data } = await useFetch<DocumentJsonModel>(
@@ -51,9 +46,6 @@ export const useDocumentsStore = defineStore("documents", () => {
   return {
     // State
     documentsData,
-
-    // Getters
-    documentsList,
 
     // Actions
     getDocumentDataById,
