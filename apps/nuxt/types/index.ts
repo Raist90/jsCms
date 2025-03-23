@@ -81,10 +81,12 @@ type Field =
       }
     >
   | Prettify<
-      BaseFieldKeys & {
+      Omit<BaseFieldKeys, "required"> & {
         type: "array";
-        // let's restrict multidimensional arrays for now
-        fields: Exclude<Field, BaseFieldKeys & { type: "array" }>[];
+        required: false;
+        of: "string" | "number" | "boolean" | (string & {});
+        min?: number;
+        max?: number;
       }
     >
   | Prettify<SlugField>

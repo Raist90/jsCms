@@ -1,6 +1,7 @@
 import type { DocumentDefinition } from "~/types";
 
 export {
+  isArrayField,
   isBooleanField,
   isNumberField,
   isObjectField,
@@ -39,6 +40,10 @@ function isStringField(fieldType: FieldType) {
 
 function isSlugField(fieldType: FieldType) {
   return !!(fieldType === "slug");
+}
+
+function isArrayField(fieldType: FieldType) {
+  return !!(fieldType === "array");
 }
 
 /**

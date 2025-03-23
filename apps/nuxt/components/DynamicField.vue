@@ -6,6 +6,7 @@ import {
   isPrimitiveField,
   isStringField,
   isSlugField,
+  isArrayField,
 } from "~/predicates";
 import type { DocumentDefinition } from "~/types";
 import { isBoolean, isFunction, isString } from "@sindresorhus/is";
@@ -130,4 +131,27 @@ function generateSlug(fieldName: string) {
       :disabled
     />
   </template>
+
+  <UIInputListWrapper
+    v-else-if="isArrayField(field.type)"
+    v-model="formData[field.name]"
+    :label="field.title"
+    :description="field.description"
+    :of="field.of"
+    :errors="
+      Object.entries(formErrors || {})
+        .filter(([key]) => key.startsWith(field.name))
+        .map(([_key, value]) => value)
+    "
+    :min="field.min"
+    :max="field.max"
+  >
+    <template #item="{ index }">
+      <input
+        v-model="formData[field.name][index]"
+        :class="['bg-white text-gray-900 w-full py-1.5 px-2.5 shadow-sm']"
+        type="text"
+      />
+    </template>
+  </UIInputListWrapper>
 </template>

@@ -7,7 +7,7 @@ defineProps<Props>();
 
 <template>
   <div
-    class="border flex px-2 items-center h-9"
+    class="border flex p-2 items-center h-9"
     :class="{
       'border-red-500 bg-red-500/10': status === 'error',
       'border-green-500 bg-green-500/10': status === 'success',

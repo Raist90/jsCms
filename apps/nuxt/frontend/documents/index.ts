@@ -23,6 +23,16 @@ const article = addDocument({
       type: "slug",
       slugify: "title",
     },
+    {
+      description: "The article tags.",
+      name: "tags",
+      title: "Tags",
+      type: "array",
+      of: "string",
+      required: false,
+      min: 1,
+      max: 3,
+    },
   ],
 });
 

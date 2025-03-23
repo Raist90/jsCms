@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import Badge from "../components/Badge.vue";
+import Alert from "../components/Alert.vue";
+import { computed } from "vue";
 
 type Props = {
   label: string;
   description?: string;
-  // TODO: rename this to `of`
-  of: "string" | "number" | "boolean" | "object";
+  of: "string" | "number" | "boolean" | (string & {});
   min?: number;
   max?: number;
+  errors?: string[];
 };
-defineProps<Props>();
+const props = defineProps<Props>();
+const errors = computed(() => props.errors);
 
 const model = defineModel<string[]>({ required: true });
 
@@ -20,57 +23,62 @@ function addItem() {
 function deleteItem(index: number) {
   model.value = model.value.filter((_, i) => i !== index);
 }
-
-// TODO: this will accept slots
-// Make a counter for the number of items in the list
-// Create an handleClick method to increment the counter using min and max as constraints
-// Badge should show the number of items in the list
-// We should also have an array of elements to store the list items and being able to remove them
-// formData model will probably work just fine for this out of the box
 </script>
 
 <template>
-  <div
-    class="border border-zinc-400 p-4 max-w-lg bg-zinc-700"
-    v-if="of === 'string'"
-  >
-    <div class="flex items-baseline">
-      <label class="text-sm font-bold" v-text="label" />
-      <Badge
-        :status="
-          (min && model.length < min) || (max && model.length > max)
-            ? 'warning'
-            : 'info'
-        "
-        >{{ model.length }} items</Badge
-      >
-    </div>
-
-    <p v-if="description" class="text-sm text-gray-300">{{ description }}</p>
-
-    <div class="mt-1 flex flex-col gap-y-3">
-      <!-- TODO: handle iteration with v-for here and inject a single input as slot -->
-      <div
-        v-for="(_, index) in model"
-        :key="index"
-        class="flex items-center bg-white h-9"
-      >
-        <input
-          :class="['bg-white text-gray-900 w-full py-1.5 px-2.5 shadow-sm']"
-          :of
-          v-model="model[index]"
-        />
-        <button
-          @click="deleteItem(index)"
-          class="shrink-0 px-2.5 block text-red-500 h-full text-sm border-l border-gray-300"
+  <div class="flex flex-col gap-y-2 w-full max-w-lg">
+    <div class="border border-gray-700 p-4 max-w-lg" v-if="of === 'string'">
+      <div class="flex items-baseline">
+        <label class="text-sm font-bold" v-text="label" />
+        <Badge
+          :status="
+            (min && model.length < min) || (max && model.length > max)
+              ? 'warning'
+              : 'info'
+          "
+          >{{ model.length }} items</Badge
         >
-          Delete
-        </button>
       </div>
 
-      <button @click="addItem" class="h-9 w-full border border-dashed text-sm">
-        Add item
-      </button>
+      <p v-if="description" class="text-sm text-gray-300">{{ description }}</p>
+
+      <div class="mt-1 flex flex-col gap-y-3">
+        <div
+          v-for="(_, index) in model"
+          :key="index"
+          :class="[
+            errors &&
+              errors.find((error) => error.includes(`[${index}]`)) &&
+              'border-2 border-red-500',
+            'flex mt-1',
+          ]"
+        >
+          <slot name="item" :index />
+          <button
+            type="button"
+            @click="deleteItem(index)"
+            class="text-red-500 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm"
+          >
+            Delete
+          </button>
+        </div>
+
+        <button
+          type="button"
+          @click="addItem"
+          class="h-9 w-full border border-dashed border-gray-700 text-sm"
+        >
+          Add item
+        </button>
+
+        <div class="flex flex-col gap-y-2">
+          <div v-for="error in errors" :key="error">
+            <Alert v-if="error" status="error">{{
+              error.replace(/\[(\d+)\]/, (_, n) => `[${+n + 1}]`)
+            }}</Alert>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

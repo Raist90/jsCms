@@ -81,6 +81,10 @@ watch(
         if (field.type === "object") {
           formData[field.name] = {};
         }
+
+        if (field.type === "array") {
+          formData[field.name] = [];
+        }
       });
   },
   { immediate: true },

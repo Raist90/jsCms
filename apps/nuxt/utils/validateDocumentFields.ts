@@ -1,7 +1,7 @@
 import type { DocumentDefinition } from "~/types";
 import { z } from "zod";
-import { isBoolean, isFunction } from "@sindresorhus/is";
-import { isObjectField } from "~/predicates";
+import { isBoolean, isFunction, isNumber, isString } from "@sindresorhus/is";
+import { isArrayField, isObjectField } from "~/predicates";
 
 export { validateDocumentFields };
 
@@ -12,14 +12,53 @@ function validateDocumentFields(
   const errors: Record<string, string> = {};
 
   for (const field of fields) {
+    const fieldName = field.name;
+
+    if (isArrayField(field.type)) {
+      if (!("min" in field) && !("max" in field)) continue;
+
+      if ("of" in field) {
+        if (isNumber(field.min)) {
+          if (formData[fieldName].length < field.min)
+            errors[fieldName] =
+              `Field ${fieldName} must have at least ${field.min} items`;
+        }
+
+        if (isNumber(field.max)) {
+          if (formData[fieldName].length > field.max)
+            errors[fieldName] =
+              `Field ${fieldName} must have at most ${field.max} items`;
+        }
+
+        if (field.of === "string") {
+          const itemsList = Object.entries({ ...formData[fieldName] });
+
+          for (const item of itemsList) {
+            const [itemKey, itemVal] = item;
+
+            if (isString(itemVal) && !itemVal.length) {
+              const key = parseInt(itemKey, 10);
+              errors[`${fieldName}[${key}]`] =
+                `Field ${field.title}[${key}] must be a valid string`;
+            }
+          }
+        }
+
+        continue;
+      }
+    }
+
     if (
       (isBoolean(field.required) && !field.required) ||
       (isFunction(field.required) && !field.required(formData))
     )
       continue;
 
-    const fieldName = field.name;
-    if (!(fieldName in formData)) {
+    if (
+      !(fieldName in formData) ||
+      // Don't accept empty strings as valid values
+      isString(formData[fieldName] && !formData[fieldName].length)
+    ) {
       errors[fieldName] = `Field ${fieldName} is required`;
       continue;
     }
@@ -43,7 +82,7 @@ function validateFieldType(
   let errMsg: string | null = null;
 
   const validatorSchema = z.object({
-    string: z.string().min(1),
+    string: z.string(),
     number: z.number(),
     boolean: z.boolean(),
     slug: z.string().min(1),
