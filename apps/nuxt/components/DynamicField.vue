@@ -9,7 +9,7 @@ import {
   isArrayField,
 } from "~/predicates";
 import type { DocumentDefinition } from "~/types";
-import { isBoolean, isFunction, isString } from "@sindresorhus/is";
+import { isArray, isBoolean, isFunction, isString } from "@sindresorhus/is";
 
 type Props = {
   field: DocumentDefinition["fields"][number];
@@ -27,7 +27,7 @@ const route = useRoute();
 const isEditMode = computed(() => !!route.params.id);
 
 // Inizialize boolean values
-onMounted(() => {
+onBeforeMount(() => {
   if (!isEditMode.value) {
     if (field.value.type === "boolean")
       formData.value[field.value.name] = false;
@@ -133,7 +133,7 @@ function generateSlug(fieldName: string) {
   </template>
 
   <UIInputListWrapper
-    v-else-if="isArrayField(field.type)"
+    v-else-if="isArrayField(field.type) && isArray(formData[field.name])"
     v-model="formData[field.name]"
     :label="field.title"
     :description="field.description"

@@ -6,7 +6,7 @@ type FetchOptions = {
   formatter?: (data: any) => Partial<typeof data> | undefined;
 };
 async function fetch(options: FetchOptions) {
-  const { data } = await useFetch("/api/documentJson", {
+  const { data } = await useFetch("/api/documentEntry", {
     method: "POST",
     body: {
       documentName: options.documentName,

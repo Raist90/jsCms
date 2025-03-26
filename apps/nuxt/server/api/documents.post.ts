@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
       target: contentTable.id,
       set: {
         data: body.data,
+        definition: body.definition,
       },
     });
 });

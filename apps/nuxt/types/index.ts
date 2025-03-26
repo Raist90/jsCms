@@ -121,5 +121,6 @@ type DocumentEntry = {
   id: ReturnType<typeof crypto.randomUUID>;
   type: string;
   data: Record<string, any>;
+  definition: DocumentDefinition;
   timestamp: string;
 };

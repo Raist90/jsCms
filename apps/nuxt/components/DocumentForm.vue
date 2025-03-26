@@ -19,6 +19,8 @@ const formData = model.value?.data
   ? model.value.data
   : reactive<Record<string, any>>({});
 
+const entryDefinition = model.value?.definition;
+
 const { patchDocumentEntry } = useDocumentsStore();
 
 const route = useRoute();
@@ -45,6 +47,7 @@ const onFormSubmit = async () => {
       data: {
         ...formData,
       },
+      definition: props.documentDefinition,
     } satisfies Omit<DocumentEntry, "timestamp">);
 
     toast.add({
@@ -99,9 +102,32 @@ watch(
       JSON.stringify(val) !== JSON.stringify(originalRef.value)),
   { deep: true },
 );
+
+const hasDefinitionsMismatch = computed(() => {
+  if (!isEditMode.value) return;
+
+  const stringifiedDefinition = JSON.stringify(props.documentDefinition);
+  const stringifiedEntryDefinition = JSON.stringify(entryDefinition);
+
+  return stringifiedDefinition !== stringifiedEntryDefinition;
+});
+watch(
+  hasDefinitionsMismatch,
+  (val) => {
+    if (val) isFormDisabled.value = true;
+    else isFormDisabled.value = false;
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
+  <section v-if="hasDefinitionsMismatch">
+    <UIAlert class="w-fit h-auto m-4 mb-0" status="warning">
+      The document definition has changed since the last time you saved this
+      document. Please review the changes before updating it.
+    </UIAlert>
+  </section>
   <section>
     <form novalidate @submit.prevent="onFormSubmit">
       <div class="p-4 w-10/12 space-y-4">
@@ -117,6 +143,15 @@ watch(
 
       <div class="p-4 flex justify-between border-y border-gray-700">
         <UIButton
+          v-if="hasDefinitionsMismatch"
+          type="button"
+          class="max-w-fit"
+          variant="outline"
+        >
+          Update this {{ documentDefinition.name }} definition
+        </UIButton>
+        <UIButton
+          v-else
           :disabled="isFormDisabled || !hasChanges"
           type="submit"
           class="max-w-fit"
@@ -127,7 +162,7 @@ watch(
 
         <UIButton
           v-if="isEditMode"
-          :disabled="isFormDisabled"
+          :disabled="isFormDisabled && !hasDefinitionsMismatch"
           type="button"
           class="max-w-fit"
           variant="danger"
