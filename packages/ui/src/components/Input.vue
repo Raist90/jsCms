@@ -39,7 +39,7 @@ const model = defineModel<string>();
           :class="[
             'bg-white shadow-sm text-gray-900 w-full h-9 py-1.5 px-2.5',
             withButton && 'w-full',
-            disabled && 'opacity-80 cursor-not-allowed',
+            disabled && 'opacity-50 cursor-not-allowed',
           ]"
           :name
           :required

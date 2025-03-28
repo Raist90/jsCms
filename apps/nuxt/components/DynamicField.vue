@@ -99,7 +99,7 @@ function generateSlug(fieldName: string) {
             :disabled
             :class="[
               'text-gray-900 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm',
-              disabled && 'opacity-80 cursor-not-allowed',
+              disabled && 'opacity-50 cursor-not-allowed',
             ]"
             type="button"
             @click="generateSlug(field.name)"
