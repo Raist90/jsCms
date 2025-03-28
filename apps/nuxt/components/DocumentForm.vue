@@ -3,10 +3,17 @@ import type { DocumentDefinition, DocumentEntry } from "~/types";
 import DynamicField from "./DynamicField.vue";
 import { useDocumentsStore } from "~/store/documentsStore";
 
-const props = defineProps<{
-  documentDefinition: DocumentDefinition;
-}>();
+const props = withDefaults(
+  defineProps<{
+    documentDefinition: DocumentDefinition;
+    hasDefinitionsMismatch?: boolean;
+  }>(),
+  {
+    hasDefinitionsMismatch: false,
+  },
+);
 const fields = computed(() => props.documentDefinition.fields);
+const hasDefinitionsMismatch = computed(() => props.hasDefinitionsMismatch);
 
 const emit = defineEmits([
   "document-entry-add",
@@ -22,7 +29,6 @@ const formData = model.value?.data
   ? model.value.data
   : reactive<Record<string, any>>({});
 
-const entryDefinition = model.value?.definition;
 const documentDefinition = computed(() => props.documentDefinition);
 
 const { patchDocumentEntry } = useDocumentsStore();
@@ -106,14 +112,6 @@ watch(
   { deep: true },
 );
 
-const hasDefinitionsMismatch = computed(() => {
-  if (!isEditMode.value) return;
-
-  const stringifiedDefinition = JSON.stringify(documentDefinition.value);
-  const stringifiedEntryDefinition = JSON.stringify(entryDefinition);
-
-  return stringifiedDefinition !== stringifiedEntryDefinition;
-});
 watch(
   hasDefinitionsMismatch,
   (val) => {

@@ -12,9 +12,23 @@ const isSubmitUpdateDocumentDefinitionModalOpen = ref(false);
 const isSubmitDeleteDocumentEntryModalOpen = ref(false);
 
 const { currentPageId: documentId } = useExtractRouteData(route);
-const documentEntry = await getDocumentEntryById(documentId.value);
+const documentEntry = ref(await getDocumentEntryById(documentId.value));
+const documentEntryDefinition = computed(
+  () => documentEntry?.value?.definition,
+);
 const documentDefinition =
-  (documentEntry && findDocumentDefinitionByType(documentEntry.type)) || null;
+  (documentEntry.value &&
+    findDocumentDefinitionByType(documentEntry.value.type)) ||
+  null;
+
+const hasDefinitionsMismatch = computed(() => {
+  const stringifiedEntryDefinition = JSON.stringify(
+    documentEntryDefinition.value,
+  );
+  const stringifiedDefinition = JSON.stringify(documentDefinition?.value);
+
+  return !!(stringifiedEntryDefinition !== stringifiedDefinition);
+});
 
 async function onDocumentEntryDelete(documentEntry: DocumentEntry) {
   await patchDocumentEntry("delete", documentEntry);
@@ -48,17 +62,15 @@ const stripFieldsMissingInDefinition = (
   );
 };
 
-// TODO: Now I just need to find a way to refresh the page after the update.
-// I think I could just move `hasDocumentDefinitionMismatch` here
-async function onDocumentDefinitionUpdate(documentEntry: DocumentEntry) {
+async function onDocumentDefinitionUpdate(entry: DocumentEntry) {
   // TODO: Handle the case when `documentDefinition` is null
   if (!documentDefinition?.value) return;
 
   try {
     await patchDocumentEntry("update", {
-      id: documentEntry.id,
-      type: documentEntry.type,
-      data: stripFieldsMissingInDefinition(documentEntry.data),
+      id: entry.id,
+      type: entry.type,
+      data: stripFieldsMissingInDefinition(entry.data),
       definition: documentDefinition.value,
     } satisfies Omit<DocumentEntry, "timestamp">);
 
@@ -66,12 +78,19 @@ async function onDocumentDefinitionUpdate(documentEntry: DocumentEntry) {
 
     toast.add({
       isOpen: true,
-      message: `${capitalize(documentEntry.type)} correctly updated!`,
+      message: `${capitalize(entry.type)} correctly updated!`,
       onClose: () => toast.clear(),
       msTimeout: 2500,
     });
   } catch (err) {
     console.error(err);
+  }
+
+  try {
+    // Refetch the document entry to update the UI
+    documentEntry.value = await getDocumentEntryById(documentId.value);
+  } catch (err) {
+    console.log(err);
   }
 }
 </script>
@@ -86,6 +105,7 @@ async function onDocumentDefinitionUpdate(documentEntry: DocumentEntry) {
       v-if="documentEntry && documentDefinition"
       v-model="documentEntry"
       :documentDefinition
+      :hasDefinitionsMismatch
       @document-entry-delete="isSubmitDeleteDocumentEntryModalOpen = true"
       @document-definition-update="
         isSubmitUpdateDocumentDefinitionModalOpen = true
