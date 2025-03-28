@@ -3,13 +3,16 @@ import type { DocumentDefinition, DocumentEntry } from "~/types";
 import DynamicField from "./DynamicField.vue";
 import { useDocumentsStore } from "~/store/documentsStore";
 
-const props = defineProps<{ documentDefinition: DocumentDefinition }>();
+const props = defineProps<{
+  documentDefinition: DocumentDefinition;
+}>();
 const fields = computed(() => props.documentDefinition.fields);
 
 const emit = defineEmits([
   "document-entry-add",
   "document-entry-delete",
   "document-entry-update",
+  "document-definition-update",
 ]);
 
 const toast = useToast();
@@ -20,6 +23,7 @@ const formData = model.value?.data
   : reactive<Record<string, any>>({});
 
 const entryDefinition = model.value?.definition;
+const documentDefinition = computed(() => props.documentDefinition);
 
 const { patchDocumentEntry } = useDocumentsStore();
 
@@ -43,16 +47,16 @@ const onFormSubmit = async () => {
   try {
     await patchDocumentEntry(isEditMode.value ? "update" : "add", {
       id: isEditMode.value ? model.value?.id : documentEntryId,
-      type: props.documentDefinition.name,
+      type: documentDefinition.value.name,
       data: {
         ...formData,
       },
-      definition: props.documentDefinition,
+      definition: documentDefinition.value,
     } satisfies Omit<DocumentEntry, "timestamp">);
 
     toast.add({
       isOpen: true,
-      message: `${capitalize(props.documentDefinition.name)} correctly ${
+      message: `${capitalize(documentDefinition.value.name)} correctly ${
         isEditMode.value ? "updated!" : "saved!"
       }`,
       onClose: () => {
@@ -71,7 +75,7 @@ const onFormSubmit = async () => {
 
   if (!isEditMode.value)
     navigateTo(
-      `/documents/${props.documentDefinition.name}/id/${documentEntryId}`,
+      `/documents/${documentDefinition.value.name}/id/${documentEntryId}`,
     );
 };
 
@@ -79,16 +83,15 @@ const onFormSubmit = async () => {
 watch(
   fields,
   (val) => {
-    if (!isEditMode.value)
-      val.forEach((field) => {
-        if (field.type === "object") {
-          formData[field.name] = {};
-        }
+    val.forEach((field) => {
+      if (field.type === "object" && !formData[field.name]) {
+        formData[field.name] = {};
+      }
 
-        if (field.type === "array") {
-          formData[field.name] = [];
-        }
-      });
+      if (field.type === "array" && !formData[field.name]) {
+        formData[field.name] = [];
+      }
+    });
   },
   { immediate: true },
 );
@@ -106,7 +109,7 @@ watch(
 const hasDefinitionsMismatch = computed(() => {
   if (!isEditMode.value) return;
 
-  const stringifiedDefinition = JSON.stringify(props.documentDefinition);
+  const stringifiedDefinition = JSON.stringify(documentDefinition.value);
   const stringifiedEntryDefinition = JSON.stringify(entryDefinition);
 
   return stringifiedDefinition !== stringifiedEntryDefinition;
@@ -147,6 +150,7 @@ watch(
           type="button"
           class="max-w-fit"
           variant="outline"
+          @click="emit('document-definition-update')"
         >
           Update this {{ documentDefinition.name }} definition
         </UIButton>

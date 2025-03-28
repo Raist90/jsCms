@@ -8,12 +8,15 @@ const toast = useToast();
 const route = useRoute();
 const { findDocumentDefinitionByType } = useCmsConfig();
 
+const isSubmitUpdateDocumentDefinitionModalOpen = ref(false);
+const isSubmitDeleteDocumentEntryModalOpen = ref(false);
+
 const { currentPageId: documentId } = useExtractRouteData(route);
 const documentEntry = await getDocumentEntryById(documentId.value);
 const documentDefinition =
-  (documentEntry && findDocumentDefinitionByType(documentEntry?.type)) || null;
+  (documentEntry && findDocumentDefinitionByType(documentEntry.type)) || null;
 
-async function onDocumentDataDelete(documentEntry: DocumentEntry) {
+async function onDocumentEntryDelete(documentEntry: DocumentEntry) {
   await patchDocumentEntry("delete", documentEntry);
   navigateTo(`/documents/${documentEntry.type}`);
 
@@ -27,7 +30,50 @@ async function onDocumentDataDelete(documentEntry: DocumentEntry) {
   });
 }
 
-const isConfirmModalOpen = ref(false);
+const isFieldMissingInDefinition = (field: string) => {
+  return !documentDefinition?.value?.fields.some((f) => f.name === field);
+};
+
+const stripFieldsMissingInDefinition = (
+  data: Record<string, any>,
+): Record<string, any> => {
+  return Object.fromEntries(
+    Object.entries(data)
+      .filter(([key]) => !isFieldMissingInDefinition(key))
+      .map(([key, value]) => {
+        if (typeof value === "object" && !Array.isArray(value))
+          return [key, stripFieldsMissingInDefinition(value)];
+        else return [key, value];
+      }),
+  );
+};
+
+// TODO: Now I just need to find a way to refresh the page after the update.
+// I think I could just move `hasDocumentDefinitionMismatch` here
+async function onDocumentDefinitionUpdate(documentEntry: DocumentEntry) {
+  // TODO: Handle the case when `documentDefinition` is null
+  if (!documentDefinition?.value) return;
+
+  try {
+    await patchDocumentEntry("update", {
+      id: documentEntry.id,
+      type: documentEntry.type,
+      data: stripFieldsMissingInDefinition(documentEntry.data),
+      definition: documentDefinition.value,
+    } satisfies Omit<DocumentEntry, "timestamp">);
+
+    isSubmitUpdateDocumentDefinitionModalOpen.value = false;
+
+    toast.add({
+      isOpen: true,
+      message: `${capitalize(documentEntry.type)} correctly updated!`,
+      onClose: () => toast.clear(),
+      msTimeout: 2500,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
 </script>
 
 <template>
@@ -40,14 +86,48 @@ const isConfirmModalOpen = ref(false);
       v-if="documentEntry && documentDefinition"
       v-model="documentEntry"
       :documentDefinition
-      @document-entry-delete="isConfirmModalOpen = true"
+      @document-entry-delete="isSubmitDeleteDocumentEntryModalOpen = true"
+      @document-definition-update="
+        isSubmitUpdateDocumentDefinitionModalOpen = true
+      "
     />
 
     <UIModal
       v-if="documentEntry"
-      :isOpen="isConfirmModalOpen"
+      :isOpen="isSubmitUpdateDocumentDefinitionModalOpen"
       title="Are you sure?"
-      @close="isConfirmModalOpen = false"
+      @close="isSubmitUpdateDocumentDefinitionModalOpen = false"
+    >
+      <template #content>
+        <p>
+          Are you sure you want to update this document definition? By doing so
+          you will lose some data referenced in the old schema.
+        </p>
+      </template>
+
+      <template #cta>
+        <div class="flex justify-between">
+          <UIButton
+            variant="danger"
+            type="button"
+            @click="onDocumentDefinitionUpdate(documentEntry)"
+            >Update</UIButton
+          >
+          <UIButton
+            variant="outline"
+            type="button"
+            @click="isSubmitUpdateDocumentDefinitionModalOpen = false"
+            >Cancel</UIButton
+          >
+        </div>
+      </template>
+    </UIModal>
+
+    <UIModal
+      v-if="documentEntry"
+      :isOpen="isSubmitDeleteDocumentEntryModalOpen"
+      title="Are you sure?"
+      @close="isSubmitDeleteDocumentEntryModalOpen = false"
     >
       <template #content>
         <p>Are you sure you want to delete this document?</p>
@@ -58,13 +138,13 @@ const isConfirmModalOpen = ref(false);
           <UIButton
             variant="danger"
             type="button"
-            @click="onDocumentDataDelete(documentEntry)"
+            @click="onDocumentEntryDelete(documentEntry)"
             >Delete</UIButton
           >
           <UIButton
             variant="outline"
             type="button"
-            @click="isConfirmModalOpen = false"
+            @click="isSubmitDeleteDocumentEntryModalOpen = false"
             >Cancel</UIButton
           >
         </div>
