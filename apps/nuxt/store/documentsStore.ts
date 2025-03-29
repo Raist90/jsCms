@@ -1,8 +1,12 @@
 import type { DocumentEntry } from "~/types";
 
 export const useDocumentsStore = defineStore("documents", () => {
+  const nuxtApp = useNuxtApp();
+
   // States
-  const documentsEntries = ref<DocumentEntry[]>([]);
+  const documentsEntries = ref<DocumentEntry[]>(
+    nuxtApp.payload.data.documentsEntries || [],
+  );
 
   // Actions
   async function getDocumentEntryById(id?: string) {
