@@ -10,13 +10,9 @@ export const useDocumentsStore = defineStore("documents", () => {
 
   // Actions
   async function getDocumentEntryById(id?: string) {
-    const { data } = await useFetch<DocumentEntry>(
-      `/api/document/data/id/${id}`,
-      {
-        method: "GET",
-      },
-    );
-    return data.value;
+    return $fetch<DocumentEntry>(`/api/document/data/id/${id}`, {
+      method: "GET",
+    });
   }
 
   async function patchDocumentEntry(

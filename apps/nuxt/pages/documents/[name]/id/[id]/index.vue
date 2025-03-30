@@ -5,21 +5,34 @@ import type { DocumentEntry } from "~/types";
 
 const { getDocumentEntryById, patchDocumentEntry } = useDocumentsStore();
 const toast = useToast();
-const route = useRoute();
 const { findDocumentDefinitionByType } = useCmsConfig();
 
 const isSubmitUpdateDocumentDefinitionModalOpen = ref(false);
 const isSubmitDeleteDocumentEntryModalOpen = ref(false);
 
-const { currentPageId: documentId } = useExtractRouteData(route);
-const documentEntry = ref(await getDocumentEntryById(documentId.value));
+const route = useRoute();
+const {
+  currentPageId: documentId,
+  currentDocumentEntryName: documentEntryType,
+} = useExtractRouteData(route);
+
+const { data: documentEntry, status } = await useLazyAsyncData(
+  `document-${documentId.value}`,
+  () => getDocumentEntryById(documentId.value),
+  {
+    server: false,
+    getCachedData: (key, nuxtApp) =>
+      nuxtApp.isHydrating
+        ? nuxtApp.payload.data[key]
+        : nuxtApp.static.data[key],
+  },
+);
+
 const documentEntryDefinition = computed(
   () => documentEntry?.value?.definition,
 );
-const documentDefinition =
-  (documentEntry.value &&
-    findDocumentDefinitionByType(documentEntry.value.type)) ||
-  null;
+
+const documentDefinition = findDocumentDefinitionByType(documentEntryType);
 
 const hasDefinitionsMismatch = computed(() => {
   const stringifiedEntryDefinition = JSON.stringify(
@@ -87,12 +100,14 @@ async function onDocumentDefinitionUpdate(entry: DocumentEntry) {
   }
 
   try {
-    // Refetch the document entry to update the UI
-    documentEntry.value = await getDocumentEntryById(documentId.value);
+    // Refresh the document entry to update the UI
+    refreshNuxtData(`document-${documentId.value}`);
   } catch (err) {
     console.log(err);
   }
 }
+
+const { shouldRenderSkeleton } = useSkeleton(computed(() => status.value));
 </script>
 
 <template>
@@ -101,8 +116,9 @@ async function onDocumentDefinitionUpdate(entry: DocumentEntry) {
       <h2 class="font-bold" v-text="documentEntry?.data.title" />
     </header>
 
+    <UIDocumentFormSkeleton v-if="shouldRenderSkeleton" />
     <DocumentForm
-      v-if="documentEntry && documentDefinition"
+      v-else-if="documentEntry && documentDefinition"
       v-model="documentEntry"
       :documentDefinition
       :hasDefinitionsMismatch

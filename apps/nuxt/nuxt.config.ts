@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   components: false,
   css: ["~/assets/css/main.css"],
   devtools: { enabled: false },
+  experimental: {
+    payloadExtraction: true,
+  },
   modules: [
     "nuxt-lucide-icons",
     "@nuxt/eslint",
@@ -11,6 +14,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@pinia/nuxt",
     "@nuxtjs/tailwindcss",
+    "@vueuse/nuxt",
     "jscms-ui/nuxt",
   ],
   fonts: {

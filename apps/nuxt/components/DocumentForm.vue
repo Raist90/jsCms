@@ -13,6 +13,7 @@ const props = withDefaults(
   },
 );
 const fields = computed(() => props.documentDefinition.fields);
+const documentDefinition = computed(() => props.documentDefinition);
 const hasDefinitionsMismatch = computed(() => props.hasDefinitionsMismatch);
 
 const emit = defineEmits([
@@ -28,8 +29,6 @@ const model = defineModel<Record<string, any>>();
 const formData = model.value?.data
   ? model.value.data
   : reactive<Record<string, any>>({});
-
-const documentDefinition = computed(() => props.documentDefinition);
 
 const { patchDocumentEntry } = useDocumentsStore();
 
