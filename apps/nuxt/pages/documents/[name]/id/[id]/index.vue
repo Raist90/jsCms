@@ -21,10 +21,6 @@ const { data: documentEntry, status } = await useLazyAsyncData(
   () => getDocumentEntryById(documentId.value),
   {
     server: false,
-    getCachedData: (key, nuxtApp) =>
-      nuxtApp.isHydrating
-        ? nuxtApp.payload.data[key]
-        : nuxtApp.static.data[key],
   },
 );
 
