@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import DocumentForm from "~/components/DocumentForm.vue";
-import config from "@/cmsConfig";
-
-const {
-  schema: { documents },
-} = config;
 
 const route = useRoute();
-const { currentDocumentEntryName } = useExtractRouteData(route);
-// TODO: I need to create a composable or utility that interacts with config
-const documentDefinition = documents.find(
-  (document) => document.name === currentDocumentEntryName.value,
-);
+const { currentDocumentEntryName: documentEntryType } =
+  useExtractRouteData(route);
+
+const { findDocumentDefinitionByType } = useCmsConfig();
+const documentDefinition = findDocumentDefinitionByType(documentEntryType);
 </script>
 
 <template>
