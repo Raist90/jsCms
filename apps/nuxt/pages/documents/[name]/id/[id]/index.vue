@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DocumentForm from "~/components/DocumentForm.vue";
+import { isValidUUID } from "~/predicates";
 import { useDocumentsStore } from "~/store/documentsStore";
 import type { DocumentEntry } from "~/types";
 
@@ -9,6 +10,7 @@ const { findDocumentDefinitionByType } = useCmsConfig();
 
 const isSubmitUpdateDocumentDefinitionModalOpen = ref(false);
 const isSubmitDeleteDocumentEntryModalOpen = ref(false);
+const isLoading = ref(false);
 
 const route = useRoute();
 const {
@@ -62,8 +64,39 @@ function refreshDocumentEntry() {
   }
 }
 
-function onDocumentEntryUpdate() {
-  refreshDocumentEntry();
+async function onDocumentEntryUpdate(formData: Record<string, any>) {
+  isLoading.value = true;
+
+  try {
+    if (!isValidUUID(documentId.value))
+      throw new Error(`Invalid UUID: ${documentId.value}`);
+    if (!documentDefinition.value)
+      throw new Error(
+        `Document definition not found for type: ${documentEntryType}`,
+      );
+
+    await patchDocumentEntry("update", {
+      id: documentId.value,
+      type: documentDefinition.value.name,
+      data: formData,
+      definition: documentDefinition.value,
+    });
+
+    toast.add({
+      isOpen: true,
+      message: `${capitalize(documentDefinition.value.name)} correctly updated!`,
+      onClose: () => {
+        toast.clear();
+      },
+      msTimeout: 2500,
+    });
+
+    refreshDocumentEntry();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 const isFieldMissingInDefinition = (field: string) => {
@@ -94,7 +127,7 @@ async function onDocumentDefinitionUpdate(entry: DocumentEntry) {
       type: entry.type,
       data: stripFieldsMissingInDefinition(entry.data),
       definition: documentDefinition.value,
-    } satisfies Omit<DocumentEntry, "timestamp">);
+    });
 
     isSubmitUpdateDocumentDefinitionModalOpen.value = false;
 
@@ -127,6 +160,8 @@ const { shouldRenderSkeleton } = useSkeleton(computed(() => status.value));
       v-model="documentEntry"
       :documentDefinition
       :hasDefinitionsMismatch
+      isEditMode
+      :isLoading
       @document-entry-delete="isSubmitDeleteDocumentEntryModalOpen = true"
       @document-entry-update="onDocumentEntryUpdate"
       @document-definition-update="

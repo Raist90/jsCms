@@ -1,42 +1,39 @@
 <script setup lang="ts">
-import type { DocumentDefinition, DocumentEntry } from "~/types";
+import type { DocumentDefinition } from "~/types";
 import DynamicField from "./DynamicField.vue";
-import { useDocumentsStore } from "~/store/documentsStore";
 
 const props = withDefaults(
   defineProps<{
     documentDefinition: DocumentDefinition;
     hasDefinitionsMismatch?: boolean;
+    isEditMode?: boolean;
+    isLoading?: boolean;
   }>(),
   {
     hasDefinitionsMismatch: false,
+    isEditMode: false,
+    isLoading: false,
   },
 );
 const fields = computed(() => props.documentDefinition.fields);
 const documentDefinition = computed(() => props.documentDefinition);
 const hasDefinitionsMismatch = computed(() => props.hasDefinitionsMismatch);
+const isEditMode = computed(() => props.isEditMode);
 
-const emit = defineEmits([
-  "document-entry-add",
-  "document-entry-delete",
-  "document-entry-update",
-  "document-definition-update",
-]);
-
-const toast = useToast();
+const emit = defineEmits<{
+  (e: "document-entry-delete" | "document-definition-update"): void;
+  (
+    e: "document-entry-add" | "document-entry-update",
+    formData: Record<string, any>,
+  ): void;
+}>();
 
 const model = defineModel<Record<string, any>>();
 const formData = model.value?.data
   ? model.value.data
   : reactive<Record<string, any>>({});
 
-const { patchDocumentEntry } = useDocumentsStore();
-
-const route = useRoute();
-const isEditMode = computed(() => !!route.params.id);
-
 const formErrors = ref<Record<string, string> | null>(null);
-const isFormDisabled = ref(false);
 
 const onFormSubmit = async () => {
   const validationErrors = validateDocumentFields(fields.value, formData);
@@ -46,44 +43,13 @@ const onFormSubmit = async () => {
   }
 
   formErrors.value = null;
-  isFormDisabled.value = true;
 
-  const documentEntryId = crypto.randomUUID();
-  try {
-    await patchDocumentEntry(isEditMode.value ? "update" : "add", {
-      id: isEditMode.value ? model.value?.id : documentEntryId,
-      type: documentDefinition.value.name,
-      data: {
-        ...formData,
-      },
-      definition: documentDefinition.value,
-    } satisfies Omit<DocumentEntry, "timestamp">);
+  if (isEditMode.value) emit("document-entry-update", formData);
+  else emit("document-entry-add", formData);
 
-    toast.add({
-      isOpen: true,
-      message: `${capitalize(documentDefinition.value.name)} correctly ${
-        isEditMode.value ? "updated!" : "saved!"
-      }`,
-      onClose: () => {
-        toast.clear();
-        isFormDisabled.value = false;
-      },
-      msTimeout: 2500,
-    });
-
-    // Reinizialize deepclone of the original data
-    originalRef.value = JSON.parse(JSON.stringify(formData));
-    hasChanges.value = false;
-  } catch (err) {
-    console.error(err);
-  }
-
-  if (!isEditMode.value)
-    navigateTo(
-      `/documents/${documentDefinition.value.name}/id/${documentEntryId}`,
-    );
-
-  emit("document-entry-update");
+  // Reinizialize deepclone of the original data
+  originalRef.value = JSON.parse(JSON.stringify(formData));
+  hasChanges.value = false;
 };
 
 // Initialize the form data with empty objects for nested fields
@@ -112,15 +78,6 @@ watch(
       JSON.stringify(val) !== JSON.stringify(originalRef.value)),
   { deep: true },
 );
-
-watch(
-  hasDefinitionsMismatch,
-  (val) => {
-    if (val) isFormDisabled.value = true;
-    else isFormDisabled.value = false;
-  },
-  { immediate: true },
-);
 </script>
 
 <template>
@@ -138,7 +95,7 @@ watch(
             v-model="formData"
             :field="field"
             :formErrors
-            :disabled="isFormDisabled"
+            :disabled="hasDefinitionsMismatch || isLoading"
           />
         </template>
       </div>
@@ -155,7 +112,7 @@ watch(
         </UIButton>
         <UIButton
           v-else
-          :disabled="isFormDisabled || !hasChanges"
+          :disabled="isLoading || !hasChanges"
           type="submit"
           class="max-w-fit"
           size="md"
@@ -165,7 +122,7 @@ watch(
 
         <UIButton
           v-if="isEditMode"
-          :disabled="isFormDisabled && !hasDefinitionsMismatch"
+          :disabled="isLoading && !hasDefinitionsMismatch"
           type="button"
           class="max-w-fit"
           variant="danger"
