@@ -2,14 +2,16 @@
 import DocumentForm from "~/components/DocumentForm.vue";
 import { isValidUUID } from "~/predicates";
 import { useDocumentsStore } from "~/store/documentsStore";
-import type { DocumentEntry } from "~/types";
+import type { DocumentDefinition, DocumentEntry } from "~/types";
+import DeleteDocumentEntryModal from "~/components/modals/DeleteDocumentEntryModal.vue";
+import UpdateDocumentDefinitionModal from "~/components/modals/UpdateDocumentDefinitionModal.vue";
 
 const { getDocumentEntryById, patchDocumentEntry } = useDocumentsStore();
 const toast = useToast();
 const { findDocumentDefinitionByType } = useCmsConfig();
 
-const isSubmitUpdateDocumentDefinitionModalOpen = ref(false);
-const isSubmitDeleteDocumentEntryModalOpen = ref(false);
+const isUpdateDocumentDefinitionModalOpen = ref(false);
+const isDeleteDocumentEntryModalOpen = ref(false);
 const isLoading = ref(false);
 
 const route = useRoute();
@@ -41,7 +43,7 @@ const hasDefinitionsMismatch = computed(() => {
   return !!(stringifiedEntryDefinition !== stringifiedDefinition);
 });
 
-async function onDocumentEntryDelete(documentEntry: DocumentEntry) {
+async function onConfirmDocumentEntryDelete(documentEntry: DocumentEntry) {
   await patchDocumentEntry("delete", documentEntry);
   navigateTo(`/documents/${documentEntry.type}`);
 
@@ -53,15 +55,6 @@ async function onDocumentEntryDelete(documentEntry: DocumentEntry) {
     },
     msTimeout: 2500,
   });
-}
-
-// TODO: This shouldn't be here
-function refreshDocumentEntry() {
-  try {
-    refreshNuxtData(`document-${documentId.value}`);
-  } catch (err) {
-    console.log(err);
-  }
 }
 
 async function onDocumentEntryUpdate(formData: Record<string, any>) {
@@ -91,7 +84,8 @@ async function onDocumentEntryUpdate(formData: Record<string, any>) {
       msTimeout: 2500,
     });
 
-    refreshDocumentEntry();
+    // Refresh the document entry to update the UI
+    refreshNuxtData(`document-${documentId.value}`);
   } catch (err) {
     console.error(err);
   } finally {
@@ -99,15 +93,15 @@ async function onDocumentEntryUpdate(formData: Record<string, any>) {
   }
 }
 
-const isFieldMissingInDefinition = (field: string) => {
-  return !documentDefinition?.value?.fields.some((f) => f.name === field);
+const isFieldMissingInDefinition = (fieldKey: string) => {
+  return !documentDefinition?.value?.fields.some((f) => f.name === fieldKey);
 };
 
 const stripFieldsMissingInDefinition = (
-  data: Record<string, any>,
+  documentEntryData: Record<string, any>,
 ): Record<string, any> => {
   return Object.fromEntries(
-    Object.entries(data)
+    Object.entries(documentEntryData)
       .filter(([key]) => !isFieldMissingInDefinition(key))
       .map(([key, value]) => {
         if (typeof value === "object" && !Array.isArray(value))
@@ -117,19 +111,19 @@ const stripFieldsMissingInDefinition = (
   );
 };
 
-async function onDocumentDefinitionUpdate(entry: DocumentEntry) {
-  // TODO: Handle the case when `documentDefinition` is null
-  if (!documentDefinition?.value) return;
-
+async function onConfirmDocumentDefinitionUpdate(
+  entry: DocumentEntry,
+  definition: DocumentDefinition,
+) {
   try {
     await patchDocumentEntry("update", {
       id: entry.id,
       type: entry.type,
       data: stripFieldsMissingInDefinition(entry.data),
-      definition: documentDefinition.value,
+      definition,
     });
 
-    isSubmitUpdateDocumentDefinitionModalOpen.value = false;
+    isUpdateDocumentDefinitionModalOpen.value = false;
 
     toast.add({
       isOpen: true,
@@ -139,7 +133,7 @@ async function onDocumentDefinitionUpdate(entry: DocumentEntry) {
     });
 
     // Refresh the document entry to update the UI
-    refreshDocumentEntry();
+    refreshNuxtData(`document-${documentId.value}`);
   } catch (err) {
     console.error(err);
   }
@@ -162,70 +156,27 @@ const { shouldRenderSkeleton } = useSkeleton(computed(() => status.value));
       :hasDefinitionsMismatch
       isEditMode
       :isLoading
-      @document-entry-delete="isSubmitDeleteDocumentEntryModalOpen = true"
+      @document-entry-delete="isDeleteDocumentEntryModalOpen = true"
       @document-entry-update="onDocumentEntryUpdate"
-      @document-definition-update="
-        isSubmitUpdateDocumentDefinitionModalOpen = true
+      @document-definition-update="isUpdateDocumentDefinitionModalOpen = true"
+    />
+
+    <UpdateDocumentDefinitionModal
+      v-if="documentEntry && documentDefinition"
+      :isOpen="isUpdateDocumentDefinitionModalOpen"
+      @close="isUpdateDocumentDefinitionModalOpen = false"
+      @confirm-document-definition-update="
+        onConfirmDocumentDefinitionUpdate(documentEntry, documentDefinition)
       "
     />
 
-    <UIModal
+    <DeleteDocumentEntryModal
       v-if="documentEntry"
-      :isOpen="isSubmitUpdateDocumentDefinitionModalOpen"
-      title="Are you sure?"
-      @close="isSubmitUpdateDocumentDefinitionModalOpen = false"
-    >
-      <template #content>
-        <p>
-          Are you sure you want to update this document definition? By doing so
-          you will lose some data referenced in the old schema.
-        </p>
-      </template>
-
-      <template #cta>
-        <div class="flex justify-between">
-          <UIButton
-            variant="danger"
-            type="button"
-            @click="onDocumentDefinitionUpdate(documentEntry)"
-            >Update</UIButton
-          >
-          <UIButton
-            variant="outline"
-            type="button"
-            @click="isSubmitUpdateDocumentDefinitionModalOpen = false"
-            >Cancel</UIButton
-          >
-        </div>
-      </template>
-    </UIModal>
-
-    <UIModal
-      v-if="documentEntry"
-      :isOpen="isSubmitDeleteDocumentEntryModalOpen"
-      title="Are you sure?"
-      @close="isSubmitDeleteDocumentEntryModalOpen = false"
-    >
-      <template #content>
-        <p>Are you sure you want to delete this document?</p>
-      </template>
-
-      <template #cta>
-        <div class="flex justify-between">
-          <UIButton
-            variant="danger"
-            type="button"
-            @click="onDocumentEntryDelete(documentEntry)"
-            >Delete</UIButton
-          >
-          <UIButton
-            variant="outline"
-            type="button"
-            @click="isSubmitDeleteDocumentEntryModalOpen = false"
-            >Cancel</UIButton
-          >
-        </div>
-      </template>
-    </UIModal>
+      :isOpen="isDeleteDocumentEntryModalOpen"
+      @close="isDeleteDocumentEntryModalOpen = false"
+      @confirm-document-entry-delete="
+        onConfirmDocumentEntryDelete(documentEntry)
+      "
+    />
   </section>
 </template>
