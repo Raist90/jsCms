@@ -53,6 +53,19 @@ async function onDocumentEntryDelete(documentEntry: DocumentEntry) {
   });
 }
 
+// TODO: This shouldn't be here
+function refreshDocumentEntry() {
+  try {
+    refreshNuxtData(`document-${documentId.value}`);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function onDocumentEntryUpdate() {
+  refreshDocumentEntry();
+}
+
 const isFieldMissingInDefinition = (field: string) => {
   return !documentDefinition?.value?.fields.some((f) => f.name === field);
 };
@@ -91,15 +104,11 @@ async function onDocumentDefinitionUpdate(entry: DocumentEntry) {
       onClose: () => toast.clear(),
       msTimeout: 2500,
     });
+
+    // Refresh the document entry to update the UI
+    refreshDocumentEntry();
   } catch (err) {
     console.error(err);
-  }
-
-  try {
-    // Refresh the document entry to update the UI
-    refreshNuxtData(`document-${documentId.value}`);
-  } catch (err) {
-    console.log(err);
   }
 }
 
@@ -119,6 +128,7 @@ const { shouldRenderSkeleton } = useSkeleton(computed(() => status.value));
       :documentDefinition
       :hasDefinitionsMismatch
       @document-entry-delete="isSubmitDeleteDocumentEntryModalOpen = true"
+      @document-entry-update="onDocumentEntryUpdate"
       @document-definition-update="
         isSubmitUpdateDocumentDefinitionModalOpen = true
       "

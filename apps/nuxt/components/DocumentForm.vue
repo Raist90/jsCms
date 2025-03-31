@@ -82,6 +82,8 @@ const onFormSubmit = async () => {
     navigateTo(
       `/documents/${documentDefinition.value.name}/id/${documentEntryId}`,
     );
+
+  emit("document-entry-update");
 };
 
 // Initialize the form data with empty objects for nested fields

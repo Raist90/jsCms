@@ -111,11 +111,7 @@ function generateSlug(fieldName: string) {
     </div>
   </template>
 
-  <template
-    v-else-if="
-      isObjectField(field.type) && 'fields' in field && field.fields.length
-    "
-  >
+  <template v-else-if="isObjectField(field.type) && field.fields.length">
     <div>
       <h3 class="font-bold mb-1">{{ field.title }}</h3>
       <p class="text-sm text-gray-300 dark:text-gray-400">
