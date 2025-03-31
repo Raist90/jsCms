@@ -4,9 +4,6 @@ export default defineNuxtConfig({
   components: false,
   css: ["~/assets/css/main.css"],
   devtools: { enabled: false },
-  experimental: {
-    payloadExtraction: true,
-  },
   modules: [
     "nuxt-lucide-icons",
     "@nuxt/eslint",
