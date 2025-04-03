@@ -1,6 +1,15 @@
-import { addDocument } from "~/types";
+import {
+  addDocument,
+  type DocumentDefinition,
+  type DocumentEntry,
+} from "~/types";
 
-export { validDocumentMock, invalidDocumentMock };
+export {
+  validDocumentMock,
+  invalidDocumentMock,
+  validDocumentWithNestedObject,
+  invalidDocumentWithNestedObject,
+};
 
 const validDocumentMock = {
   document: addDocument({
@@ -56,7 +65,7 @@ const validDocumentMock = {
         ],
       },
     ],
-  }),
+  } satisfies DocumentDefinition),
   formData: {
     title: "Hello world",
     slug: "hello-world",
@@ -66,7 +75,7 @@ const validDocumentMock = {
         subtitle: "This is a test",
       },
     },
-  },
+  } satisfies DocumentEntry["data"],
 };
 
 const invalidDocumentMock = {
@@ -91,8 +100,75 @@ const invalidDocumentMock = {
         type: "string",
       },
     ],
-  },
+  } satisfies DocumentDefinition,
   formData: {
     title: "Hello world",
+  } satisfies DocumentEntry["data"],
+};
+
+const validDocumentWithNestedObject = {
+  document: {
+    name: "mock",
+    title: "Mock",
+    description: "A mock document with nested objects",
+    type: "document",
+    fields: [
+      {
+        name: "mockParent",
+        title: "Mock parent",
+        description: "A mock parent object",
+        type: "object",
+        required: true,
+        fields: [
+          {
+            name: "mockChild",
+            title: "Mock child",
+            description: "A mock child object",
+            type: "object",
+            required: true,
+            fields: [
+              {
+                name: "mockGrandchild",
+                title: "Mock grandchild",
+                description: "A mock grandchild object",
+                type: "object",
+                required: true,
+                fields: [
+                  {
+                    name: "title",
+                    title: "Title",
+                    description: "The title of the grandchild",
+                    type: "string",
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  } satisfies DocumentDefinition,
+  formData: {
+    mockParent: {
+      mockChild: {
+        mockGrandchild: {
+          title: "Hello world",
+        },
+      },
+    },
   },
+};
+
+const invalidDocumentWithNestedObject = {
+  document: validDocumentWithNestedObject.document,
+  formData: {
+    mockParent: {
+      mockChild: {
+        mockGrandchild: {
+          someArbytraryField: "Hello world",
+        },
+      },
+    },
+  } satisfies DocumentEntry["data"],
 };
