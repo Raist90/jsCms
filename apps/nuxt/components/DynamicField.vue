@@ -133,7 +133,7 @@ function generateSlug(fieldName: string) {
     v-model="formData[field.name]"
     :label="field.title"
     :description="field.description"
-    :of="field.of"
+    :of="field.of as 'string'"
     :errors="
       Object.entries(formErrors || {})
         .filter(([key]) => key.startsWith(field.name))

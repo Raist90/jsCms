@@ -84,7 +84,11 @@ type Field =
       Omit<BaseFieldKeys, "required"> & {
         type: "array";
         required: false;
-        of: "string" | "number" | "boolean" | (string & {});
+        of:
+          | "string"
+          | "number"
+          | "boolean"
+          | Prettify<BaseFieldKeys & { type: "object"; fields: Field[] }>;
         min?: number;
         max?: number;
       }
