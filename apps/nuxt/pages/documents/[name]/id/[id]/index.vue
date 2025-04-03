@@ -8,7 +8,6 @@ import UpdateDocumentDefinitionModal from "~/components/modals/UpdateDocumentDef
 
 const { getDocumentEntryById, patchDocumentEntry } = useDocumentsStore();
 const toast = useToast();
-const { findDocumentDefinitionByType } = useCmsConfig();
 
 const isUpdateDocumentDefinitionModalOpen = ref(false);
 const isDeleteDocumentEntryModalOpen = ref(false);
@@ -27,11 +26,11 @@ const { data: documentEntry, status } = await useLazyAsyncData(
     server: false,
   },
 );
-
 const documentEntryDefinition = computed(
   () => documentEntry?.value?.definition,
 );
 
+const { findDocumentDefinitionByType } = useCmsConfig();
 const documentDefinition = findDocumentDefinitionByType(documentEntryType);
 
 const hasDefinitionsMismatch = computed(() => {
@@ -93,24 +92,6 @@ async function onDocumentEntryUpdate(formData: Record<string, any>) {
   }
 }
 
-const isFieldMissingInDefinition = (fieldKey: string) => {
-  return !documentDefinition?.value?.fields.some((f) => f.name === fieldKey);
-};
-
-const stripFieldsMissingInDefinition = (
-  documentEntryData: Record<string, any>,
-): Record<string, any> => {
-  return Object.fromEntries(
-    Object.entries(documentEntryData)
-      .filter(([key]) => !isFieldMissingInDefinition(key))
-      .map(([key, value]) => {
-        if (typeof value === "object" && !Array.isArray(value))
-          return [key, stripFieldsMissingInDefinition(value)];
-        else return [key, value];
-      }),
-  );
-};
-
 async function onConfirmDocumentDefinitionUpdate(
   entry: DocumentEntry,
   definition: DocumentDefinition,
@@ -119,7 +100,7 @@ async function onConfirmDocumentDefinitionUpdate(
     await patchDocumentEntry("update", {
       id: entry.id,
       type: entry.type,
-      data: stripFieldsMissingInDefinition(entry.data),
+      data: stripFieldsMissingInDefinition(entry.data, definition.fields),
       definition,
     });
 
