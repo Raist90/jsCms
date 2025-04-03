@@ -6,7 +6,8 @@ import { computed } from "vue";
 type Props = {
   label: string;
   description?: string;
-  of: "string" | "number" | "boolean" | (string & {});
+  disabled: boolean;
+  of: "string" | "number";
   min?: number;
   max?: number;
   errors?: string[];
@@ -14,10 +15,12 @@ type Props = {
 const props = defineProps<Props>();
 const errors = computed(() => props.errors);
 
-const model = defineModel<string[]>({ required: true });
+// This type depends on the value of props.of
+const model = defineModel<any[]>({ required: true });
 
 function addItem() {
-  model.value = [...model.value, ""]; // Add empty string for new item
+  if (props.of === "string") model.value = [...model.value, ""];
+  if (props.of === "number") model.value = [...model.value, 0];
 }
 
 function deleteItem(index: number) {
@@ -27,7 +30,7 @@ function deleteItem(index: number) {
 
 <template>
   <div class="flex flex-col gap-y-2 w-full max-w-lg">
-    <div class="border border-gray-700 p-4 max-w-lg" v-if="of === 'string'">
+    <div class="border border-gray-700 p-4 max-w-lg">
       <div class="flex items-baseline">
         <label class="text-sm font-bold" v-text="label" />
         <Badge
@@ -55,18 +58,26 @@ function deleteItem(index: number) {
         >
           <slot name="item" :index />
           <button
+            :disabled
             type="button"
             @click="deleteItem(index)"
-            class="text-red-500 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm"
+            :class="[
+              disabled && 'opacity-50 cursor-not-allowed',
+              'text-red-500 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm',
+            ]"
           >
             Delete
           </button>
         </div>
 
         <button
+          :disabled
           type="button"
           @click="addItem"
-          class="h-9 w-full border border-dashed border-gray-700 text-sm"
+          :class="[
+            disabled && 'opacity-50 cursor-not-allowed',
+            'h-9 w-full border border-dashed border-gray-700 text-sm',
+          ]"
         >
           Add item
         </button>

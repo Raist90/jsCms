@@ -129,11 +129,16 @@ function generateSlug(fieldName: string) {
   </template>
 
   <UIInputListWrapper
-    v-else-if="isArrayField(field.type) && isArray(formData[field.name])"
+    v-else-if="
+      isArrayField(field.type) &&
+      isArray(formData[field.name]) &&
+      (field.of === 'string' || field.of === 'number')
+    "
     v-model="formData[field.name]"
     :label="field.title"
     :description="field.description"
-    :of="field.of as 'string'"
+    :disabled
+    :of="field.of"
     :errors="
       Object.entries(formErrors || {})
         .filter(([key]) => key.startsWith(field.name))
@@ -145,8 +150,12 @@ function generateSlug(fieldName: string) {
     <template #item="{ index }">
       <input
         v-model="formData[field.name][index]"
-        :class="['bg-white text-gray-900 w-full py-1.5 px-2.5 shadow-sm']"
-        type="text"
+        :disabled
+        :class="[
+          disabled && 'opacity-50 cursor-not-allowed',
+          'bg-white text-gray-900 w-full py-1.5 px-2.5 shadow-sm',
+        ]"
+        :type="field.of"
       />
     </template>
   </UIInputListWrapper>
