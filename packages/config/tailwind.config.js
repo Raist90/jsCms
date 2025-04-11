@@ -3,7 +3,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Space Mono"],
+        sans: ["Reddit Mono"],
       },
     },
   },

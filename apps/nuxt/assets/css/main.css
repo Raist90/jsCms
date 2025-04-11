@@ -2,7 +2,7 @@
 
 @layer base {
   html {
-    @apply text-white;
+    @apply text-white text-lg antialiased;
   }
 
   body {
