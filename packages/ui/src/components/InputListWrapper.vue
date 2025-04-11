@@ -53,7 +53,7 @@ function deleteItem(index: number) {
             errors &&
               errors.find((error) => error.includes(`[${index}]`)) &&
               'border-2 border-red-500',
-            'flex mt-1',
+            'flex mt-1 h-9',
           ]"
         >
           <slot name="item" :index />
@@ -63,7 +63,7 @@ function deleteItem(index: number) {
             @click="deleteItem(index)"
             :class="[
               disabled && 'opacity-50 cursor-not-allowed',
-              'text-red-500 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm',
+              'text-red-500 bg-gray-50 w-fit shrink-0 px-3 py-2 flex items-center border-l border-gray-300 text-sm',
             ]"
           >
             Delete
