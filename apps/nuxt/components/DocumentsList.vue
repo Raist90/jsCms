@@ -37,7 +37,7 @@ function getFallbackTitle(document: DocumentEntry) {
     </header>
 
     <nav v-if="documentsList.length" class="p-4">
-      <ul class="grid gap-y-2">
+      <ul class="grid gap-y-2 text-sm">
         <li v-for="document in documentsList" :key="document.id">
           <NuxtLink
             :class="['block p-2 rounded-md']"

@@ -42,6 +42,7 @@ const rows = computed(() => {
       <UIButton
         variant="outline"
         size="sm"
+        class="font-bold"
         @click="navigateTo(`/documents/${documentEntryName}/add`)"
         >Add a new {{ documentEntryName }}</UIButton
       >
