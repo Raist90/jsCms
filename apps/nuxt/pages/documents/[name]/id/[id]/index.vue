@@ -30,7 +30,7 @@ const documentEntryDefinition = computed(
   () => documentEntry?.value?.definition,
 );
 
-const { findDocumentDefinitionByType } = useCmsConfig();
+const { findDocumentDefinitionByType } = await useCmsConfig();
 const documentDefinition = findDocumentDefinitionByType(documentEntryType);
 
 const hasDefinitionsMismatch = computed(() => {

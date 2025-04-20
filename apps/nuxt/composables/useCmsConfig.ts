@@ -1,6 +1,6 @@
-import config from "@/cmsConfig";
+export async function useCmsConfig() {
+  const config = await $fetch("/api/schema");
 
-export function useCmsConfig() {
   const documentsDefinitions = computed(() => config.schema.documents);
 
   const findDocumentDefinitionByType = (type: MaybeRef<string>) =>
@@ -10,6 +10,7 @@ export function useCmsConfig() {
     });
 
   return {
+    config,
     documentsDefinitions,
     findDocumentDefinitionByType,
   };

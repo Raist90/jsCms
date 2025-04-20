@@ -6,7 +6,6 @@ export type {
   DocumentDefinition,
   DocumentEntry,
 };
-export { addDocument };
 
 type ComputeRange<
   N extends number,
@@ -106,11 +105,6 @@ type DocumentDefinition = {
   title: string;
   type: "document";
 };
-
-// TODO: move this elsewhere
-function addDocument(document: DocumentDefinition): DocumentDefinition {
-  return document;
-}
 
 type Schema = {
   documents: DocumentDefinition[];

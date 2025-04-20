@@ -29,6 +29,11 @@ export default defineNuxtConfig({
       ],
     },
   },
+  runtimeConfig: {
+    public: {
+      NUXT_PUBLIC_PROJECT_ROOT: "",
+    },
+  },
   typescript: {
     typeCheck: true,
   },

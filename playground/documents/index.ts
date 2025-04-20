@@ -1,4 +1,4 @@
-import { addDocument } from "@/types";
+import { addDocument } from "nuxt-app/core";
 
 export { article, page, settings };
 

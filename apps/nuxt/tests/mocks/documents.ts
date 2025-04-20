@@ -1,8 +1,5 @@
-import {
-  addDocument,
-  type DocumentDefinition,
-  type DocumentEntry,
-} from "~/types";
+import { addDocument } from "~/src";
+import type { DocumentDefinition, DocumentEntry } from "~/types";
 
 export {
   validDocumentMock,

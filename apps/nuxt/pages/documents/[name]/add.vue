@@ -6,7 +6,7 @@ const route = useRoute();
 const { currentDocumentEntryName: documentEntryType } =
   useExtractRouteData(route);
 
-const { findDocumentDefinitionByType } = useCmsConfig();
+const { findDocumentDefinitionByType } = await useCmsConfig();
 const documentDefinition = findDocumentDefinitionByType(documentEntryType);
 
 const { patchDocumentEntry } = useDocumentsStore();

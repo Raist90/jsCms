@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import DocumentsList from "~/components/DocumentsList.vue";
 import Sidebar from "~/components/Sidebar.vue";
-import config from "@/cmsConfig";
+// import config from "@/cmsConfig";
 import Topbar from "~/components/Topbar.vue";
 
 const {
-  schema: { documents },
-} = config;
+  config: {
+    schema: { documents },
+  },
+} = await useCmsConfig();
+
+// const {
+//   schema: { documents },
+// } = config;
 
 const route = useRoute();
 const { currentDocumentEntryName: documentEntryType } =
