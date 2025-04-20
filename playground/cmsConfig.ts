@@ -3,8 +3,6 @@ import * as allDocuments from "./documents";
 
 export default {
   schema: {
-    documents: Object.values(allDocuments).filter(
-      (doc) => doc.name === "article",
-    ),
+    documents: Object.values(allDocuments),
   },
 } satisfies AppConfig;

@@ -1,18 +1,10 @@
 <script setup lang="ts">
 import DocumentsList from "~/components/DocumentsList.vue";
 import Sidebar from "~/components/Sidebar.vue";
-// import config from "@/cmsConfig";
 import Topbar from "~/components/Topbar.vue";
 
-const {
-  config: {
-    schema: { documents },
-  },
-} = await useCmsConfig();
-
-// const {
-//   schema: { documents },
-// } = config;
+const { config } = await useCmsConfig();
+const documents = computed(() => config.value?.schema.documents);
 
 const route = useRoute();
 const { currentDocumentEntryName: documentEntryType } =
@@ -25,7 +17,7 @@ const { currentDocumentEntryName: documentEntryType } =
 
     <div class="flex flex-row flex-1">
       <div class="w-60 shrink-0 border-r border-gray-700">
-        <Sidebar :documents />
+        <Sidebar v-if="documents" :documents />
       </div>
 
       <div

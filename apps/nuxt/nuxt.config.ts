@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      NUXT_PUBLIC_PROJECT_ROOT: "",
+      baseUrl: process.env.NUXT_PUBLIC_PROJECT_ROOT || "",
     },
   },
   typescript: {

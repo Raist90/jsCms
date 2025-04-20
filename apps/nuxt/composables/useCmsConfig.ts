@@ -1,12 +1,17 @@
 export async function useCmsConfig() {
-  const config = await $fetch("/api/schema");
+  const { data: config } = useAsyncData(
+    "schema",
+    async () => await $fetch("/api/schema"),
+  );
 
-  const documentsDefinitions = computed(() => config.schema.documents);
+  const documentsDefinitions = computed(() => config.value?.schema.documents);
 
   const findDocumentDefinitionByType = (type: MaybeRef<string>) =>
     computed(() => {
       const unrefedType = unref(type);
-      return documentsDefinitions.value.find((doc) => doc.name === unrefedType);
+      return documentsDefinitions.value?.find(
+        (doc) => doc.name === unrefedType,
+      );
     });
 
   return {

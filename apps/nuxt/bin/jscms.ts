@@ -28,17 +28,14 @@ program
       console.log(`- Port: ${options.port}`);
 
       // Run Nuxt directly
-      execSync(
-        `NUXT_PUBLIC_PROJECT_ROOT=${process.cwd()} bun run dev -- -p ${options.port} -H ${options.host}`,
-        {
-          stdio: "inherit",
-          cwd: resolve(__dirname, "../"), // Navigate to your Nuxt app directory
-          env: {
-            ...process.env,
-            NUXT_PUBLIC_PROJECT_ROOT: process.cwd(),
-          },
+      execSync(`bun run dev -- -p ${options.port} -H ${options.host}`, {
+        stdio: "inherit",
+        cwd: resolve(__dirname, "../"), // Navigate to your Nuxt app directory
+        env: {
+          ...process.env,
+          NUXT_PUBLIC_PROJECT_ROOT: process.cwd(),
         },
-      );
+      });
     } catch (error) {
       console.error("Failed to start CMS server:", error);
       process.exit(1);

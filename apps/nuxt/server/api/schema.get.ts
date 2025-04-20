@@ -3,15 +3,20 @@ import type { AppConfig } from "~/types";
 import fallbackConfig from "@/cmsConfig";
 import { createJiti } from "jiti";
 
+type ConfigPath = {
+  default: AppConfig;
+};
+
 export default defineEventHandler(async () => {
+  const {
+    public: { baseUrl },
+  } = useRuntimeConfig();
+
   let config: AppConfig;
   try {
-    const configPath = join(
-      String(process.env.NUXT_PUBLIC_PROJECT_ROOT),
-      "cmsConfig.ts",
-    );
+    const configPath = join(baseUrl, "cmsConfig.ts");
     const jiti = createJiti(process.cwd());
-    config = ((await jiti.import(configPath)) as any).default;
+    config = (await jiti.import<ConfigPath>(configPath)).default;
   } catch (error) {
     console.error("Error loading config:", error);
     config = fallbackConfig;

@@ -14,16 +14,28 @@ const documentsEntries = computed(() => {
 
 const columns = [
   "id",
-  ...Object.keys(documentsEntries.value[0].data),
+  ...Object.keys(documentsEntries.value[0].data).sort((a, b) => {
+    if (a === "title") return -1;
+    if (b === "title") return 1;
+    return a.localeCompare(b);
+  }),
   "createdAt",
 ];
 
 const rows = computed(() => {
-  return documentsEntries.value.map((entry) => ({
-    id: entry.id,
-    ...entry.data,
-    timestamp: entry.timestamp,
-  }));
+  return documentsEntries.value.map((entry) => {
+    const row = {
+      id: entry.id,
+      ...entry.data,
+      createdAt: entry.timestamp,
+    };
+
+    return Object.fromEntries(
+      Object.entries(row).sort(
+        (a, b) => columns.indexOf(a[0]) - columns.indexOf(b[0]),
+      ),
+    );
+  });
 });
 </script>
 
