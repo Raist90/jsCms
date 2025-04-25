@@ -1,9 +1,8 @@
 {
-  "name": "nuxt-app",
+  "name": "nexus",
   "bin": {
-    "jscms": "./bin/jscms.ts"
+    "nexus": "./bin/nexus.ts"
   },
-  "private": true,
   "type": "module",
   "exports": {
     "./core": "./src/index.ts",

@@ -1,21 +1,18 @@
 {
-  "name": "@jscms/nuxt",
+  "name": "jscms",
   "version": "0.1.0",
   "description": "A Javascript CMS built with Nuxt",
   "author": "Raist90",
-  "private": false,
+  "private": true,
   "license": "MIT",
   "type": "module",
-  "bin": {
-    "jscms": "bin/jscms.js"
-  },
   "workspaces": [
     "apps/*",
     "packages/*",
     "playground"
   ],
   "scripts": {
-    "dev": "cd playground && bunx jscms --port 4444",
+    "dev": "cd playground && bunx nexus --port 4444",
     "components:dev": "cd packages/ui && vite",
     "storybook": "cd packages/ui && storybook dev -p 6006",
     "lint:nuxt": "cd apps/nuxt && eslint .",

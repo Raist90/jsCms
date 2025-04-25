@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "nuxt": "^3.13.0",
-    "nuxt-app": "workspace:*",
+    "nexus": "workspace:*",
     "jscms-config": "workspace:*",
     "@nuxt/eslint": "^0.6.0",
     "eslint-config-prettier": "^9.1.0",

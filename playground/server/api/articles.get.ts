@@ -1,4 +1,4 @@
-import { cmsClient } from "nuxt-app/core";
+import { cmsClient } from "nexus/core";
 
 export default defineEventHandler(async () => {
   const data = await cmsClient.fetch({

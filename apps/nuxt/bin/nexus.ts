@@ -9,10 +9,7 @@ const packageJson = JSON.parse(
 );
 
 const program = new Command();
-program
-  .name("jscms")
-  .description("Javascript CMS CLI")
-  .version(packageJson.version);
+program.name("nexus").description("NexusCMS CLI").version(packageJson.version);
 
 program
   .option("-p, --port <number>", "Port to run on", "3333")

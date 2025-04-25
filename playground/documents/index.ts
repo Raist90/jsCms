@@ -1,4 +1,4 @@
-import { addDocument } from "nuxt-app/core";
+import { addDocument } from "nexus/core";
 
 export { article, page, settings };
 
