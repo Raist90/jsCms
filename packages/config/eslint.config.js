@@ -3,6 +3,7 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginVue from "eslint-plugin-vue";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import tailwind from "eslint-plugin-tailwindcss";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -35,4 +36,5 @@ export default [
       "@typescript-eslint/no-explicit-any": "off",
     },
   },
+  ...tailwind.configs["flat/recommended"],
 ];

@@ -82,7 +82,7 @@ watch(
 
 <template>
   <section v-if="hasDefinitionsMismatch">
-    <UIAlert class="w-fit h-auto m-4 mb-0" status="warning">
+    <UIAlert class="m-4 mb-0 h-auto w-fit" status="warning">
       The document definition has changed since the last time you saved this
       document. Please review the changes before updating it.
     </UIAlert>
@@ -90,7 +90,7 @@ watch(
 
   <section>
     <form novalidate @submit.prevent="onFormSubmit">
-      <div class="p-4 w-10/12 space-y-4">
+      <div class="w-10/12 space-y-4 p-4">
         <template v-for="field in fields" :key="field.name">
           <DynamicField
             v-model="formData"
@@ -101,7 +101,7 @@ watch(
         </template>
       </div>
 
-      <div class="p-4 flex justify-between border-y border-gray-700">
+      <div class="flex justify-between border-y border-gray-700 p-4">
         <UIButton
           v-if="hasDefinitionsMismatch"
           type="button"

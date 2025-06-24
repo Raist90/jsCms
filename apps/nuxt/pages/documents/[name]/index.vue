@@ -46,9 +46,9 @@ const rows = computed(() => {
 <template>
   <section class="w-full">
     <header
-      class="p-4 border-b border-gray-700 flex justify-between items-center h-16"
+      class="flex h-16 items-center justify-between border-b border-gray-700 p-4"
     >
-      <div class="flex gap-x-3 items-center">
+      <div class="flex items-center gap-x-3">
         <h2
           class="font-bold"
           v-text="`${capitalize(documentEntryName)} list`"

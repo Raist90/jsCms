@@ -12,10 +12,10 @@ const { currentDocumentEntryName: documentEntryType } =
 </script>
 
 <template>
-  <div class="h-screen flex flex-col">
+  <div class="flex h-screen flex-col">
     <Topbar />
 
-    <div class="flex flex-row flex-1">
+    <div class="flex flex-1 flex-row">
       <div class="w-60 shrink-0 border-r border-gray-700">
         <Sidebar v-if="documents" :documents />
       </div>

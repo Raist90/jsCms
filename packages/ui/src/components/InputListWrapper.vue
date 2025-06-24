@@ -29,8 +29,8 @@ function deleteItem(index: number) {
 </script>
 
 <template>
-  <div class="flex flex-col gap-y-2 w-full max-w-lg">
-    <div class="border border-gray-700 p-4 max-w-lg">
+  <div class="flex w-full max-w-lg flex-col gap-y-2">
+    <div class="max-w-lg border border-gray-700 p-4">
       <div class="flex items-baseline">
         <label class="text-sm font-bold" v-text="label" />
         <Badge
@@ -53,7 +53,7 @@ function deleteItem(index: number) {
             errors &&
               errors.find((error) => error.includes(`[${index}]`)) &&
               'border-2 border-red-500',
-            'flex mt-1 h-9',
+            'mt-1 flex h-9',
           ]"
         >
           <slot name="item" :index />
@@ -62,8 +62,8 @@ function deleteItem(index: number) {
             type="button"
             @click="deleteItem(index)"
             :class="[
-              disabled && 'opacity-50 cursor-not-allowed',
-              'text-red-500 bg-gray-50 w-fit shrink-0 px-3 py-2 flex items-center border-l border-gray-300 text-sm',
+              disabled && 'cursor-not-allowed opacity-50',
+              'flex w-fit shrink-0 items-center border-l border-gray-300 bg-gray-50 px-3 py-2 text-sm text-red-500',
             ]"
           >
             Delete
@@ -75,7 +75,7 @@ function deleteItem(index: number) {
           type="button"
           @click="addItem"
           :class="[
-            disabled && 'opacity-50 cursor-not-allowed',
+            disabled && 'cursor-not-allowed opacity-50',
             'h-9 w-full border border-dashed border-gray-700 text-sm',
           ]"
         >

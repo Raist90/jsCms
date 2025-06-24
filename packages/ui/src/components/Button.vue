@@ -37,7 +37,7 @@ const sizeMap = ref({
     :class="[
       variantMap[variant],
       extended ? 'w-full' : 'w-fit',
-      disabled && 'opacity-50 cursor-not-allowed',
+      disabled && 'cursor-not-allowed opacity-50',
       sizeMap[size],
     ]"
     :type

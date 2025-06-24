@@ -47,25 +47,26 @@ onUnmounted(() => {
           aria-hidden
         />
 
+        <!-- eslint-disable-next-line tailwindcss/no-custom-classname -->
         <UseFocusTrap class="content">
           <div
             ref="modalRef"
             :class="[
               fullscreen && 'h-screen md:h-fit',
-              'relative bg-gray-900 w-full max-w-md border border-gray-700 flex flex-col z-20 m-1 md:m-0',
+              'relative z-20 m-1 flex w-full max-w-md flex-col border border-gray-700 bg-gray-900 md:m-0',
             ]"
             :aria-labelledby="modalId"
             role="dialog"
           >
             <header
-              class="flex justify-between items-center gap-x-8 p-4 border-b border-gray-700"
+              class="flex items-center justify-between gap-x-8 border-b border-gray-700 p-4"
             >
               <h2 class="uppercase" :id="modalId" v-text="title" />
 
               <button
                 aria-label="Close"
                 @click="emit('close')"
-                class="text-xs focus:bg-gray-700 p-1"
+                class="p-1 text-xs focus:bg-gray-700"
               >
                 <X aria-hidden :size="20" />
               </button>
@@ -77,7 +78,7 @@ onUnmounted(() => {
 
             <footer
               v-if="slots.cta"
-              class="p-4 border-t border-gray-700 mt-auto"
+              class="mt-auto border-t border-gray-700 p-4"
             >
               <slot name="cta" />
             </footer>

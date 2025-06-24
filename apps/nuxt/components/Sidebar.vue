@@ -9,7 +9,7 @@ const { currentDocumentEntryName } = useExtractRouteData(route);
 
 <template>
   <section>
-    <header class="p-4 border-b border-gray-700 flex items-center h-16">
+    <header class="flex h-16 items-center border-b border-gray-700 p-4">
       <h2 class="font-bold">Documents</h2>
     </header>
 
@@ -17,7 +17,7 @@ const { currentDocumentEntryName } = useExtractRouteData(route);
       <ul class="grid gap-y-2">
         <li v-for="document in documents" :key="document.name">
           <NuxtLink
-            class="block p-2 rounded-md"
+            class="block rounded-md p-2"
             :class="[
               document.name === currentDocumentEntryName &&
                 (((route.path === `/documents/${document.name}` ||

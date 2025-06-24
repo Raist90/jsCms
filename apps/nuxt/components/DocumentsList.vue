@@ -32,7 +32,7 @@ function getFallbackTitle(document: DocumentEntry) {
 
 <template>
   <section v-if="documentType">
-    <header class="p-4 border-b border-gray-700 flex items-center h-16">
+    <header class="flex h-16 items-center border-b border-gray-700 p-4">
       <h2 class="font-bold">{{ capitalize(documentType) }} list</h2>
     </header>
 
@@ -40,7 +40,7 @@ function getFallbackTitle(document: DocumentEntry) {
       <ul class="grid gap-y-2 text-sm">
         <li v-for="document in documentsList" :key="document.id">
           <NuxtLink
-            :class="['block p-2 rounded-md']"
+            :class="['block rounded-md p-2']"
             :to="`/documents/${document.type}/id/${document.id}`"
             :active="currentPath.includes(document.id)"
             activeClass="bg-blue-500"

@@ -125,7 +125,7 @@ const { shouldRenderSkeleton } = useSkeleton(computed(() => status.value));
 
 <template>
   <section class="w-full">
-    <header class="p-4 border-b border-gray-700 flex gap-x-3 items-center h-16">
+    <header class="flex h-16 items-center gap-x-3 border-b border-gray-700 p-4">
       <h2 class="font-bold" v-text="documentEntry?.data.title" />
     </header>
 

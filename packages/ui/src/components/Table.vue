@@ -7,14 +7,14 @@ defineProps<Props>();
 </script>
 
 <template>
-  <section class="p-4 flex flex-col gap-y-4 overflow-x-auto">
-    <table class="table-auto border border-gray-700 border-collapse text-sm">
+  <section class="flex flex-col gap-y-4 overflow-x-auto p-4">
+    <table class="table-auto border-collapse border border-gray-700 text-sm">
       <thead class="text-left">
         <tr>
           <th
             v-for="column in columns"
             :key="column"
-            class="p-2 border border-gray-700"
+            class="border border-gray-700 p-2"
             v-text="column"
           />
         </tr>
@@ -25,7 +25,7 @@ defineProps<Props>();
           <td
             v-for="(val, index) in row"
             :key="index"
-            class="p-2 border border-gray-700"
+            class="border border-gray-700 p-2"
             v-text="val"
           />
         </tr>

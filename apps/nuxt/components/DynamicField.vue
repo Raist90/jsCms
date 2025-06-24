@@ -67,7 +67,7 @@ function generateSlug(fieldName: string) {
 
     <div
       v-if="isBooleanField(field.type)"
-      class="flex gap-x-2 items-center p-2"
+      class="flex items-center gap-x-2 p-2"
     >
       <UIToggle
         v-model="formData[field.name]"
@@ -98,8 +98,8 @@ function generateSlug(fieldName: string) {
           <button
             :disabled
             :class="[
-              'text-gray-900 bg-gray-50 w-fit shrink-0 px-3 py-2 h-9 flex items-center border-l border-gray-300 text-sm',
-              disabled && 'opacity-50 cursor-not-allowed',
+              'flex h-9 w-fit shrink-0 items-center border-l border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900',
+              disabled && 'cursor-not-allowed opacity-50',
             ]"
             type="button"
             @click="generateSlug(field.name)"
@@ -113,7 +113,7 @@ function generateSlug(fieldName: string) {
 
   <template v-else-if="isObjectField(field.type) && field.fields.length">
     <div>
-      <h3 class="font-bold mb-1">{{ field.title }}</h3>
+      <h3 class="mb-1 font-bold">{{ field.title }}</h3>
       <p class="text-sm text-gray-300 dark:text-gray-400">
         {{ field.description }}
       </p>
@@ -152,8 +152,8 @@ function generateSlug(fieldName: string) {
         v-model="formData[field.name][index]"
         :disabled
         :class="[
-          disabled && 'opacity-50 cursor-not-allowed',
-          'bg-white text-gray-900 w-full py-1.5 px-2.5 shadow-sm',
+          disabled && 'cursor-not-allowed opacity-50',
+          'w-full bg-white px-2.5 py-1.5 text-gray-900 shadow-sm',
         ]"
         :type="field.of"
       />

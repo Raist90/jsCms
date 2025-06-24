@@ -17,7 +17,7 @@ const model = defineModel<string>();
 </script>
 
 <template>
-  <div class="flex flex-col gap-y-2 w-full max-w-lg">
+  <div class="flex w-full max-w-lg flex-col gap-y-2">
     <div>
       <div v-if="label" class="flex items-baseline">
         <label class="text-sm font-bold" v-text="label" />
@@ -37,9 +37,9 @@ const model = defineModel<string>();
       >
         <input
           :class="[
-            'bg-white shadow-sm text-gray-900 w-full h-9 py-1.5 px-2.5',
+            'h-9 w-full bg-white px-2.5 py-1.5 text-gray-900 shadow-sm',
             withButton && 'w-full',
-            disabled && 'opacity-50 cursor-not-allowed',
+            disabled && 'cursor-not-allowed opacity-50',
           ]"
           :name
           :required

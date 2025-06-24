@@ -58,20 +58,20 @@ const toastId = useId();
     leaveToClass="opacity-0 translate-y-10"
   >
     <div
-      class="fixed mb-6 w-full max-w-[96%] md:max-w-96 bottom-0 left-1/2 -translate-x-1/2 border-l-4 border-green-500 bg-green-100 text-black p-2 z-20"
+      class="fixed bottom-0 left-1/2 z-20 mb-6 w-full max-w-[96%] -translate-x-1/2 border-l-4 border-green-500 bg-green-100 p-2 text-black md:max-w-96"
       v-if="isOpen"
       :id="toastId"
       role="dialog"
       aria-modal
     >
-      <div class="flex gap-x-2 justify-between items-center">
+      <div class="flex items-center justify-between gap-x-2">
         <p class="text-sm" v-text="props.message" />
 
         <button
           ref="btn"
           aria-label="Close"
           @click="closeToast"
-          class="text-xs focus:bg-green-300 p-1 rounded-lg"
+          class="rounded-lg p-1 text-xs focus:bg-green-300"
         >
           <X aria-hidden :size="20" />
         </button>
