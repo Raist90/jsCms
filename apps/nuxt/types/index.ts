@@ -111,6 +111,7 @@ type Schema = {
 };
 
 type AppConfig = {
+  absoluteDBPath?: string;
   schema: Schema;
 };
 

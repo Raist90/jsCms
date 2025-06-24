@@ -12,15 +12,19 @@ const documentsEntries = computed(() => {
   );
 });
 
-const columns = [
-  "id",
-  ...Object.keys(documentsEntries.value[0].data).sort((a, b) => {
-    if (a === "title") return -1;
-    if (b === "title") return 1;
-    return a.localeCompare(b);
-  }),
-  "createdAt",
-];
+const columns = computed(() =>
+  documentsEntries.value?.length
+    ? [
+        "id",
+        ...Object.keys(documentsEntries.value?.[0]?.data).sort((a, b) => {
+          if (a === "title") return -1;
+          if (b === "title") return 1;
+          return a.localeCompare(b);
+        }),
+        "createdAt",
+      ]
+    : [],
+);
 
 const rows = computed(() => {
   return documentsEntries.value.map((entry) => {
@@ -32,7 +36,7 @@ const rows = computed(() => {
 
     return Object.fromEntries(
       Object.entries(row).sort(
-        (a, b) => columns.indexOf(a[0]) - columns.indexOf(b[0]),
+        (a, b) => columns.value.indexOf(a[0]) - columns.value.indexOf(b[0]),
       ),
     );
   });
@@ -60,6 +64,6 @@ const rows = computed(() => {
       >
     </header>
 
-    <UITable :columns :rows />
+    <UITable v-if="documentsEntries.length" :columns :rows />
   </section>
 </template>
