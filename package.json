@@ -14,6 +14,7 @@
   "scripts": {
     "dev": "cd playground && bunx nexus --port 4444",
     "components:dev": "cd packages/ui && vite",
+    "playground:dev": "cd playground && bun dev",
     "storybook": "cd packages/ui && storybook dev -p 6006",
     "lint:nuxt": "cd apps/nuxt && eslint .",
     "lint:ui": "cd packages/ui && eslint .",
