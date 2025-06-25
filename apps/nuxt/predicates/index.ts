@@ -14,7 +14,7 @@ export {
 type FieldType = DocumentDefinition["fields"][number]["type"];
 
 function isPrimitiveField(fieldType: FieldType) {
-  return !!(
+  return (
     fieldType === "string" ||
     fieldType === "number" ||
     fieldType === "boolean" ||
@@ -23,27 +23,27 @@ function isPrimitiveField(fieldType: FieldType) {
 }
 
 function isBooleanField(fieldType: FieldType) {
-  return !!(fieldType === "boolean");
+  return fieldType === "boolean";
 }
 
 function isNumberField(fieldType: FieldType) {
-  return !!(fieldType === "number");
+  return fieldType === "number";
 }
 
 function isObjectField(fieldType: FieldType) {
-  return !!(fieldType === "object");
+  return fieldType === "object";
 }
 
 function isStringField(fieldType: FieldType) {
-  return !!(fieldType === "string");
+  return fieldType === "string";
 }
 
 function isSlugField(fieldType: FieldType) {
-  return !!(fieldType === "slug");
+  return fieldType === "slug";
 }
 
 function isArrayField(fieldType: FieldType) {
-  return !!(fieldType === "array");
+  return fieldType === "array";
 }
 
 /**

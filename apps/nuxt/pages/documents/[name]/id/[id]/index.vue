@@ -33,13 +33,13 @@ const documentEntryDefinition = computed(
 const { findDocumentDefinitionByType } = await useCmsConfig();
 const documentDefinition = findDocumentDefinitionByType(documentEntryType);
 
-const hasDefinitionsMismatch = computed(() => {
+const hasDefinitionsMismatch = computed<boolean>(() => {
   const stringifiedEntryDefinition = JSON.stringify(
     documentEntryDefinition.value,
   );
   const stringifiedDefinition = JSON.stringify(documentDefinition?.value);
 
-  return !!(stringifiedEntryDefinition !== stringifiedDefinition);
+  return stringifiedEntryDefinition !== stringifiedDefinition;
 });
 
 async function onConfirmDocumentEntryDelete(documentEntry: DocumentEntry) {
