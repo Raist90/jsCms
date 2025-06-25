@@ -6,17 +6,15 @@ export async function useCmsConfig() {
 
   const documentsDefinitions = computed(() => config.value?.schema.documents);
 
-  const findDocumentDefinitionByType = (type: MaybeRef<string>) =>
-    computed(() => {
-      const unrefedType = unref(type);
-      return documentsDefinitions.value?.find(
-        (doc) => doc.name === unrefedType,
-      );
-    });
+  const findDocumentDefinitionByType = (type: Ref<string>) =>
+    computed(() =>
+      documentsDefinitions.value?.find((doc) => doc.name === type.value),
+    );
 
   return {
     config,
     documentsDefinitions,
+
     findDocumentDefinitionByType,
   };
 }

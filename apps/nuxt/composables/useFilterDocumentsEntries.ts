@@ -1,14 +1,12 @@
 import type { DocumentEntry } from "~/types";
 
 export function useFilterDocumentsEntries(
-  documentsEntries: MaybeRef<DocumentEntry[]>,
+  documentsEntries: Ref<DocumentEntry[]>,
 ) {
-  const filterDocumentsEntriesByType = (type: MaybeRef<string>) =>
-    computed(() => {
-      const unrefedDocuments = unref(documentsEntries);
-      const unrefedType = unref(type);
-      return unrefedDocuments.filter((doc) => doc.type === unrefedType);
-    });
+  const filterDocumentsEntriesByType = (type: Ref<string>) =>
+    computed(() =>
+      documentsEntries.value.filter((doc) => doc.type === type.value),
+    );
 
   return {
     filterDocumentsEntriesByType,
