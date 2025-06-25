@@ -16,7 +16,7 @@ const props = defineProps<Props>();
 const errors = computed(() => props.errors);
 
 // This type depends on the value of props.of
-const model = defineModel<any[]>({ required: true });
+const model = defineModel<(string | number)[]>({ required: true });
 
 function addItem() {
   if (props.of === "string") model.value = [...model.value, ""];
