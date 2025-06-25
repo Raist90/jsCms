@@ -1,8 +1,9 @@
 import { eq } from "drizzle-orm";
+
 import { db } from "~/db/db";
 import { contentTable } from "~/db/dbSchema";
-import type { Prettify } from "~/types";
 import type { cmsClient } from "~/src";
+import type { Prettify } from "~/types";
 
 export default defineEventHandler(async (event) => {
   const body =

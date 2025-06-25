@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
-import { Command } from "commander";
-import { resolve } from "path";
-import { readFileSync } from "fs";
 import { execSync } from "child_process";
+import { Command } from "commander";
+import { readFileSync } from "fs";
+import { resolve } from "path";
+
 import type { AppConfig } from "~/types";
 
 const packageJson = JSON.parse(

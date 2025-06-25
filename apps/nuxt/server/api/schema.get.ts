@@ -1,7 +1,8 @@
-import { join } from "path";
-import type { AppConfig } from "~/types";
-import fallbackConfig from "@/cmsConfig";
 import { createJiti } from "jiti";
+import { join } from "path";
+
+import fallbackConfig from "@/cmsConfig";
+import type { AppConfig } from "~/types";
 
 type ConfigPath = {
   default: AppConfig;

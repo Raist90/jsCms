@@ -1,4 +1,5 @@
 import type { AppConfig } from "nexus/types";
+
 import * as allDocuments from "./documents";
 
 export default {

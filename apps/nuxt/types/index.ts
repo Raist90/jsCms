@@ -1,10 +1,10 @@
 export type {
-  ComputeRange,
-  Prettify,
-  Schema,
   AppConfig,
+  ComputeRange,
   DocumentDefinition,
   DocumentEntry,
+  Prettify,
+  Schema,
 };
 
 type ComputeRange<

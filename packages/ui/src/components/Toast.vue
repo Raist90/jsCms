@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, useId, watch } from "vue";
 import { X } from "lucide-vue-next";
+import { computed, onUnmounted, ref, useId, watch } from "vue";
 
 type Props = {
   isOpen: boolean;

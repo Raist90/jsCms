@@ -1,9 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { stripFieldsMissingInDefinition } from "./stripFieldsMissingInDefinition";
+
 import {
   validDocumentMock,
   validDocumentWithNestedObject,
 } from "~/tests/mocks/documents";
+
+import { stripFieldsMissingInDefinition } from "./stripFieldsMissingInDefinition";
 
 // TODO: Add more tests
 describe("stripFieldsMissingInDefinition", async () => {

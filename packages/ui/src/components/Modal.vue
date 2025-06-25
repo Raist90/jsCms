@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { onClickOutside } from "@vueuse/core";
+import { UseFocusTrap } from "@vueuse/integrations/useFocusTrap/component";
 import { X } from "lucide-vue-next";
 import { computed, onMounted, onUnmounted, ref, useId } from "vue";
-import { UseFocusTrap } from "@vueuse/integrations/useFocusTrap/component";
-import { onClickOutside } from "@vueuse/core";
 
 type Props = {
   isOpen: boolean;

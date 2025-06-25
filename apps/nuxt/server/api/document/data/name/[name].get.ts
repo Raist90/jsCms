@@ -1,7 +1,8 @@
-import { db } from "~/db/db";
-import { contentTable } from "~/db/dbSchema";
 import { eq } from "drizzle-orm";
 import z from "zod";
+
+import { db } from "~/db/db";
+import { contentTable } from "~/db/dbSchema";
 
 export default defineEventHandler(async (event) => {
   const params = await getValidatedRouterParams(

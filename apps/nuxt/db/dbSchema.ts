@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+
 import type { DocumentDefinition, DocumentEntry } from "~/types";
 
 export const contentTable = sqliteTable("api", {

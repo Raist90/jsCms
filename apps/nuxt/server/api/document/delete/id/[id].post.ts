@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
+import z from "zod";
+
 import { db } from "~/db/db";
 import { contentTable } from "~/db/dbSchema";
-import z from "zod";
 import { isValidUUID } from "~/predicates";
 
 export default defineEventHandler(async (event) => {

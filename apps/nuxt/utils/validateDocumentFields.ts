@@ -1,7 +1,8 @@
-import type { DocumentDefinition } from "~/types";
-import { z } from "zod";
 import { isBoolean, isFunction, isNumber, isString } from "@sindresorhus/is";
+import { z } from "zod";
+
 import { isArrayField, isObjectField } from "~/predicates";
+import type { DocumentDefinition } from "~/types";
 
 export { validateDocumentFields };
 

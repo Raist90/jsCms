@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
-import Modal from "../components/Modal.vue";
+
 import Button from "../components/Button.vue";
+import Modal from "../components/Modal.vue";
 
 type ModalProps = InstanceType<typeof Modal>["$props"];
 const meta: Meta<ModalProps> = {

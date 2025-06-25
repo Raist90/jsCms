@@ -6,8 +6,8 @@ export {
   isNumberField,
   isObjectField,
   isPrimitiveField,
-  isStringField,
   isSlugField,
+  isStringField,
   isValidUUID,
 };
 

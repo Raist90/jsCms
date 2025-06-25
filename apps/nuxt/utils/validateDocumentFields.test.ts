@@ -1,6 +1,8 @@
-import { describe, test, expect } from "vitest";
-import { validateDocumentFields } from "./validateDocumentFields";
+import { describe, expect, test } from "vitest";
+
 import { mocks } from "~/tests/mocks";
+
+import { validateDocumentFields } from "./validateDocumentFields";
 
 const {
   documents: {

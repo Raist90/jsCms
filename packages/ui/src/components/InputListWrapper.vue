@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import Badge from "../components/Badge.vue";
-import Alert from "../components/Alert.vue";
 import { computed } from "vue";
+
+import Alert from "../components/Alert.vue";
+import Badge from "../components/Badge.vue";
 
 type Props = {
   label: string;

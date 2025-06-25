@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { isArray, isBoolean, isFunction, isString } from "@sindresorhus/is";
+
 import {
+  isArrayField,
   isBooleanField,
   isNumberField,
   isObjectField,
   isPrimitiveField,
-  isStringField,
   isSlugField,
-  isArrayField,
+  isStringField,
 } from "~/predicates";
 import type { DocumentDefinition } from "~/types";
-import { isArray, isBoolean, isFunction, isString } from "@sindresorhus/is";
 
 type Props = {
   field: DocumentDefinition["fields"][number];

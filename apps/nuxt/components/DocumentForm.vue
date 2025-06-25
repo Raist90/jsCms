@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DocumentDefinition } from "~/types";
+
 import DynamicField from "./DynamicField.vue";
 
 const props = withDefaults(

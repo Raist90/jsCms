@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import DocumentForm from "~/components/DocumentForm.vue";
+import DeleteDocumentEntryModal from "~/components/modals/DeleteDocumentEntryModal.vue";
+import UpdateDocumentDefinitionModal from "~/components/modals/UpdateDocumentDefinitionModal.vue";
 import { isValidUUID } from "~/predicates";
 import { useDocumentsStore } from "~/store/documentsStore";
 import type { DocumentDefinition, DocumentEntry } from "~/types";
-import DeleteDocumentEntryModal from "~/components/modals/DeleteDocumentEntryModal.vue";
-import UpdateDocumentDefinitionModal from "~/components/modals/UpdateDocumentDefinitionModal.vue";
 
 const { getDocumentEntryById, patchDocumentEntry } = useDocumentsStore();
 const toast = useToast();

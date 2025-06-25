@@ -2,10 +2,10 @@ import { addDocument } from "~/src";
 import type { DocumentDefinition, DocumentEntry } from "~/types";
 
 export {
-  validDocumentMock,
   invalidDocumentMock,
-  validDocumentWithNestedObject,
   invalidDocumentWithNestedObject,
+  validDocumentMock,
+  validDocumentWithNestedObject,
 };
 
 const validDocumentMock = {

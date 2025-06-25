@@ -1,4 +1,5 @@
 import { isString } from "@sindresorhus/is";
+
 import type { useRoute } from "#app";
 
 export function useExtractRouteData(route: ReturnType<typeof useRoute>) {
