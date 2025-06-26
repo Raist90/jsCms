@@ -43,6 +43,7 @@ const onFormSubmit = async () => {
     return;
   }
 
+  // If there were any validation errors, reset them after successful validation
   formErrors.value = null;
 
   if (isEditMode.value) emit("document-entry-update", formData);
