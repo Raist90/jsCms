@@ -62,7 +62,6 @@ program
       console.log(`- config: ${configpath}`);
       console.log(`- db path: ${userConfig.default.absoluteDBPath}`);
 
-      // execSync(`bun drizzle-kit studio -p ${options.port}`, {
       execSync(`bun drizzle-kit studio`, {
         stdio: "inherit",
         cwd: resolve(__dirname, "../"),
