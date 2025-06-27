@@ -14,9 +14,10 @@ const program = new Command();
 program.name("nexus").description("NexusCMS CLI").version(packageJson.version);
 
 program
-  .option("-p, --port <number>", "Port to run on", "3333")
+  .option("-p, --port <number>", "Port to run on", "3000")
   .option("-c, --config <path>", "Path to config file", "./cmsConfig.ts")
   .option("-h, --host <string>", "Host to run on", "localhost")
+  .description("Starting the NexusCMS server...")
   .action(async (options) => {
     try {
       const configPath = resolve(process.cwd(), options.config);
@@ -43,6 +44,36 @@ program
       );
     } catch (error) {
       console.error("Failed to start CMS server:", error);
+      process.exit(1);
+    }
+  });
+
+program
+  .command("studio")
+  .option("-p, --port <number>", "Port to run on", "3333")
+  .option("-c, --config <path>", "path to config file", "./cmsConfig.ts")
+  .description("Open drizzle studio for database management")
+  .action(async (options) => {
+    try {
+      const configpath = resolve(process.cwd(), options.config);
+      const userConfig: { default: AppConfig } = await import(configpath);
+
+      console.log(`starting drizzle studio...`);
+      console.log(`- config: ${configpath}`);
+      console.log(`- db path: ${userConfig.default.absoluteDBPath}`);
+
+      // execSync(`bun drizzle-kit studio -p ${options.port}`, {
+      execSync(`bun drizzle-kit studio`, {
+        stdio: "inherit",
+        cwd: resolve(__dirname, "../"),
+        env: {
+          ...process.env,
+          NUXT_PUBLIC_PROJECT_ROOT: process.cwd(),
+          DB_FILE_NAME: `file:${process.cwd()}/${userConfig.default.absoluteDBPath}`,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to start drizzle studio:", error);
       process.exit(1);
     }
   });
