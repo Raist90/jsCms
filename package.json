@@ -12,7 +12,8 @@
     "playground"
   ],
   "scripts": {
-    "dev": "cd playground && bunx nexus --port 4444",
+    "dev:nexus": "cd playground && bunx nexus --port 4444",
+    "dev:studio": "cd playground && bunx nexus studio --port 3333",
     "components:dev": "cd packages/ui && vite",
     "playground:dev": "cd playground && bun dev",
     "storybook": "cd packages/ui && storybook dev -p 6006",

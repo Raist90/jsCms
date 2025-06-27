@@ -1,0 +1,13 @@
+processes:
+  nexus:
+    description: "Run the nexus server"
+    command: bun dev:nexus
+  database:
+    description: "Run drizzle studio"
+    command: bun dev:studio
+  storybook:
+    description: "Run storybook"
+    command: bun storybook
+  playground:
+    description: "Run the playground"
+    command: bun playground:dev
