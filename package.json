@@ -7,24 +7,22 @@
   "license": "MIT",
   "type": "module",
   "workspaces": [
-    "apps/*",
-    "packages/*",
-    "playground"
+    "packages/*"
   ],
   "scripts": {
-    "dev:nexus": "cd playground && bunx nexus --port 4444",
-    "dev:studio": "cd playground && bunx nexus studio --port 3333",
+    "dev:nexus": "cd packages/playground && bunx nexus --port 4444",
+    "dev:studio": "cd packages/playground && bunx nexus studio --port 3333",
     "components:dev": "cd packages/ui && vite",
-    "playground:dev": "cd playground && bun dev",
+    "playground:dev": "cd packages/playground && bun dev",
     "storybook": "cd packages/ui && storybook dev -p 6006",
-    "lint:nuxt": "cd apps/nuxt && eslint .",
+    "lint:nuxt": "cd packages/nexus && eslint .",
     "lint:ui": "cd packages/ui && eslint .",
     "lint:config": "cd packages/config && eslint .",
-    "lint:playground": "cd playground && eslint .",
-    "lint:nuxt:fix": "cd apps/nuxt && eslint . --fix",
+    "lint:playground": "cd packages/playground && eslint .",
+    "lint:nuxt:fix": "cd packages/nexus && eslint . --fix",
     "lint:ui:fix": "cd packages/ui && eslint . --fix",
     "lint:config:fix": "cd packages/config && eslint . --fix",
-    "lint:playground:fix": "cd playground && eslint . --fix",
+    "lint:playground:fix": "cd packages/playground && eslint . --fix",
     "lint": "bun run lint:nuxt && bun run lint:ui && bun run lint:config && bun run lint:playground",
     "lint:fix": "bun run lint:nuxt:fix && bun run lint:ui:fix && bun run lint:config:fix && bun run lint:playground:fix",
     "vitest": "bun test --watch"
