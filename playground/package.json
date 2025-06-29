@@ -10,7 +10,7 @@
   "dependencies": {
     "nuxt": "^3.13.0",
     "nexus": "workspace:*",
-    "jscms-config": "workspace:*",
+    "nexus-config": "workspace:*",
     "@nuxt/eslint": "^0.6.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1"

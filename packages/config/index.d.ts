@@ -1,4 +1,4 @@
-declare module "jscms-config" {
+declare module "nexus-config" {
   import type { Linter } from "eslint";
   import type { Config as TailwindConfig } from "tailwindcss";
 

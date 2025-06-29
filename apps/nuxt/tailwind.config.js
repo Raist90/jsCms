@@ -1,4 +1,4 @@
-import { tailwindConfig } from "jscms-config";
+import { tailwindConfig } from "nexus-config";
 
 /** @type {import('tailwindcss').Config} */
 export default {

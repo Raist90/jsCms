@@ -1,3 +1,3 @@
 // @ts-check
-import { eslintConfig } from "jscms-config";
+import { eslintConfig } from "nexus-config";
 export default eslintConfig;

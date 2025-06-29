@@ -1,5 +1,5 @@
 {
-  "name": "jscms-config",
+  "name": "nexus-config",
   "private": true,
   "type": "module",
   "main": "index.js",

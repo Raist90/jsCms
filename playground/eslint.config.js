@@ -1,5 +1,5 @@
 // @ts-check
-import { eslintConfig } from "jscms-config";
+import { eslintConfig } from "nexus-config";
 
 import withNuxt from "./.nuxt/eslint.config.mjs";
 
