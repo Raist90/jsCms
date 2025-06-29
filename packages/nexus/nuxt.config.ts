@@ -1,3 +1,5 @@
+import devtoolsJson from "vite-plugin-devtools-json";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2025-03-16",
@@ -36,5 +38,8 @@ export default defineNuxtConfig({
   },
   typescript: {
     typeCheck: true,
+  },
+  vite: {
+    plugins: [devtoolsJson()],
   },
 });
