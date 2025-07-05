@@ -9,7 +9,6 @@ export default defineNuxtPlugin(() => {
       }),
     );
 
-    // TODO: We should probably crash the app here
     if (error.value || !data.value) return;
 
     const store = useDocumentsStore();

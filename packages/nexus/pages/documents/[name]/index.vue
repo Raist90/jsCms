@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import DeleteDocumentEntriesModal from "~/components/modals/DeleteDocumentEntriesModal.vue";
 import { useDocumentsStore } from "~/store/documentsStore";
 
 const route = useRoute();
 const { currentDocumentEntryName: documentEntryName } =
   useExtractRouteData(route);
 
-const { documentsEntries: allDocumentsEntries } = useDocumentsStore();
+const documentStore = useDocumentsStore();
+const { documentsEntries: allDocumentsEntries } = storeToRefs(documentStore);
 const documentsEntries = computed(() => {
-  return allDocumentsEntries.filter(
+  return allDocumentsEntries.value.filter(
     (entry) => entry.type === documentEntryName.value,
   );
 });
@@ -41,6 +43,48 @@ const rows = computed(() => {
     );
   });
 });
+
+const toast = useToast();
+
+const selectedRow = ref<typeof rows.value>([]);
+async function onConfirmDeleteSelected() {
+  // TODO: Delete in bulk instead of one by one
+  selectedRow.value.map(async (row) => {
+    try {
+      const entryToDelete = documentsEntries.value.find(
+        (entry) => entry.id === row.id,
+      );
+      if (!entryToDelete) {
+        throw new Error(`Document entry with id ${row.id} not found.`);
+      }
+
+      await documentStore.patchDocumentEntry("delete", entryToDelete);
+
+      selectedRow.value = selectedRow.value.filter(
+        (selected) => selected.id !== row.id,
+      );
+      isDeleteDocumentEntriesModalOpen.value = false;
+
+      toast.add({
+        isOpen: true,
+        message: "Documents correctly deleted!",
+        onClose: () => {
+          toast.clear();
+        },
+        msTimeout: 2500,
+      });
+    } catch (e) {
+      toast.add({
+        isOpen: true,
+        message:
+          "Error deleting documents" +
+          (e instanceof Error ? `: ${e.message}` : ""),
+      });
+    }
+  });
+}
+
+const isDeleteDocumentEntriesModalOpen = ref(false);
 </script>
 
 <template>
@@ -55,15 +99,36 @@ const rows = computed(() => {
         />
       </div>
 
-      <UIButton
-        variant="outline"
-        size="sm"
-        class="font-bold"
-        @click="navigateTo(`/documents/${documentEntryName}/add`)"
-        >Add a new {{ documentEntryName }}</UIButton
-      >
+      <div class="flex gap-x-2">
+        <UIButton
+          v-if="selectedRow.length"
+          variant="danger"
+          size="sm"
+          class="font-bold"
+          @click="isDeleteDocumentEntriesModalOpen = true"
+          >Delete {{ documentEntryName }}({{ selectedRow.length }})</UIButton
+        >
+        <UIButton
+          variant="outline"
+          size="sm"
+          class="font-bold"
+          @click="navigateTo(`/documents/${documentEntryName}/add`)"
+          >Add a new {{ documentEntryName }}</UIButton
+        >
+      </div>
     </header>
 
-    <UITable v-if="documentsEntries.length" :columns :rows />
+    <UITable
+      v-if="documentsEntries.length"
+      v-model="selectedRow"
+      :columns
+      :rows
+    />
+
+    <DeleteDocumentEntriesModal
+      :isOpen="isDeleteDocumentEntriesModalOpen"
+      @close="isDeleteDocumentEntriesModalOpen = false"
+      @confirm-document-entry-delete="onConfirmDeleteSelected()"
+    />
   </section>
 </template>

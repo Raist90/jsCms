@@ -16,7 +16,11 @@ export default defineEventHandler(async () => {
   let config: AppConfig;
   try {
     const configPath = join(baseUrl, "cmsConfig.ts");
-    const jiti = createJiti(process.cwd());
+    // TODO: This is almost useless as it will not work with Vite's HMR
+    const jiti = createJiti(process.cwd(), {
+      fsCache: false,
+      moduleCache: false,
+    });
     config = (await jiti.import<ConfigPath>(configPath)).default;
   } catch (error) {
     console.error("Error loading config:", error);
