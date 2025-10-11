@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Alert, Badge } from "jscms-ui";
-
 type Props = {
   description?: string;
   disabled?: boolean;
@@ -21,9 +19,9 @@ const model = defineModel<string>();
     <div>
       <div v-if="label" class="flex items-baseline">
         <label class="text-sm font-bold" v-text="label" />
-        <Badge :status="required ? 'warning' : 'info'">{{
+        <UIBadge :status="required ? 'warning' : 'info'">{{
           `${required ? "Required" : "Optional"}`
-        }}</Badge>
+        }}</UIBadge>
       </div>
 
       <p v-if="description" class="text-sm text-gray-300">{{ description }}</p>
@@ -51,6 +49,6 @@ const model = defineModel<string>();
       </div>
     </div>
 
-    <Alert v-if="error" status="error">{{ error }}</Alert>
+    <UIAlert v-if="error" status="error">{{ error }}</UIAlert>
   </div>
 </template>

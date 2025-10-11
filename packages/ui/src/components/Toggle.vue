@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Badge } from "jscms-ui";
+import Badge from "./Badge.vue";
 
 type Props = {
   description?: string;

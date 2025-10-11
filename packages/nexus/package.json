@@ -32,12 +32,14 @@
     "@sindresorhus/is": "^7.0.1",
     "@vueuse/core": "^13.0.0",
     "@vueuse/nuxt": "^13.0.0",
+    "commander": "^14.0.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "nexus-config": "workspace:*",
+    "jiti": "^2.6.1",
     "jscms-ui": "workspace:*",
+    "nexus-config": "workspace:*",
     "nuxt": "^3.13.0",
     "nuxt-lucide-icons": "^1.0.5",
     "pinia": "^2.3.0",
@@ -54,7 +56,6 @@
     "playwright-core": "^1.48.2",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
-    "vite-plugin-devtools-json": "^0.2.0",
     "vitest": "^2.1.4",
     "vue-tsc": "^2.1.10"
   }

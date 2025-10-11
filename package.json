@@ -14,7 +14,7 @@
     "dev:studio": "cd packages/playground && bunx nexus studio --port 3333",
     "components:dev": "cd packages/ui && vite",
     "playground:dev": "cd packages/playground && bun dev",
-    "storybook": "cd packages/ui && storybook dev -p 6006",
+    "storybook": "cd packages/ui && bunx storybook dev -p 6006",
     "lint:nuxt": "cd packages/nexus && eslint .",
     "lint:ui": "cd packages/ui && eslint .",
     "lint:config": "cd packages/config && eslint .",
