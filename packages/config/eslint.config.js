@@ -10,7 +10,7 @@ import tseslint from "typescript-eslint";
 export default [
   eslintPluginPrettierRecommended,
   {
-    files: ["**/*.{js,mjs,cjs,ts,vue}"],
+    files: ["**/*"],
     rules: {
       "prettier/prettier": [
         "error",
