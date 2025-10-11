@@ -42,4 +42,9 @@ export default defineNuxtConfig({
   vite: {
     plugins: [devtoolsJson()],
   },
+  nitro: {
+    devServer: {
+      watch: [`${process.env.NUXT_PUBLIC_PROJECT_ROOT}/documents`],
+    },
+  },
 });
