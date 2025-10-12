@@ -53,6 +53,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/typescript-plugin": "^2.1.10",
     "drizzle-kit": "^0.26.2",
+    "eslint-plugin-tailwindcss": "^3.18.2",
     "happy-dom": "^15.11.0",
     "playwright-core": "^1.48.2",
     "tsx": "^4.19.1",
