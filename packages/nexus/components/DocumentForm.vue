@@ -17,9 +17,6 @@ const props = withDefaults(
   },
 );
 const fields = computed(() => props.documentDefinition.fields);
-const documentDefinition = computed(() => props.documentDefinition);
-const hasDefinitionsMismatch = computed(() => props.hasDefinitionsMismatch);
-const isEditMode = computed(() => props.isEditMode);
 
 const emit = defineEmits<{
   (e: "document-entry-delete" | "document-definition-update"): void;
@@ -30,9 +27,7 @@ const emit = defineEmits<{
 }>();
 
 const model = defineModel<Record<string, any>>();
-const formData = model.value?.data
-  ? model.value.data
-  : reactive<Record<string, any>>({});
+const formData = model.value?.data ?? reactive<Record<string, any>>({});
 
 const formErrors = ref<Record<string, string> | null>(null);
 
@@ -46,7 +41,7 @@ const onFormSubmit = async () => {
   // If there were any validation errors, reset them after successful validation
   formErrors.value = null;
 
-  if (isEditMode.value) emit("document-entry-update", formData);
+  if (props.isEditMode) emit("document-entry-update", formData);
   else emit("document-entry-add", formData);
 
   // Reinizialize deepclone of the original data
@@ -54,20 +49,25 @@ const onFormSubmit = async () => {
   hasChanges.value = false;
 };
 
-// Initialize the form data with empty objects for nested fields
+// Initialize the form data
 watch(
   fields,
-  (val) => {
+  (val) =>
     val.forEach((field) => {
-      if (field.type === "object" && !formData[field.name]) {
-        formData[field.name] = {};
+      if (!formData[field.name]) {
+        switch (field.type) {
+          case "boolean":
+            formData[field.name] = false;
+            break;
+          case "object":
+            formData[field.name] = {};
+            break;
+          case "array":
+            formData[field.name] = [];
+            break;
+        }
       }
-
-      if (field.type === "array" && !formData[field.name]) {
-        formData[field.name] = [];
-      }
-    });
-  },
+    }),
   { immediate: true },
 );
 

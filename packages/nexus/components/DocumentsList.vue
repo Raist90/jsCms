@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useDocumentsStore } from "~/store/documentsStore";
-import type { DocumentEntry } from "~/types";
 
 const props = defineProps<{
   documentEntryType: string;
@@ -15,19 +14,6 @@ const documentsList = filterDocumentsEntriesByType(documentType);
 
 const route = useRoute();
 const { currentPath } = useExtractRouteData(route);
-
-// TODO: It needs some testing with primitives.
-function getFallbackTitle(document: DocumentEntry) {
-  const { data } = document;
-  const topLevelKey = Object.keys(data)[0];
-  const topLevelValue = data[topLevelKey];
-
-  if (typeof topLevelValue === "object") {
-    const firstNestedKey = Object.keys(topLevelValue)[0];
-    return topLevelValue[firstNestedKey];
-  }
-  return topLevelValue;
-}
 </script>
 
 <template>
@@ -45,7 +31,7 @@ function getFallbackTitle(document: DocumentEntry) {
             :active="currentPath.includes(document.id)"
             activeClass="bg-blue-500"
           >
-            {{ document.data.title || getFallbackTitle(document) }}
+            {{ document.data.title || document.definition.title }}
           </NuxtLink>
         </li>
       </ul>
