@@ -16,8 +16,22 @@ const props = defineProps<Props>();
 
 const model = defineModel<Record<string, any>[]>({ required: true });
 
+// TODO: I need to type better this one
+// It probably doesnt make any sense to use Nexus types
+function createDefaultObject(schema: ObjectField) {
+  if (schema.type === "object") {
+    const obj: any = {};
+    schema.fields.forEach((field: any) => {
+      if (field.type === "object") obj[field.name] = createDefaultObject(field);
+      // else if (field.type === "array") obj[field.name] = []; // test this one
+    });
+    return obj;
+  }
+  return {};
+}
+
 function addItem() {
-  model.value = [...model.value, {}];
+  model.value = [...model.value, createDefaultObject(props.of)];
 }
 function deleteItem(index: number) {
   model.value = model.value.filter((_, i) => i !== index);
@@ -58,21 +72,23 @@ const itemErrors = (index: number) => {
     <!-- ]" -->
 
     <div v-for="(_, index) in model" :key="index">
-      <div class="flex flex-col gap-y-2">
-        <slot name="item" :index :errors="itemErrors(index)" />
-      </div>
+      <div class="flex flex-col gap-y-4 border border-gray-700 px-2 py-4">
+        <div class="flex flex-col gap-y-2">
+          <slot name="item" :index :errors="itemErrors(index)" />
+        </div>
 
-      <!-- <button -->
-      <!--   :disabled -->
-      <!--   type="button" -->
-      <!--   @click="deleteItem(index)" -->
-      <!--   :class="[ -->
-      <!--     disabled && 'cursor-not-allowed opacity-50', -->
-      <!--     'flex w-fit shrink-0 items-center border-l border-gray-300 bg-gray-50 px-3 py-2 text-sm text-red-500', -->
-      <!--   ]" -->
-      <!-- > -->
-      <!--   Delete -->
-      <!-- </button> -->
+        <button
+          :disabled
+          type="button"
+          @click="deleteItem(index)"
+          :class="[
+            disabled && 'cursor-not-allowed opacity-50',
+            'flex w-fit shrink-0 items-center border-l border-gray-300 bg-gray-50 px-3 py-2 text-sm text-red-500',
+          ]"
+        >
+          Delete item
+        </button>
+      </div>
     </div>
 
     <button

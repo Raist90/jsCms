@@ -1,6 +1,6 @@
 import { addDocument } from "nexus/core";
 
-export { article, page, menu, settings };
+export { article, page, menu, settings, nested };
 
 const article = addDocument({
   description: "This is an article",
@@ -103,6 +103,47 @@ const menu = addDocument({
             type: "slug",
             slugify: "title",
           },
+        ],
+      },
+    }
+  ]
+})
+
+const nested = addDocument({
+  description: "This is the menu document",
+  name: "nested",
+  title: "Nested",
+  type: "document",
+  fields: [
+    {
+      description: "These are the menu items",
+      name: "items",
+      title: "Items",
+      type: "array",
+      required: false,
+      of: {
+        description: "This is a menu item",
+        name: "menuItem",
+        title: "Menu Item",
+        required: false,
+        type: "object",
+        fields: [
+          {
+            description: "This is the menu item title",
+            name: "title",
+            required: true,
+            title: "Title",
+            type: "object",
+            fields: [
+              {
+                description: "This is the first name",
+                name: "first",
+                required: true,
+                title: "First",
+                type: "string",
+              }
+            ]
+          }
         ],
       },
     }
