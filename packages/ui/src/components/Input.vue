@@ -11,7 +11,7 @@ type Props = {
 };
 defineProps<Props>();
 
-const model = defineModel<string>();
+const model = defineModel<string | number>();
 </script>
 
 <template>

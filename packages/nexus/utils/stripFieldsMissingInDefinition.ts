@@ -1,3 +1,5 @@
+import { isObject } from "@sindresorhus/is";
+
 import type { DocumentDefinition } from "~/types";
 
 export const stripFieldsMissingInDefinition = (
@@ -15,8 +17,15 @@ export const stripFieldsMissingInDefinition = (
           return [key, stripFieldsMissingInDefinition(value, field.fields)];
         }
 
-        if (field?.type === "array" && typeof field.of === "object") {
-          return [key, stripFieldsMissingInDefinition(value, field.of.fields)];
+        if (field?.type === "array" && isObject(field.of)) {
+          return [
+            key,
+            value.map(
+              (item: any) =>
+                isObject(field.of) &&
+                stripFieldsMissingInDefinition(item, field.of.fields),
+            ),
+          ];
         }
         return [key, value];
       }),

@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { isArray, isBoolean, isFunction, isString } from "@sindresorhus/is";
+import {
+  isArray,
+  isBoolean,
+  isFunction,
+  isObject,
+  isString,
+} from "@sindresorhus/is";
 
 import {
   isArrayField,
@@ -101,7 +107,7 @@ function generateSlug(fieldName: string) {
     </div>
   </template>
 
-  <template v-else-if="isObjectField(field.type) && field.fields.length">
+  <template v-if="isObjectField(field.type) && field.fields.length">
     <div>
       <h3 class="mb-1 font-bold">{{ field.title }}</h3>
       <p class="text-sm text-gray-300 dark:text-gray-400">
@@ -119,7 +125,7 @@ function generateSlug(fieldName: string) {
   </template>
 
   <UIInputListWrapper
-    v-else-if="
+    v-if="
       isArrayField(field.type) &&
       isArray(formData[field.name]) &&
       (field.of === 'string' || field.of === 'number')
@@ -149,4 +155,31 @@ function generateSlug(fieldName: string) {
       />
     </template>
   </UIInputListWrapper>
+
+  <UIObjectListWrapper
+    v-if="
+      isArrayField(field.type) &&
+      isArray(formData[field.name]) &&
+      isObject(field.of)
+    "
+    v-model="formData[field.name]"
+    :label="field.title"
+    :description="field.description"
+    :disabled
+    :of="field.of"
+    :errors="formErrors"
+    :min="field.min"
+    :max="field.max"
+  >
+    <template #item="{ index, errors }">
+      <DynamicField
+        v-for="subfield in field.of.fields"
+        :key="subfield.name"
+        v-model="formData[field.name][index]"
+        :field="subfield"
+        :formErrors="errors"
+        :disabled
+      />
+    </template>
+  </UIObjectListWrapper>
 </template>

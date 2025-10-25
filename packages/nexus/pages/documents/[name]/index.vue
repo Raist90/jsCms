@@ -14,6 +14,8 @@ const documentsEntries = computed(() => {
   );
 });
 
+// TODO: Theres a problem here when mixing different document definitions
+// We should render one table for definition or nothing at all
 const columns = computed(() =>
   documentsEntries.value?.length
     ? [

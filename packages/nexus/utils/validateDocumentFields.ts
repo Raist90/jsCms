@@ -1,4 +1,10 @@
-import { isBoolean, isFunction, isNumber, isString } from "@sindresorhus/is";
+import {
+  isBoolean,
+  isFunction,
+  isNumber,
+  isObject,
+  isString,
+} from "@sindresorhus/is";
 import { z } from "zod";
 
 import { isArrayField, isObjectField } from "~/predicates";
@@ -16,6 +22,25 @@ function validateDocumentFields(
     const fieldName = field.name;
 
     if (isArrayField(field.type)) {
+      if ("of" in field && isObject(field.of)) {
+        const itemsList = Object.entries({ ...formData[fieldName] });
+
+        for (const [itemKey, itemVal] of itemsList) {
+          // itemKey is the index/key, itemVal is the value for this array item
+          const _errors = validateDocumentFields(
+            field.of.fields,
+            itemVal as any,
+          );
+          const key = parseInt(itemKey, 10);
+
+          if (_errors) {
+            for (const errKey in _errors) {
+              errors[`${fieldName}[${key}].${errKey}`] = _errors[errKey];
+            }
+          }
+        }
+      }
+
       if (!("min" in field) && !("max" in field)) continue;
 
       if ("of" in field) {
