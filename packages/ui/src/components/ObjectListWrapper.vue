@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Accordion from "../components/Accordion.vue";
 import Badge from "../components/Badge.vue";
 
 type ObjectField = Record<string, any> & { type: "object" };
@@ -64,30 +65,66 @@ const itemErrors = (index: number) => {
       >
     </div>
 
-    <!-- :class="[ -->
-    <!--   errors && -->
-    <!--     errors.find((error) => error.includes(`[${index}]`)) && -->
-    <!--     'border-2 border-red-500', -->
-    <!--   // 'mt-1 flex h-9', -->
-    <!-- ]" -->
-
     <div v-for="(_, index) in model" :key="index">
-      <div class="flex flex-col gap-y-4 border border-gray-700 px-2 py-4">
-        <div class="flex flex-col gap-y-2">
-          <slot name="item" :index :errors="itemErrors(index)" />
-        </div>
+      <div
+        :class="[
+          Object.keys(errors || {}).some((key) => key.includes(`[${index}]`))
+            ? 'border-red-500'
+            : 'border-gray-700',
+        ]"
+        class="border"
+      >
+        <Accordion :title="`${of.title} ${index + 1}`">
+          <template #content>
+            <div class="mb-4 flex flex-col gap-y-2">
+              <div class="flex flex-col gap-y-2">
+                <slot name="item" :index :errors="itemErrors(index)" />
+              </div>
 
-        <button
-          :disabled
-          type="button"
-          @click="deleteItem(index)"
-          :class="[
-            disabled && 'cursor-not-allowed opacity-50',
-            'flex w-fit shrink-0 items-center border-l border-gray-300 bg-gray-50 px-3 py-2 text-sm text-red-500',
-          ]"
-        >
-          Delete item
-        </button>
+              <div class="mt-2 flex gap-2">
+                <button
+                  v-if="index > 0"
+                  type="button"
+                  class="flex items-center border border-gray-700 px-2 text-sm"
+                  @click="
+                    model = [
+                      ...model.slice(0, index - 1),
+                      model[index],
+                      model[index - 1],
+                      ...model.slice(index + 1),
+                    ]
+                  "
+                >
+                  Move up
+                </button>
+
+                <button
+                  v-if="index < model.length - 1"
+                  type="button"
+                  class="flex items-center border border-gray-700 px-2 text-sm"
+                  @click="
+                    model = [
+                      ...model.slice(0, index),
+                      model[index + 1],
+                      model[index],
+                      ...model.slice(index + 2),
+                    ]
+                  "
+                >
+                  Move down
+                </button>
+
+                <button
+                  type="button"
+                  class="flex items-center border border-gray-700 px-2 text-sm text-red-500"
+                  @click="deleteItem(index)"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </template>
+        </Accordion>
       </div>
     </div>
 

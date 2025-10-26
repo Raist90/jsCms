@@ -172,6 +172,12 @@ function generateSlug(fieldName: string) {
     :max="field.max"
   >
     <template #item="{ index, errors }">
+      <!-- <div> -->
+      <!--   <h3 class="mb-1 font-bold">{{ field.title }}</h3> -->
+      <!--   <p class="text-sm text-gray-300 dark:text-gray-400"> -->
+      <!--     {{ field.description }} -->
+      <!--   </p> -->
+      <!-- </div> -->
       <DynamicField
         v-for="subfield in field.of.fields"
         :key="subfield.name"
